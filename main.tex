@@ -4,6 +4,9 @@
 \usepackage{amssymb, amsmath, amssymb}
 \usepackage{booktabs}
 \usepackage{makecell}
+\usepackage{float}
+\floatplacement{figure}{H}
+\usepackage{longtable}
 \usepackage[stable]{footmisc}
 \usepackage{lmodern}
 \usepackage{microtype}
@@ -13,13 +16,11 @@
 \usepackage[usenames, dvipsnames]{xcolor}
 \usepackage{setspace}
 \usepackage{float}
-\usepackage[top=2.1cm, bottom=2.1cm, left=2.1cm, right=2.1cm]{geometry}
+\usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
 \usepackage{graphicx}
 \usepackage{xcolor}
 \definecolor{darkblue}{rgb}{0.0,0.0,0.55}
 \usepackage{dcolumn}
-\usepackage{float}
-\floatplacement{figure}{H}
 \usepackage{mathtools}
 \usepackage{caption}
 \usepackage[UKenglish]{babel}
@@ -105,13 +106,11 @@ Over the last years, we have seen an emerging consensus about the causes and con
 
 Yet this consensus does not translate itself into effective political action. Global climate negotiations have progressed slowly under the guidelines of the United Nations Framework Convention on Climate Change (UNFCCC), and there is wide scepticism that multilateral talks will move faster in the next years \citep{cole2015advantages, hjerpe2015views}. As carbon dioxide emissions continue to increase, current efforts are likely to be insufficient to meet the Paris Agreement target of $2^{\circ}$C temperature rise above pre-industrial levels \citep{jordan2015emergence}. Existing research affirms that this unsatisfactory performance is partially due to institutional design \citep{ostrom2014polycentric, cole2015advantages}. For instance, multilateral forums downplay the domestic constraints political leaders experience when implementing strategies to reduce greenhouse gas emissions \citep{rayner2010eat}. Universal binding agreements also offer limited scope for experimentation, which hinders the ability for individuals to solve complex collective action problems \citep{de2014global}.
 
-More recently, scholars have argued that polycentric governance approaches provide a better `institutional fit' for natural resource systems \citep{turnheim2018innovating,berkhout2003negotiating, carlisle2017polycentric, ostrom1990governing}. Polycentrism is defined as a political arrangement in which formally independent units operating at different levels engage in a continuous process of cooperation and competition \citep{cole2015advantages,aligica2013co}. Experiences such as inshore fisheries in Turkey or timber management in Switzerland show that polycentrism induces individual cooperation and allows communities to avoid the `tragedy of the commons', that is, the overexploitation of shared resources \citep{hardin1968tragedy, ostrom1990governing}. Authors also point out that polycentrism promotes quick adaptation to bad use of public resources because of continuous experimentation at smaller scales \citep{turnheim2018innovating,ostrom2012nested,ostrom2014polycentric,sovacool2013adaptation}. 
-
-% Rewrite last sentence
+More recently, scholars have argued that polycentric approaches provide a better `institutional fit' for natural resource systems \citep{turnheim2018innovating,berkhout2003negotiating, carlisle2017polycentric, ostrom1990governing}. Polycentrism is defined as a political arrangement in which formally independent units operating at different levels engage in a continuous process of cooperation and competition \citep{cole2015advantages,aligica2013co}. Experiences such as inshore fisheries in Turkey and timber management in Switzerland show that polycentrism induces individual cooperation and allows communities to avoid the `tragedy of the commons', that is, the overexploitation of shared resources \citep{hardin1968tragedy, ostrom1990governing}. Authors also point out that polycentric systems improve accountability as decentralisation reduces rent-seeking opportunities for interest groups \citep{turnheim2018innovating,ostrom2012nested,ostrom2014polycentric,sovacool2013adaptation}. 
 
 Despite their potential advantages, two challenges may undermine the support for multilevel arrangements. On the one hand, pluralistic systems demand high levels of participation. Since climate change has diffuse benefits but concentrated costs, individuals have a strong incentive not to join collective efforts \citep{barrett2003increasing, heitzig2011self, nordhaus2015climate}. On the other hand, individuals tend to heavily discount climate change investments \citep{dasgupta2008discounting, nordhaus1997discounting}. Reducing carbon emissions requires significant expenditures today, yet the benefits of climate mitigation will arise only in a distant future. In that regard, citizens might prefer state-based initiatives to prevent climate change if private costs are too high or expected results too uncertain to encourage voluntary action. 
 
-% Maybe write a paragraph about elites and veto players?
+Self-enforcing environmental governance faces further difficulties in new democracies. In Latin America, authoritarian regimes discouraged civil participation and reduced social capital, two requirements for effective polycentric arrangements \citep{aligica2014institutional,ostrom1990governing}. Top-down climate policies also create incentives for organised groups to collude with state officials and pursue private interests. In that scenario, elites and state representatives have \textit{de facto} veto power over environmental legislation and can override local decisions to their own benefit.
 
 We design a conjoint experiment to assess which type of climate change governance system Latin American elites are willing to support. Conjoint experiments allow respondents to evaluate two competing profiles that vary across multiple dimensions of interest, and under sensible assumptions, they can estimate the causal impact of each factor on the respondent's decision \citep{bansak2016economic, hainmueller2014causal}. In our survey, we asked 651 `elites' -- academics, members of the executive power, legislators, businesspeople, and members of non-governmental organisations -- to select their preferred agreement in 7 randomised binary choices. We recruited respondents from Argentina, Brazil, Bolivia, Chile, Colombia, Costa Rica, Ecuador, Mexico, Panama, and Peru.
 
@@ -120,53 +119,58 @@ In what follows, we describe our experimental methods and results. We then turn 
 \section{Research Design}%
 \label{sec:research_design}
 
-We chose to survey Latin American elites for several reasons. First, Latin America is the most bio-diverse region in the world. The Amazon river basin is the largest preserved forest on Earth, and it contains about half of the world's carbon stock \citep{yang2018post}. Second, the region remains largely dependent on agriculture, so global warming will severely disrupt Latin American economies \citep{jones2003potential}. Lastly, Latin American elites have vast disagreements about societal issues. For instance, the rapid shifts between leftist and rightist governments, along with growing ideological polarisation in the region, indicate that local elites are not a cohesive social group  \citep{ellner2019pinktide}. Latin American elites are capable of influencing if climate change solutions are pursued, but they might disagree more on which particular solutions to pursue.
+We conducted our experiment in 10 Latin American countries. Latin America is the most biodiverse region in the world and it remains largely dependent on agriculture, thus global warming can severely disrupt the regional environment and economy \citep{jones2003potential, yang2018post}. Moreover, survey experiments on climate policies have focused on a small set of developed countries, so truly comparative experimental work is still scarce. We fill this gap by including countries in South, Central, and North America where local elites have different stakes at climate change negotiations.
 
-We formulate our experiment according to Elinor Ostrom's `design principles' of successful common pool resource management and selected our category values according to them \citep{ostrom1990governing, bechtel2013mass}. The hypothetical climate change agreements includes six dimensions: 1) which organisation defines the rules; 2) how would conflicts be resolved; 3) what punishment should be applied to rule-breakers; 4) how should repeated violations be sanctioned; 5) which countries should bear the costs of the agreement; 6) how often should the agreement be renegotiated. Table~\ref{tab:categories} describes the values we included in each design principle. \\
+The hypothetical climate change agreements includes six dimensions: 1) which organisation defines the rules; 2) how would conflicts be resolved; 3) what punishment should be applied to rule-breakers; 4) how should repeated violations be sanctioned; 5) which countries should bear the costs of the agreement; 6) how often should the agreement be renegotiated. The categories map conceptual differences between polycentric and state-led climate mitigation policies \citep{bechtel2013mass, ostrom1990governing}. Table~\ref{tab:categories} describes the values we included in each design principle. \\
 
-\begin{table}[ht]
-  \begin{center}
-      \caption{\textbf{Design principles for climate change mitigation conjoint experiments.}}
-      \label{tab:categories}
-    \begin{tabular}{l|l}
-      \toprule
-      \textbf{Design principle} & \textbf{Values} \\
-      \midrule
-      Who makes the rules? & International organisations \\ 
-	  & Federal government \\ 
-	  & Local government \\ 
-	  & Local community members \\
-	  & Non-Governmental organisations \\
-	  & \\
-      Conflict resolution mechanism & United Nations \\
-	  & Government bureaucracy \\
-	  & Local courts \\
-	  & Private arbitration \\
-	  & Informal norms \\
-	  & \\
-      Punishment & Imprisonment \\
-	  & Fines \\
-	  & Blacklist \\
-	  & None \\
-	  & \\
-	  Punishment for repeated violations & More penalty \\
-	  & Same \\
-	  & Less penalty \\
-	  & \\
-	  Agreement costs & Rich countries pay more than poor countries \\
-      & Proportional to history of emissions \\ 
-      & Proportional to current emissions \\
-	  & Only rich countries pay\\
-	  & \\
-	  Renegotiation & Never \\
-	  & Fifty years \\
-	  & Twenty years \\
-	  & Five years \\
-	  & One year \\
-      \bottomrule
-    \end{tabular}
-  \end{center}
-\end{table}
+\begin{longtable}{l|l}
+\caption{Design principles for climate change mitigation conjoint experiments} \label{tab:categories} \\
+
+\hline \multicolumn{1}{c|}{\textbf{Attribute}} & \multicolumn{1}{c}{\textbf{Values}}\\ \hline 
+\endfirsthead 
+
+\multicolumn{2}{c}%
+{{\tablename \thetable{} Design principles for climate change mitigation conjoint experiments (\textit{cont.})}} \\
+\hline \multicolumn{1}{c|}{\textbf{Attribute}} & \multicolumn{1}{c}{\textbf{Values}} \\ \hline 
+\endhead
+
+\hline \multicolumn{2}{r}{{\textit{Continued on next page}}} 
+\endfoot
+
+\hline
+\endlastfoot
+
+Who makes the rules? & International organisations \\ 
+& Federal government \\ 
+& Local government \\ 
+& Local community members \\
+& Non-Governmental organisations \\
+& \\
+Conflict resolution mechanism & United Nations \\
+& Government bureaucracy \\
+& Local courts \\
+& Private arbitration \\
+& Informal norms \\
+& \\
+Punishment & Imprisonment \\
+& Fines \\
+& Blacklist \\
+& None \\
+Punishment for repeated violations & More penalty \\
+& Same \\
+& Less penalty \\
+& \\
+Agreement costs & Rich countries pay more than poor countries \\
+& Proportional to history of emissions \\ 
+& Proportional to current emissions \\
+& Only rich countries pay\\
+& \\
+Renegotiation & Never \\
+& Fifty years \\
+& Twenty years \\
+& Five years \\
+& One year\\
+\end{longtable}
 
 Our six principles correspond to a standard set of resolutions international treaties are expected to cover. However, the categories open the possibility for respondents to combine multiple levels of governance into a single climate change agreement as they see fit. We give no prior indication of whether a certain value is more prevalent in actual agreements, and we randomise the values to ensure that they all have the same probability of being selected. In total, there are 6,000 possible value combinations. Figure~\ref{fig:conjoint} illustrates our experimental design.\\
 
