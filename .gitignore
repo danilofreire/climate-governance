@@ -1,4 +1,5 @@
 *.aux
+*.DS_Store
 *.glo
 *.idx
 *.log
