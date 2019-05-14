@@ -2,6 +2,8 @@
 *.DS_Store
 *.glo
 *.idx
+*.fls
+*.fdb_latexmk
 *.log
 *.toc
 *.ist
@@ -20,6 +22,5 @@
 *.maf
 *.mtc
 *.mtc1
-*.pdf
 *.out
 *.synctex.gz

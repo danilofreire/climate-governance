@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex main"] 1557826057 "main.aux" "main.bbl" "main" 1557826355
+["bibtex main"] 1557828534 "main.aux" "main.bbl" "main" 1557828535
   "/Users/politicaltheory/Library/TinyTeX/texmf-dist/bibtex/bst/base/apalike.bst" 1292289607 24635 604dafcc79f521a11ea73e506e1fbd98 ""
-  "main.aux" 1557826355 6412 caa472d00aa8a0e639a101390eed6633 "pdflatex"
-  "references.bib" 1557820591 13267 4c97b1cfb5ec36643b87da156216cd09 ""
+  "main.aux" 1557828534 6412 caa472d00aa8a0e639a101390eed6633 "pdflatex"
+  "references.bib" 1557826456 13267 4c97b1cfb5ec36643b87da156216cd09 ""
   (generated)
   "main.blg"
   "main.bbl"
-["pdflatex"] 1557826354 "main.tex" "main.pdf" "main" 1557826355
+["pdflatex"] 1557828534 "main.tex" "main.pdf" "main" 1557828535
   "/Users/politicaltheory/Library/TinyTeX/texmf-dist/fonts/enc/dvips/fira/fir_35cirm.enc" 1556836886 2838 02ecf3b80161acaf31cce2f83b3d681f ""
   "/Users/politicaltheory/Library/TinyTeX/texmf-dist/fonts/enc/dvips/libertine/lbtn_kijugd.enc" 1490131464 2822 11e839d2bbb939844844619b2cff7df6 ""
   "/Users/politicaltheory/Library/TinyTeX/texmf-dist/fonts/enc/dvips/libertine/lbtn_lyu3x3.enc" 1490131464 2835 bfce207f80837ef8737b6a788d8bc760 ""
@@ -155,16 +155,16 @@
   "/Users/politicaltheory/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1557566398 296903 53084432e2165f2a3932b75816d2108b ""
   "/Users/politicaltheory/Library/TinyTeX/texmf-var/web2c/pdftex/pdflatex.fmt" 1557726291 798698 81fd7adb3db266461dd5e281c793d48f ""
   "/Users/politicaltheory/Library/TinyTeX/texmf.cnf" 1557474242 682 79e5ad588cb20b4f5a8941cc719c08d2 ""
-  "conjoint-cropped.pdf" 1557641088 82382 a6165f51ad0242eceee2b37ff883ed82 ""
-  "countries.pdf" 1557464843 14073 3aaf739091e6e001eca37e3ac9c035ad ""
-  "main.aux" 1557826355 6412 caa472d00aa8a0e639a101390eed6633 "pdflatex"
-  "main.bbl" 1557826057 7188 1c6e9ac691e710ecd67b1569a04862da "bibtex main"
-  "main.out" 1557826355 185 1994fd7a8f25aee92bd723255381cce2 "pdflatex"
-  "main.tex" 1557826353 25243 0f5d221b3ab4a24e0b901773928a5a11 ""
-  "pooled.pdf" 1557464843 6560 a86a8f0cf6b8cd4d373b8e1aceec32c7 ""
-  "types.pdf" 1557464843 9020 4513824dbb42d4d23614f9b4d80c7a1b ""
+  "conjoint-cropped.pdf" 1557828371 82382 a6165f51ad0242eceee2b37ff883ed82 ""
+  "countries.pdf" 1557828379 14073 3aaf739091e6e001eca37e3ac9c035ad ""
+  "main.aux" 1557828534 6412 caa472d00aa8a0e639a101390eed6633 "pdflatex"
+  "main.bbl" 1557828534 7188 1c6e9ac691e710ecd67b1569a04862da "bibtex main"
+  "main.out" 1557828534 185 1994fd7a8f25aee92bd723255381cce2 "pdflatex"
+  "main.tex" 1557828136 25233 d7c3960a1faa13cc58de31bb129663c3 ""
+  "pooled.pdf" 1557828383 6560 a86a8f0cf6b8cd4d373b8e1aceec32c7 ""
+  "types.pdf" 1557828386 9020 4513824dbb42d4d23614f9b4d80c7a1b ""
   (generated)
-  "main.out"
-  "main.log"
   "main.aux"
+  "main.out"
   "main.pdf"
+  "main.log"
