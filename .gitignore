@@ -4,6 +4,8 @@
 *.idx
 *.log
 *.toc
+*.fls
+*.fdb_latexmk
 *.ist
 *.acn
 *.acr
@@ -20,6 +22,5 @@
 *.maf
 *.mtc
 *.mtc1
-*.pdf
 *.out
 *.synctex.gz
