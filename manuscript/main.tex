@@ -82,7 +82,7 @@
 \begin{abstract}
 \onehalfspacing
 \noindent
-Policy makers generally assume that climate change mitigation requires global scale governance. In contrast, recent studies suggest that polycentrism provides an effective alternative to top-down environmental policies. But despite the high social costs each solution implies, it is unclear which institutional arrangement potential veto players support. Here we run a conjoint experiment with elite members of 10 Latin American countries and ask respondents to evaluate 6,000 possible climate change agreements. We find that institutional features have a substantial effect on support for climate treaties. Latin American elites prefer multilevel state-based solutions to global warming, but there is considerable heterogeneity across countries and elite types. Our results suggest novel ways to craft accountable, democratic climate change mitigation agreements, and they offer new insights on how to integrate interventions at the local and international levels.
+Policy makers generally assume that climate change mitigation requires global scale governance. In contrast, recent studies suggest that polycentrism provides an effective alternative to top-down environmental policies. But despite the high social costs each solution implies, it is unclear which institutional arrangement potential veto players support. Here we run a conjoint experiment with elite members of 10 Latin American countries and ask respondents to evaluate 6,000 possible climate change agreements. We find that institutional features have a substantial effect on support for climate treaties. Latin American elites prefer multilevel solutions to global warming, but there is considerable heterogeneity across countries and elite types. Our results highlights the possible difficulties in crafting broad climate mitigation agreements, and they offer new insights on how to integrate interventions at the local and international levels.
 
 \vspace{.5cm}
 
@@ -92,7 +92,7 @@ Policy makers generally assume that climate change mitigation requires global sc
 \vspace{.5cm}
 
 \noindent 
-\textbf{Word count:} 3,000
+\textbf{Word count:} 3,510
 \end{abstract}
 
 \newpage
@@ -162,33 +162,31 @@ The categories map the main conceptual differences between polycentric and state
 	\label{fig:conjoint}
 \end{figure}
 
-We estimate our models with the \texttt{cregg} package \citep{leeper2018cregg} for the \texttt{R} statistical language \citep{rstats2019}. We report marginal means instead of average marginal conditional effects (AMCE). \citet{leeper2018subgroup} show that AMCEs can be misleading when applied to subgroup analysis as results are sensitive to the choice of reference categories in interactions. Marginal means provide a clear description of quantities of interest -- preference towards a given attribute -- and allows for easy comparisons between different groups of respondents. AMCE estimates are available in the Supplementary Materials.
+We estimate our models with the \texttt{cregg} package \citep{leeper2018cregg} for the \texttt{R} statistical language \citep{rstats2019}. We report marginal means instead of average marginal conditional effects (AMCE). \citet{leeper2018subgroup} show that AMCEs can be misleading in subgroup analysis as model results are sensitive to the choice of reference categories in interactions. In contrast, marginal means provide a clear description of quantities of interest, in our case preferences towards agreement attributes, while allowing for easy comparisons between groups of respondents. For these reason, we opt for a visual presentation of our results using marginal means, but readers can refer to the Supplementary Material for ACME estimates.  
 
 \section{Results}%
 \label{sec:results}
 
-Figure~\ref{fig:pooled} shows our main results. The findings indicate that Latin American elites have a strong preference for a polycentric approach to mitigate climate change. We see that the respondents have a positive view about two sources of climate governance, namely those located at the international and the local levels. Importantly, Latin American elites support both levels \textit{simultaneously}; this provides evidence that they favour agreements which incorporate action separate political spheres at the same time in the same regime. 
+Figure~\ref{fig:pooled} shows our main results. The graph illustrates the preference associate with each attribute of hypothetical climate mitigation agreements. Dots with horizontal bars represent point estimates and 95\% confidence intervals from linear regressions with cluster-robust standard errors. \\ 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.9\linewidth]{pooled.pdf}
-	\caption{\textbf{Effect of agreement dimensions on the probability of support for climate change agreement in 10 Latin American countries (pooled data).} The horizontal bars correspond to the 95\% confidence interval of the estimated effect. Standard errors are clustered by respondent (respondents = 651; comparisons = 7,968). Full numerical estimates are available in the Supplementary Information Appendix.}
+	\includegraphics[width=.9\linewidth,height=11.5cm]{pooled.pdf}
+	\caption{\textbf{Effect of agreement dimensions on the probability of support for climate change agreement in 10 Latin American countries (pooled data)}}
 	\label{fig:pooled}
 \end{figure}
 
-Climate change agreements designed by international organisations are viewed more favourably than the alternatives. Global institutions receive 54\% (SE = 1.25) of acceptance in our sample. At the same time, respondents clearly indicate their preference for bottom-up rule-making. Agreements formulated by local community members and local governments are the second and third-preferred choices with 51.6\% (SE = 1.25) and 49.8\% (SE = 1.24) approval. In contrast, Latin American elites see non-governmental organisations are their least preferred option for climate change rule-making with 45.5\% (SE = 1.26). 
+Respondents prefer that international organisations create climate mitigation rules (54\%, SE = 1.2), but they also hold favourable views of local communities (51.6\%, SE = 1.25), local governments (49.8\%, SE = 1.2), and state governments (48.6\%, SE = 1.3) as rule-makers. Although local communities receive slightly more support than the other alternatives, the differences among the three groups are not statistically significant. Interestingly, Latin American elites support multiple levels simultaneously, what suggests they are willing to incorporate separate political spheres into the climate change regime. We also observe that non-governmental organisations are the least preferred option for climate change rule-making with 45.5\% (SE = 1.26). 
 
-We see a similar pattern with respect to conflict resolution. Respondents suggest disputes should be addressed mainly by the United Nations and local courts. These two choices have 57.3\% (SE = 1.22) and 54.6\% (SE = 1.23) approval, respectively. Private arbitration comes next with 50\% (SE = 1.26), followed by government bureaucracy with 46.4\% (SE = 1.25). Informal norms is the least preferred mechanism to deal with conflicts between agreement parties (41\%, SE = 1.25). 
+We see a similar pattern with respect to conflict resolution. Respondents suggest disputes should be addressed mainly by the United Nations and local courts. These two choices have 57.3\% (SE = 1.2) and 54.6\% (SE = 1.2) approval, respectively. Private arbitration comes next with 50\% (SE = 1.3), followed by government bureaucracy with 46.4\% (SE = 1.3). Informal norms receive only 41\% support (SE = 1.3). 
 
-In line with Ostrom's predictions, Latin American elites agree with graduated sanctions to repeated offenders (53.2\%, SE = 0.94) and they believe agreement costs should be allocated according to the country's history of emissions (53.6\%, SE = 1.14). Moreover, related to the same idea of proportionality, respondents indicate that lawbreakers should be punished with fines (55.3\%, SE = 1.06), which can be easily increased if necessary.
+Latin American elites agree with graduated sanctions to repeated offenders (53.2\%, SE = 0.9) and they believe agreement costs should be allocated according to the country's history of emissions (53.6\%, SE = 1.1). Moreover, related to the same idea of proportionality, respondents indicate that lawbreakers should be punished with fines (55.3\%, SE = 1.1), which can be easily increased if necessary.
 
 We find no evidence that rich countries alone should bear the burden of climate change mitigation costs. Latin American elites believe developing countries should also contribute to the provision of global public goods. This suggests that elites view it was legitimate to contribute to climate change solutions, so this may not be a major source of free riding to climate change solutions in the region.
 
-In terms of agreement duration, respondents are interested in a balance between stability and flexibility. This also lends support to Elinor Ostrom's theory of polycentric climate change governance. Agreements that either cannot be modified or that last for 50 years are rejected by the interviewees. Their preference lies in agreements that can be renegotiated every five years (59\%, SE = 1.2), as they are durable enough to provide long-term incentives to the parties, yet still adaptable to unforeseen demands.
+In terms of agreement duration, respondents are interested in a balance between stability and flexibility. Agreements that either cannot be modified or that last for 50 years are rejected by the interviewees. Their preference lies in agreements that can be renegotiated every five years (59\%, SE = 1.2), as they are durable enough to provide long-term incentives to the parties, yet still adaptable to unforeseen demands.
 
-We also examine if our results vary across countries and types of elites. Figure~\ref{fig:countries} displays the preferred climate change agreement characteristics for each of the 10 countries in our sample. Despite Latin America's wide social heterogeneity, we observe that the results are notably similar. Most respondents affirm that the United Nations should be responsible for resolving conflicts, and six of them place local courts as the second-preferred choice. Peruvian elites are the only to prefer private arbitration to mediate disputes (60.7\%, SE = 4.5). We see that respondents in eight out of ten countries are willing to apply fines as punishment for agreement violators, with Chileans and Ecuadorians stating they would rather blacklist defectors. The majority also prefers to employ more penalties to repeated offenders. 
-
-Another interesting cross-country similarity is that our sample largely supports agreements that can be renegotiated every five or twenty years. The difference is particularly wide in Costa Rica, where five-year agreements receive 29.4\% more approval than treaties that will never be revised. Chileans, in contrast, have the largest gap between one-year and five-year agreements: 22.7\%. Two possible explanations is that Chilean elites are either sensitive to transaction costs of negotiating repeated agreements, or they worry that one-year treaties may not provide enough stability for collective action.
+Overall, the results do not conform to strictly top-down or bottom-down approaches. While we do see evidence for coordination at the macro level, respondents are open to input from other government actors and local groups. But we find that elites also do not fully agree with polycentric arrangements. As we noted above, the data do not show major difference in preferences between federal and local governments and between these and community-based solutions. Further, the rejection on non-governmental organisations points to a discredit of self-governing arrangements to deal with global warming. This last result is consistent with the Latin American tradition of heavier reliance on the state than on voluntary organisations.
 
 \begin{figure}[H]
 	\centering
@@ -197,36 +195,38 @@ Another interesting cross-country similarity is that our sample largely supports
 	\label{fig:countries}
 \end{figure}
 
-There are some interesting differences about which institutions should make the agreement rules. Argentinians are particularly sceptical about local community members (44.9\%, SE = 4.4) and favourable towards international organisations (61.9\%, SE = 4.1), whereas Bolivians believe local communities (57.5\%, SE = 5.3) and governments (55.9\%, SE = 5.4) are the best source for climate change rules. Respondents in most countries place NGOs as their least-preferred option, but elites from Brazil and Costa Rica have a more positive view of these organisations. Federal governments receive the lowest support in Chile, but respondents have the highest preference for local communities with 63\% (SE = 3.9). 
+We also examine how our results vary across countries and types of elites. Figure~\ref{fig:countries} displays the preferred climate change agreement characteristics for each of the 10 countries in our sample. The disaggregated data confirm that elites have a generalised preference for a heavy role by international agencies in terms of solving conflicts, and a generalised dislike for informal norms. In addition, the cross-country results also show a preference for a positive role by federal to local government, or local community members being involved in the deliberation process.
 
-Figure~\ref{fig:types} shows the results disaggregated by elite type. We find that several positions are comparable across all subgroups. Academics, members of the civil society, and representatives in the executive and legislative branches hold similar views about how conflicts should be resolved, what punishment to apply to lawbreakers (fines and blacklisting), and the duration of the agreements.
+However, some of the regional patterns are a by-product of sample aggregation. Latin American countries do not agree on which organisations should provide the rules Costa Rica prefers local to global rule-making; Mexico prefers global and dislikes local, similar to Peru, Argentina, and Brazil; Colombia prefers global and local rule-making simultaneously; and Bolivia prefers local organisations to design climate treaties. This has important consequences for climate policies in the region. The lack of coordination about which governance body should create the treaty may configure a case of Arrow's impossibility theorem \citep{arrow1950difficulty}. Should a polycentric system be put for vote at international arenas, it is unclear what would be the outcome as regional consensus seems unlikely. 
+
+Figure~\ref{fig:types} shows the results disaggregated by elite type. Academics, members of the civil society, and representatives in the executive and legislative branches hold similar views about how conflicts should be resolved, what punishment to apply to lawbreakers (fines and blacklisting), and the duration of the agreements. These are in line with our previous results.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth]{types.pdf}
-	\caption{\textbf{Effect of agreement dimensions on the probability of support for climate change agreement by elite type.} Bars represent 95\% confidence intervals.}
+	\caption{\textbf{Effect of agreement dimensions on the probability of support for climate change agreement by elite type.}}
 	\label{fig:types}
 \end{figure}
 
-Differences emerge in two of the six dimensions of interest. First, whereas academics and members of the civil society are less favourable to allowing the federal government to formulate the rules, members of the executive and the legislative -- part of federal government themselves -- are more likely to see themselves as the preferred rule-makers. Second, members of the legislative have a stronger opinion that rich countries should bear the larger part of the agreement costs (58.4\%, SE = 3.5). 
+Differences emerge in two of the six attributes of interest. First, whereas academics and members of the civil society are less favourable to allowing the federal government to formulate the rules, members of the executive and the legislative -- part of federal government themselves -- are more likely to see themselves as the preferred rule-makers. Second, members of the legislative have a stronger opinion that rich countries should bear the larger part of the agreement costs (58.4\%, SE = 3.5). 
 
 \section{Discussion}
 \label{sec:discussion}
 
-In this article, we analyse whether Latin American elites support a polycentric climate change mitigation regime. We find that respondents prefer international organisations to create rules and resolve conflicts, to impose increasing fines on violators and to renew agreements every five years.  The results also suggest that respondents are sceptical about non-governmental organisations and consistently reject informal norms as an instrument to solve disputes. Taken together, our experiment is very consistent with the Latin American tradition of heavier reliance on the state than on voluntary solutions. After disaggregating the data by country and elite type, we find large heterogeneity in the responses. Nevertheless, elites remain sceptical about civil society organisations and informal norms. 
+In this article, we examine which attributes of climate change mitigation treaties Latin American elites support. We find that respondents prefer international organisations to resolve conflicts, are favourable to imposing increasing fines on violators and renewing agreements every five years. Survey participants are sceptical about non-governmental organisations and consistently reject informal norms as an instrument to solve disputes. Taken together, our experiment suggests that Latin American elites oppose non-governmental organisations as rule-makers and want legal punishment to agreement violators. 
+
+While our results confirm that Latin Americans prefer the state to conduce public policy, they do not match the typical cases of centralised or polycentric climate change regimes suggested in the literature. After disaggregating the data by country and elite type, we confirm that elites prefer international organisations to resolve disputes and that federal and local sources of governance should have a say in climate agreements. However, we find large heterogeneity in the responses, with groups holding different opinions on how competences should be divided. 
 
 Our results have important theoretical and practical implications. The findings we present here suggest there is considerable scope for new studies on global governance, specially in underrepresented regions. Our analysis can be extended to examine if the Latin American public has the same opinion on multilevel arrangements as do the elites; and if not, it would be important to know what explains the mismatch between groups. Moreover, future work may address whether other areas of scholarship which assume international-level coordination could benefit from multilevel arrangements, either state-based or not.   
 
-The findings also highlight the importance of comparative work in experimental studies. As a region, Latin America favours results that are in line with polycentric arrangements, but we find that those preferences derive from the aggregation of heterogeneous effects. Our study indicates researchers should be cautious about the external validity of experimental findings. % Add a couple more sentences here 
+The findings also highlight the importance of comparative work in experimental studies. As a region, Latin America favours results that are in line with polycentric arrangements, but we find that those preferences derive from the aggregation of heterogeneous effects. Our study indicates researchers should be cautious about the external validity of experimental studies. 
 
-With regards to environmental policies, we provide experimental evidence that individuals have preferences that are not fully represented in current climate mitigation agreements. We identify that Latin American elites are interested in incorporating different political actors and in strengthening the role international organisations play in climate governance. Future climate negotiations can achieve better results if they take those preferences into account. 
+With regards to environmental policies, we provide experimental evidence that individuals have preferences that are not fully represented in current climate mitigation agreements. We identify that Latin American elites are interested in incorporating different political actors and in strengthening the role international organisations play in climate governance. Future climate negotiations can achieve better results if they take those preferences into account.
 
 \section*{Supplementary Material}
 \label{sec:supplementary}
 
-Please visit \href{http://github.com/danilofreire/climate-governance}{\texttt{http://github.com/danilofreire/climate-governance}} for supplementary materials for this article.
-
-\newpage
+The data, code, and any additional materials required to replicate all analyses in this article are available at \href{http://github.com/danilofreire/climate-governance}{\texttt{http://github.com/danilofreire/climate-governance}}.
 
 \bibliographystyle{apalike}
 \bibliography{references.bib}
