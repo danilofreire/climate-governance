@@ -1,23 +1,32 @@
 ---
-title: "Appendix: Latin American Elites Favour Polycentric Governance in Climate Change Agreements"
-output: pdf_document
-toc: true
-number_sections: true
+title: "Supplementary Materials for: Do Elites Support Polycentric Climate Governance? Evidence from Ten Latin American Countries"
+author: 
+- "Danilo Freire[^freire]"
+- "Umberto Mignozzetti[^mignozzetti]"
+- "David Skarbek[^skarbek]"
+date: "15 May 2019"
+fontfamily: libertine
+fontawesome: yes
+fontsize: 12pt
+monospace-url: yes
+spacing: double
+papersize: a4paper
+bibliography: references.bib
+biblio-style: apalike
+output:
+  pdf_document:
+    citation_package: natbib
+    fig_caption: yes
+    number_sections: yes
+    toc: true
+    keep_tex: no
+    template: template.latex
 header-includes:
-    - \usepackage{setspace}\doublespacing
     - \usepackage{booktabs}
     - \usepackage{longtable}
     - \usepackage{array}
-    - \usepackage{libertine}
-    - \usepackage[libertine]{newtxmath}
-    - \usepackage[scaled=.9]{inconsolata}
-    - \usepackage[UKenglish]{babel}
-    - \usepackage[UKenglish]{isodate}
-    - \usepackage{hyperref}
-    - \hypersetup{linkcolor=Mahogany, citecolor=Mahogany, urlcolor=darkblue, breaklinks=true}
     - \usepackage{multirow}
     - \usepackage{wrapfig}
-    - \usepackage{float}
     - \usepackage{colortbl}
     - \usepackage{pdflscape}
     - \usepackage{tabu}
@@ -25,9 +34,13 @@ header-includes:
     - \usepackage{threeparttablex}
     - \usepackage[normalem]{ulem}
     - \usepackage{makecell}
-    - \usepackage{xcolor}
-bibliography: references.bib
 ---
+
+[^freire]: Postdoctoral Research Associate, The Political Theory Project, Brown University, Providence, RI 02912, USA, [danilofreire@brown.edu](mailto:danilo_freire@brown.edu), <http://danilofreire.github.io>. Corresponding author.
+
+[^mignozzetti]: School of International Relations, Fundação Getulio Vargas, São Paulo, SP, Brazil and Wilf Family Department of Politics, NYU, NY, USA, [umberto.mig@nyu.edu](mailto:umberto.mig@nyu.edu), <http://umbertomig.com>.
+
+[^skarbek]: The Department of Political Science and the Political Theory Project, Brown University, Providence, RI, USA, [davidskarbek@brown.edu](mailto:david_skarbek@brown.edu), <http://davidskarbek.com>.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -36,8 +49,8 @@ library(haven); library(clusterSEs)
 library(stargazer); library(cjoint)
 library(sp); library(cregg)
 library(kableExtra)
-setwd("~/Downloads/1_data/")
-load('conj.RData')
+setwd("~/Documents/github/polycentrism/appendix/")
+load('freire-mignozzetti-skarbek.RData')
 
 plot_mm <- function(
   x,
@@ -838,7 +851,6 @@ After finishing this dataset, we started the surveying stage. From 12th of Novem
 A conjoint experiment is a statistical technique that allows individuals to express their preferences on multiple attributes of a single topic [@hainmueller2014causal; @bansak2016economic]. Individuals are presented with two hypothetical scenarios, A and B, each containing a series of characteristics a researcher wants to evaluate. The individual chooses one of them. As the attributes are randomised and individuals choose between different pairs of hypothetical scenarios, we can estimate how individuals value each of the conjoined elements.  
 
 In our research, we ask what features elite members would like to see implemented in a climate change agreement. We ask their opinion on 6 questions: 1) who makes the rules; 2) who enforces the laws; 3) what punishment should be used against lawbreakers; 4) how are repeated violations punished; 5) how are costs distributed, and 6) how often the agreement will be renegotiated. Each of the questions has four to five different attributes. For the first two questions, we ask individuals if they would rather have the community, local governments, federal governments, or international organisations to create or enforce rules. As for punishments, we have options ranging from do nothing to fines and incarceration. We ask whether the costs of climate change agreements should be paid mostly or exclusively by developed countries, by polluter countries regardless of their wealth, or if costs should be allocated according to the history of emissions of a given nation. Individuals also state their preferences for short-term agreements, a proxy we use for flexibility, or for long-term ones, what we see as a proxy for the stability of rules. Lastly, we ask which of the two conjoined choices individuals perceive as more legitimate and more efficient. 
-
 Conjoint experiments have many advantages. First, as each individual chooses between many pairs of possible climate agreements -- seven in our case -- we can drastically increase our sample size without incurring in further financial costs. The design thus maximises our research budget. Second, individuals rarely decide considering one attribute at a time, as presented in other types of survey experiments. In that regard, our conjoint analysis mirrors how people naturally make their choices, that is, by simultaneously taking several characteristics into consideration. Finally, as the experiments consist of a simple choice between A and B, conjoint analyses are easy to understand and to implement. This research design reduces the cognitive load interviewees have while answering surveys and as a result, we can expect more accurate responses from our sample.  
 
 # Descriptive Statistics
@@ -1161,7 +1173,8 @@ This estimator fixes one category and look at changes from this baseline categor
 ```{r}
 ## Main model
 rm(cj)
-load('conj.RData')
+setwd("~/Documents/github/polycentrism/appendix/")
+load('freire-mignozzetti-skarbek.RData')
 # Set conjoint baselines
 baselines <- list()
 baselines$`How often will the agreement be renegotiated?` <- "One year"
