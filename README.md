@@ -1,4 +1,4 @@
-## Do Elites Support Polycentric Climate Governance? Evidence from Ten Latin American Countries
+## Do Elites Support Polycentric Climate Governance? Evidence from Latin American Countries
 
 This GitHub repository contains data and documented R code for ["Do Elites Support Polycentric Climate Governance? Evidence from Latin American Countries,"](https://doi.org/10.31235/osf.io/9a6ch) authored by [Danilo Freire](http://danilofreire.github.io), [Umberto Mignozzetti](http://umbertomig.com), and [David Skarbek](http://davidskarbek.com).
 
