@@ -1,10 +1,11 @@
 ---
-title: "Supplementary Materials for: Do Elites Support Polycentric Climate Governance? Evidence from Ten Latin American Countries"
+title: |
+       | Supplementary Materials for "Do Elites Support Polycentric Climate Governance? Evidence from Latin American Countries"
 author: 
 - "Danilo Freire[^freire]"
 - "Umberto Mignozzetti[^mignozzetti]"
 - "David Skarbek[^skarbek]"
-date: "15 May 2019"
+date: "16 May 2019"
 fontfamily: libertine
 fontawesome: yes
 fontsize: 12pt
@@ -49,7 +50,6 @@ library(haven); library(clusterSEs)
 library(stargazer); library(cjoint)
 library(sp); library(cregg)
 library(kableExtra)
-setwd("~/Documents/github/polycentrism/appendix/")
 load('freire-mignozzetti-skarbek.RData')
 
 plot_mm <- function(
@@ -1173,7 +1173,6 @@ This estimator fixes one category and look at changes from this baseline categor
 ```{r}
 ## Main model
 rm(cj)
-setwd("~/Documents/github/polycentrism/appendix/")
 load('freire-mignozzetti-skarbek.RData')
 # Set conjoint baselines
 baselines <- list()
