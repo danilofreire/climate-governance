@@ -37,7 +37,7 @@ header-includes:
     - \usepackage{makecell}
 ---
 
-[^freire]: Postdoctoral Research Associate, The Political Theory Project, Brown University, Providence, RI 02912, USA, [danilofreire@brown.edu](mailto:danilo_freire@brown.edu), <http://danilofreire.github.io>. Corresponding author.
+[^freire]: Postdoctoral Research Associate, The Political Theory Project, Brown University, Providence, RI 02912, USA, <danilofreire@brown.edu>, <http://danilofreire.github.io>. Corresponding author.
 
 [^mignozzetti]: School of International Relations, Fundação Getulio Vargas, São Paulo, SP, Brazil and Wilf Family Department of Politics, NYU, NY, USA, [umberto.mig@nyu.edu](mailto:umberto.mig@nyu.edu), <http://umbertomig.com>.
 
@@ -1172,7 +1172,7 @@ ggsave(filename = 'MM_membertype.pdf', plot = p,
        width = 8, height = 5)
 ```
 
-# AMCE (Average Marginal Component Effect) Estimator
+# Average Marginal Component Effect (AMCE) Estimator
 
 This estimator fixes one category and look at changes from this baseline category. Below follows the plots for the main model and the country and elite type subsamples.
 
