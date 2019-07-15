@@ -1,11 +1,11 @@
 ---
 title: |
-       | Supplementary Materials for "Do Elites Support Polycentric Climate Governance? Evidence from Latin American Countries"
+       | Supplementary Materials for "Institutional Design and Elite Support for Climate Policies: Evidence from Latin American Countries"
 author: 
 - "Danilo Freire[^freire]"
 - "Umberto Mignozzetti[^mignozzetti]"
 - "David Skarbek[^skarbek]"
-date: "16 May 2019"
+date: \today
 fontfamily: libertine
 fontawesome: yes
 fontsize: 12pt
@@ -41,7 +41,7 @@ header-includes:
 
 [^mignozzetti]: School of International Relations, Fundação Getulio Vargas, São Paulo, SP, Brazil and Wilf Family Department of Politics, NYU, NY, USA, [umberto.mig@nyu.edu](mailto:umberto.mig@nyu.edu), <http://umbertomig.com>.
 
-[^skarbek]: The Department of Political Science and the Political Theory Project, Brown University, Providence, RI, USA, [davidskarbek@brown.edu](mailto:david_skarbek@brown.edu), <http://davidskarbek.com>.
+[^skarbek]: The Department of Political Science and the Political Theory Project, Brown University, Providence, RI, USA, <davidskarbek@brown.edu>, <http://davidskarbek.com>.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -50,7 +50,7 @@ library(haven); library(clusterSEs)
 library(stargazer); library(cjoint)
 library(sp); library(cregg)
 library(kableExtra)
-load('freire-mignozzetti-skarbek.RData')
+load('/Users/politicaltheory/Documents/github/climate/appendix/freire-mignozzetti-skarbek.RData')
 
 plot_mm <- function(
   x,
@@ -826,7 +826,10 @@ cj$`Who makes the rules?` <-
 
 # Latin American Elite Survey
 
-From 1st of October to 5th of December 2018, we run an elite survey in ten Latin American countries: Argentina, Bolivia, Brazil, Chile, Colombia, Costa Rica, Ecuador, Mexico, Panama, and Peru. The survey proceeded in two steps.
+\setlength{\parindent}{1cm}
+\setlength{\parskip}{0pt}
+
+From 1st of October to 5th of December 2018, we run an elite survey with respondents from ten Latin American countries: Argentina, Bolivia, Brazil, Chile, Colombia, Costa Rica, Ecuador, Mexico, Panama, and Peru. The survey proceeded in two steps.
 
 We collected information on Latin American elites. The target was:
 
@@ -851,13 +854,14 @@ After finishing this dataset, we started the surveying stage. From 12th of Novem
 A conjoint experiment is a statistical technique that allows individuals to express their preferences on multiple attributes of a single topic [@hainmueller2014causal; @bansak2016economic]. Individuals are presented with two hypothetical scenarios, A and B, each containing a series of characteristics a researcher wants to evaluate. The individual chooses one of them. As the attributes are randomised and individuals choose between different pairs of hypothetical scenarios, we can estimate how individuals value each of the conjoined elements.  
 
 In our research, we ask what features elite members would like to see implemented in a climate change agreement. We ask their opinion on 6 questions: 1) who makes the rules; 2) who enforces the laws; 3) what punishment should be used against lawbreakers; 4) how are repeated violations punished; 5) how are costs distributed, and 6) how often the agreement will be renegotiated. Each of the questions has four to five different attributes. For the first two questions, we ask individuals if they would rather have the community, local governments, federal governments, or international organisations to create or enforce rules. As for punishments, we have options ranging from do nothing to fines and incarceration. We ask whether the costs of climate change agreements should be paid mostly or exclusively by developed countries, by polluter countries regardless of their wealth, or if costs should be allocated according to the history of emissions of a given nation. Individuals also state their preferences for short-term agreements, a proxy we use for flexibility, or for long-term ones, what we see as a proxy for the stability of rules. Lastly, we ask which of the two conjoined choices individuals perceive as more legitimate and more efficient. 
+
 Conjoint experiments have many advantages. First, as each individual chooses between many pairs of possible climate agreements -- seven in our case -- we can drastically increase our sample size without incurring in further financial costs. The design thus maximises our research budget. Second, individuals rarely decide considering one attribute at a time, as presented in other types of survey experiments. In that regard, our conjoint analysis mirrors how people naturally make their choices, that is, by simultaneously taking several characteristics into consideration. Finally, as the experiments consist of a simple choice between A and B, conjoint analyses are easy to understand and to implement. This research design reduces the cognitive load interviewees have while answering surveys and as a result, we can expect more accurate responses from our sample.  
 
 # Descriptive Statistics
 
 The main demographic statistics collected were the country and elite types, and the geolocation of the respondents. They follow in the graphs below.
 
-```{r demogGraph, echo=FALSE, fig.align='center', fig.height=3.5}
+```{r demogGraph, echo=FALSE, fig.align='center', fig.height=3.5, message=FALSE,warning=F}
 aux <- cj %>%
   select(Response.ID, countryOrigin, groupOrigin, LocationLongitude, LocationLatitude) %>%
   unique()
@@ -888,7 +892,7 @@ Considering the elite type, note that we have, as expected, more people from aca
 
 In the map, we can see that the answers concentrate on the country's capitals, with some variation within the state, but with sample concentrated in the largest municipalities. This is expected, as elite members are assumed to gravitate around the capitals and the influence centers.
 
-# Frequency of features selected by each attribute
+# Frequency of Features Selected by Each Attribute
 
 The figures below display the freature frequency for each attribute, by each task.
 
@@ -972,7 +976,6 @@ The code for Figure 2 of the paper follows below, with also the point estimates 
 
 ```{r codefig2}
 ## Main plot
-
 # Main estimation equation
 fm <- selected ~ `Who makes the rules?` +
   `How are conflicts resolved?` +
@@ -983,9 +986,9 @@ fm <- selected ~ `Who makes the rules?` +
 
 # Plot
 mms <- mm(cj, fm, id = ~Response.ID, alpha = .1, h0=0.5)
-p <- plot_mm(mms, vline = 0.5)
-ggsave(filename = 'MM_all.pdf', plot = p, width = 6, height = 5)
+p <- plot(mms, vline = 0.5)
 p
+ggsave(filename = 'MM_all.pdf', plot = p, width = 6, height = 5)
 
 # Table
 table_mm(mms, capt = 'Marginal Means -- Full Dataset')
@@ -999,8 +1002,8 @@ The code for Figure 3 of the paper follows below, with also the point estimates 
 ## Marginal means by Country
 
 # Argentina
-arg <- mm(subset(cj, countryOrigin=='Argentina'), 
-        fm, id = ~Response.ID, alpha = .1, h0=0.5)
+arg <- mm(subset(cj, countryOrigin=='Argentina'),  
+        fm, id = ~Response.ID, alpha = 0.1, h0 = 0.5)
 table_mm(arg, capt = 'Marginal Means -- Argentina Only')
 ```
 
@@ -1008,8 +1011,8 @@ table_mm(arg, capt = 'Marginal Means -- Argentina Only')
 
 ```{r}
 # Bolivia
-bol <- mm(subset(cj, countryOrigin=='Bolivia'), 
-        fm, id = ~Response.ID, alpha = .1, h0=0.5)
+bol <- mm(subset(cj, countryOrigin=='Bolivia'),  
+        fm, id = ~Response.ID, alpha = 0.1, h0 = 0.5)
 table_mm(bol, capt = 'Marginal Means -- Bolivia Only')
 ```
 
@@ -1017,8 +1020,8 @@ table_mm(bol, capt = 'Marginal Means -- Bolivia Only')
 
 ```{r}
 # Brazil
-bra <- mm(subset(cj, countryOrigin=='Brazil'), 
-        fm, id = ~Response.ID, alpha = .1, h0=0.5)
+bra <- mm(subset(cj, countryOrigin=='Brazil'),  
+        fm, id = ~Response.ID, alpha = 0.1, h0 = 0.5)
 table_mm(bra, capt = 'Marginal Means -- Brazil Only')
 ```
 
@@ -1026,8 +1029,8 @@ table_mm(bra, capt = 'Marginal Means -- Brazil Only')
 
 ```{r}
 # Chile
-chi <- mm(subset(cj, countryOrigin=='Chile'), 
-        fm, id = ~Response.ID, alpha = .1, h0=0.5)
+chi <- mm(subset(cj, countryOrigin=='Chile'),  
+        fm, id = ~Response.ID, alpha = 0.1, h0 = 0.5)
 table_mm(chi, capt = 'Marginal Means -- Chile Only')
 ```
 
@@ -1035,8 +1038,8 @@ table_mm(chi, capt = 'Marginal Means -- Chile Only')
 
 ```{r}
 # Colombia
-col <- mm(subset(cj, countryOrigin=='Colombia'), 
-        fm, id = ~Response.ID, alpha = .1, h0=0.5)
+col <- mm(subset(cj, countryOrigin=='Colombia'),  
+        fm, id = ~Response.ID, alpha = 0.1, h0 = 0.5)
 table_mm(col, capt = 'Marginal Means -- Colombia Only')
 ```
 
@@ -1044,8 +1047,8 @@ table_mm(col, capt = 'Marginal Means -- Colombia Only')
 
 ```{r}
 # Costa Rica
-cri <- mm(subset(cj, countryOrigin=='Costa Rica'), 
-        fm, id = ~Response.ID, alpha = .1, h0=0.5)
+cri <- mm(subset(cj, countryOrigin=='Costa Rica'),  
+        fm, id = ~Response.ID, alpha = 0.1, h0 = 0.5)
 table_mm(cri, capt = 'Marginal Means -- Costa Rica Only')
 ```
 
@@ -1053,8 +1056,8 @@ table_mm(cri, capt = 'Marginal Means -- Costa Rica Only')
 
 ```{r}
 # Ecuador
-ecu <- mm(subset(cj, countryOrigin=='Ecuador'), 
-        fm, id = ~Response.ID, alpha = .1, h0=0.5)
+ecu <- mm(subset(cj, countryOrigin=='Ecuador'),  
+        fm, id = ~Response.ID, alpha = 0.1, h0 = 0.5)
 table_mm(ecu, capt = 'Marginal Means -- Ecuador Only')
 ```
 
@@ -1062,8 +1065,8 @@ table_mm(ecu, capt = 'Marginal Means -- Ecuador Only')
 
 ```{r}
 # Mexico
-mex <- mm(subset(cj, countryOrigin=='Mexico'), 
-        fm, id = ~Response.ID, alpha = .1, h0=0.5)
+mex <- mm(subset(cj, countryOrigin=='Mexico'),  
+        fm, id = ~Response.ID, alpha = 0.1, h0 = 0.5)
 table_mm(mex, capt = 'Marginal Means -- Mexico Only')
 ```
 
@@ -1071,8 +1074,8 @@ table_mm(mex, capt = 'Marginal Means -- Mexico Only')
 
 ```{r}
 # Panama
-pan <- mm(subset(cj, countryOrigin=='Panama'), 
-        fm, id = ~Response.ID, alpha = .1, h0=0.5)
+pan <- mm(subset(cj, countryOrigin=='Panama'),  
+        fm, id = ~Response.ID, alpha = 0.1, h0 = 0.5)
 table_mm(pan, capt = 'Marginal Means -- Panama Only')
 ```
 
@@ -1080,8 +1083,8 @@ table_mm(pan, capt = 'Marginal Means -- Panama Only')
 
 ```{r}
 # Peru
-per <- mm(subset(cj, countryOrigin=='Peru'), 
-        fm, id = ~Response.ID, alpha = .1, h0=0.5)
+per <- mm(subset(cj, countryOrigin=='Peru'),  
+        fm, id = ~Response.ID, alpha = 0.1, h0 = 0.5)
 table_mm(per, capt = 'Marginal Means -- Peru Only')
 ```
 
@@ -1100,13 +1103,15 @@ mex$country <- 'Mexico'
 pan$country <- 'Panama'
 per$country <- 'Peru'
 # Plot by country
-p <- plot_mm(rbind(arg, bol, bra, chi, col, 
+p <- plot(rbind(arg, bol, bra, chi, col, 
               cri, ecu, mex, pan, per), 
-        group = 'country', vline = 0.5, nr=10) +
-  facet_wrap( ~ country, ncol=5)
+        group = 'country', vline = 0.5, nr = 10) +
+  facet_wrap( ~ country, ncol = 5)
+
+p
+
 ggsave(filename = 'MM_country.pdf', 
        plot = p, width = 12, height = 12)
-p
 ```
 
 The code for Figure 4 of the paper follows below, with also the point estimates in a companion table.
@@ -1116,7 +1121,7 @@ The code for Figure 4 of the paper follows below, with also the point estimates 
 
 # Table for the Executive
 res1 <- mm(subset(cj, groupOrigin=='Executive'), 
-           fm, id = ~Response.ID, alpha = .1, h0=0.5)
+           fm, id = ~Response.ID, alpha = 0.1, h0 = 0.5)
 table_mm(res1, capt = 'Marginal Means -- Executive Only')
 ```
 
@@ -1125,7 +1130,7 @@ table_mm(res1, capt = 'Marginal Means -- Executive Only')
 ```{r}
 # Legislative
 res2 <- mm(subset(cj, groupOrigin=='Legislative'), 
-        fm, id = ~Response.ID, alpha = .1, h0=0.5)
+           fm, id = ~Response.ID, alpha = 0.1, h0 = 0.5)
 table_mm(res2, capt = 'Marginal Means -- Legislative Only')
 ```
 
@@ -1134,7 +1139,7 @@ table_mm(res2, capt = 'Marginal Means -- Legislative Only')
 ```{r}
 # Civil Society
 res3 <- mm(subset(cj, groupOrigin=='Civil Society'), 
-        fm, id = ~Response.ID, alpha = .1, h0=0.5)
+           fm, id = ~Response.ID, alpha = 0.1, h0 = 0.5)
 table_mm(res3, capt = 'Marginal Means -- Civil Society Only')
 ```
 
@@ -1143,7 +1148,7 @@ table_mm(res3, capt = 'Marginal Means -- Civil Society Only')
 ```{r}
 # Academia
 res4 <- mm(subset(cj, groupOrigin=='Academia'), 
-        fm, id = ~Response.ID, alpha = .1, h0=0.5)
+           fm, id = ~Response.ID, alpha = 0.1, h0 = 0.5)
 table_mm(res4, capt = 'Marginal Means -- Academia Only')
 
 ```
@@ -1158,10 +1163,11 @@ res3$MemberType <- 'Civil Society'
 res4$MemberType <- 'Academia'
 
 # Plot by Elite Type
-p <- plot_mm(rbind(res1, res2, res3, res4), 
+p <- plot(rbind(res1, res2, res3, res4), 
      group = 'MemberType', vline = 0.5, nr=4) + 
   facet_wrap( ~ MemberType, ncol=4)
 p
+
 ggsave(filename = 'MM_membertype.pdf', plot = p, 
        width = 8, height = 5)
 ```
@@ -1170,35 +1176,33 @@ ggsave(filename = 'MM_membertype.pdf', plot = p,
 
 This estimator fixes one category and look at changes from this baseline category. Below follows the plots for the main model and the country and elite type subsamples.
 
-```{r}
+```{r, fig.width = 7, fig.height = 8}
 ## Main model
 rm(cj)
 load('freire-mignozzetti-skarbek.RData')
+
 # Set conjoint baselines
 baselines <- list()
 baselines$`How often will the agreement be renegotiated?` <- "One year"
 baselines$`What punishments do they use?` <- 'None'
 baselines$`How are conflicts resolved?` <- 'Government bureaucracy'
 baselines$`How are costs distributed?` <- 'Rich countries pay more than poor countries'
+baselines$`Who makes the rules?` <- 'Federal government'
+
 attrs <- 
-  c("How are conflicts resolved?",
-    "How are costs distributed?",
-    "How are repeated violations punished?",
-    "How often will the agreement be renegotiated?",
+  c("Who makes the rules?",
+    "How are conflicts resolved?",
     "What punishments do they use?",
-    "Who makes the rules?"
-    )
+    "How are repeated violations punished?",
+    "How are costs distributed?",
+    "How often will the agreement be renegotiated?")
 
 results <- 
   cjoint::amce(fm, data=cj, cluster=T, 
                respondent.id="Response.ID", 
                design=conjDesign, 
                baselines = baselines, na.ignore = T)
-```
 
-\newpage
-
-```{r}
 # Table AMCE -- Full Model 
 tableAMCE(results, capt = 'AMCE -- Full Model')
 ```
@@ -1206,6 +1210,7 @@ tableAMCE(results, capt = 'AMCE -- Full Model')
 \newpage
 
 ```{r, fig.width = 7, fig.height = 8}
+# Plot AMCE -- Full Model
 plot(results, ci=0.9, point.size = .8, dodge.size = 1,
      text.size = 10, main = 'AMCE -- Full Model',
      attribute.names = attrs)
