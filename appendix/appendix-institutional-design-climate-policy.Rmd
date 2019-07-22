@@ -22,19 +22,6 @@ output:
     toc: true
     keep_tex: no
     template: template.latex
-header-includes:
-    - \usepackage{booktabs}
-    - \usepackage{longtable}
-    - \usepackage{array}
-    - \usepackage{multirow}
-    - \usepackage{wrapfig}
-    - \usepackage{colortbl}
-    - \usepackage{pdflscape}
-    - \usepackage{tabu}
-    - \usepackage{threeparttable}
-    - \usepackage{threeparttablex}
-    - \usepackage[normalem]{ulem}
-    - \usepackage{makecell}
 ---
 
 [^freire]: Postdoctoral Research Associate, The Political Theory Project, Brown University, Providence, RI 02912, USA, <danilofreire@brown.edu>, <http://danilofreire.github.io>. Corresponding author.
@@ -1659,6 +1646,6 @@ barplot(100*table(cj$task)/max(table(cj$task)), xlab = 'Conjoint task', ylab = '
 
 \noindent \textbf{Funding:} The research was funded by Konrad Adenauer Stiftung (KAS). KAS provided EUR$ 55,000.00 for this research. They have not interfered in the research design and in the question choices.
 
-\noindent \textbf{Replication materials:} The replication materials are <http://github.com/danilofreire/climate-governance>.
+\noindent \textbf{Replication materials:} Available at <http://github.com/danilofreire/climate-governance>.
 
 # Bibliography
