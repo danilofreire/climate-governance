@@ -5,7 +5,7 @@ author:
 - "Danilo Freire[^freire]"
 - "Umberto Mignozzetti[^mignozzetti]"
 - "David Skarbek[^skarbek]"
-date: \today
+date: July 22, 2019
 fontfamily: libertine
 fontawesome: yes
 fontsize: 12pt
@@ -50,7 +50,7 @@ library(haven); library(clusterSEs)
 library(stargazer); library(cjoint)
 library(sp); library(cregg)
 library(kableExtra)
-load('/Users/politicaltheory/Documents/github/climate/appendix/freire-mignozzetti-skarbek.RData')
+load('freire-mignozzetti-skarbek.RData')
 
 plot_mm <- function(
   x,
@@ -811,25 +811,14 @@ tableAMCE <- function(results, capt = 'Main Model') {
     group_rows('What punishments do they use?', 18, 21) %>%
     group_rows('Who makes the rules?', 22, 26))
 }
-
-# Britishfy
-cj$`Who makes the rules?` <- as.character(cj$`Who makes the rules?`)
-cj$`Who makes the rules?`[cj$`Who makes the rules?`=='International organizations'] = 'International organisations'
-cj$`Who makes the rules?` <- 
-  factor(cj$`Who makes the rules?`, 
-         levels = c("NGOs", "Local community members", 
-                    "Local government", "Federal government",
-                    "International organisations"))
 ```
 
-\newpage
-
-# Latin American Elite Survey
+# Latin American Elite Survey \label{sec:latam}
 
 \setlength{\parindent}{1cm}
 \setlength{\parskip}{0pt}
 
-From 1st of October to 5th of December 2018, we run an elite survey with respondents from ten Latin American countries: Argentina, Bolivia, Brazil, Chile, Colombia, Costa Rica, Ecuador, Mexico, Panama, and Peru. The survey proceeded in two steps.
+From October 1 to December 5, 2018, we run an elite survey with respondents from ten Latin American countries: Argentina, Bolivia, Brazil, Chile, Colombia, Costa Rica, Ecuador, Mexico, Panama, and Peru. The survey proceeded in two steps.
 
 We collected information on Latin American elites. The target was:
 
@@ -847,17 +836,17 @@ For each profile, in each country, we aimed at surveying:
 
 To do so, we build a prospective respondents dataset with ten times these members for each country. Then, we run an online and telephone survey where we collected information regarding the climate change agreements and other climate change related problems.
 
-After finishing this dataset, we started the surveying stage. From 12th of November to 5th of December, we ran the survey by contacting elite members by phone or by email. We had two teams of enumerators, one based in Sao Paulo and another based in Rio de Janeiro, Brazil, comprised of Portuguese and Spanish native speakers. Although the overall aim of the survey was 500 responses, the teams managed to collect 654 interviews.
+After finishing this dataset, we started the surveying stage. From November 12 to December 5, we ran the survey by contacting elite members by phone or by email. We had two teams of enumerators, one based in São Paulo and another based in Rio de Janeiro, Brazil, comprised of Portuguese and Spanish native speakers. Although the overall aim of the survey was 500 responses, the teams managed to collect 654 interviews.
 
-# Conjoint Experiment Analysis: Identification and Estimation
+# Conjoint Experiment Analysis: Identification and Estimation \label{sec:conjoint}
 
 A conjoint experiment is a statistical technique that allows individuals to express their preferences on multiple attributes of a single topic [@hainmueller2014causal; @bansak2016economic]. Individuals are presented with two hypothetical scenarios, A and B, each containing a series of characteristics a researcher wants to evaluate. The individual chooses one of them. As the attributes are randomised and individuals choose between different pairs of hypothetical scenarios, we can estimate how individuals value each of the conjoined elements.  
 
 In our research, we ask what features elite members would like to see implemented in a climate change agreement. We ask their opinion on 6 questions: 1) who makes the rules; 2) who enforces the laws; 3) what punishment should be used against lawbreakers; 4) how are repeated violations punished; 5) how are costs distributed, and 6) how often the agreement will be renegotiated. Each of the questions has four to five different attributes. For the first two questions, we ask individuals if they would rather have the community, local governments, federal governments, or international organisations to create or enforce rules. As for punishments, we have options ranging from do nothing to fines and incarceration. We ask whether the costs of climate change agreements should be paid mostly or exclusively by developed countries, by polluter countries regardless of their wealth, or if costs should be allocated according to the history of emissions of a given nation. Individuals also state their preferences for short-term agreements, a proxy we use for flexibility, or for long-term ones, what we see as a proxy for the stability of rules. Lastly, we ask which of the two conjoined choices individuals perceive as more legitimate and more efficient. 
 
-Conjoint experiments have many advantages. First, as each individual chooses between many pairs of possible climate agreements -- seven in our case -- we can drastically increase our sample size without incurring in further financial costs. The design thus maximises our research budget. Second, individuals rarely decide considering one attribute at a time, as presented in other types of survey experiments. In that regard, our conjoint analysis mirrors how people naturally make their choices, that is, by simultaneously taking several characteristics into consideration. Finally, as the experiments consist of a simple choice between A and B, conjoint analyses are easy to understand and to implement. This research design reduces the cognitive load interviewees have while answering surveys and as a result, we can expect more accurate responses from our sample.  
+Conjoint experiments have many advantages. First, as each individual chooses between many pairs of possible climate agreements -- seven in our case -- we can drastically increase our sample size without incurring in further financial costs. The design thus maximizes our research budget. Second, individuals rarely decide considering one attribute at a time, as presented in other types of survey experiments. In that regard, our conjoint analysis mirrors how people naturally make their choices, that is, by simultaneously taking several characteristics into consideration. Finally, as the experiments consist of a simple choice between A and B, conjoint analyses are easy to understand and to implement. This research design reduces the cognitive load interviewees have while answering surveys and as a result, we can expect more accurate responses from our sample.  
 
-# Descriptive Statistics
+# Descriptive Statistics \label{sec:descstats}
 
 The main demographic statistics collected were the country and elite types, and the geolocation of the respondents. They follow in the graphs below.
 
@@ -890,9 +879,9 @@ As we can see, we managed to contact more than fifty elite members for all count
 
 Considering the elite type, note that we have, as expected, more people from academia and the civil society, followed by Executive and Legislative. The legislative collection was below the original target, but above the minimum mark of 5 for each country. This is expected, given the difficulty of accessing these elite members. 
 
-In the map, we can see that the answers concentrate on the country's capitals, with some variation within the state, but with sample concentrated in the largest municipalities. This is expected, as elite members are assumed to gravitate around the capitals and the influence centers.
+In the map, we can see that the answers concentrate on the country's capitals, with some variation within the state, but with sample concentrated in the largest municipalities. This is also in line with our expectations, as elite members are assumed to gravitate around the capitals and the influence centers.
 
-# Frequency of Features Selected by Each Attribute
+# Frequency of Features Selected by Each Attribute \label{sec:features}
 
 The figures below display the freature frequency for each attribute, by each task.
 
@@ -1172,7 +1161,7 @@ ggsave(filename = 'MM_membertype.pdf', plot = p,
        width = 8, height = 5)
 ```
 
-# Average Marginal Component Effect (AMCE) Estimator
+# Average Marginal Component Effect (AMCE) Estimator \label{sec:amce}
 
 This estimator fixes one category and look at changes from this baseline category. Below follows the plots for the main model and the country and elite type subsamples.
 
@@ -1492,5 +1481,184 @@ plot(results, ci=0.9, point.size = .8, dodge.size = 1,
 ```
 
 \newpage
+
+# APSA Experimental Section Standard Report for Experiments
+
+## Hypothesis
+
+The experiment was designed to study the characteristics of the climate change mitigation treaties favored by Latin American elites.
+
+## Subjects and Context
+
+The eligibility criteria for the research was to belong to one of the four elite profiles listed below.
+
+1. **Executive members**: members of regulatory agencies, politicians (mayors, governors, presidents), members of ministries and secretaries at the federal and state levels.
+2. **Legislative members**: legislators and staff officers from the federal and state level in the researched countries.
+3. **Civil society**: environmental and energy-related NGO members; oil, renewables, and environmental solutions firm owners in the researched countries.
+4. **Academics**: professors from energy and engineering departments of the most prestigious universities in the countries researched.
+
+We decided to include these profiles based on the stakes and influence that such elites have on climate change policies. According to the IR constructivist theories, academics have notable influence on our topic of interest as they form the epistemic community around climate change policies. Civil society members that have stakes on climate policies are also influential, such as oil-extracting companies, lobby groups, and environmental NGOs. Executive and Legislative elites handle the decisions themselves, so their importance.
+
+We selected ten countries to our sample: Argentina, Bolivia, Brazil, Chile, Colombia, Costa Rica, Ecuador, Mexico, Panama, and Peru. Our selection criteria were the impact of climate change on each nation, their size and regional importance, and natural resources availability. For each country, we built a dataset of potential respondents with at least:
+
+* 150 potential legislative respondents
+* 150 potential executive respondents
+* 200 potential civil society respondents
+* 200 potential academic respondents
+
+These numbers represent ten times the number of respondents we were aiming to interview by the end of the survey. The dataset was build from October 5th to November 12th, 2018. We hired a team of enumerators that searched the internet for people in the countries that fulfilled our pre-determined elite profiles.
+
+We ranked the possible respondents in two tiers. In the first tier we placed people that we had complete information about their profiles: office telephone numbers, emails, social media contacts, and so on. In the second tier we included participants that had incomplete profiles, such as those with only online information available. The dataset including the first-tier respondents was randomly divided between enumerators in Rio de Janeiro and São Paulo to avoid any eventual biases from the collecting stage. Both groups conducted the interviews by phone from November 12th to December 5th, 2018. The second tier dataset was used for an online only version of the survey.
+
+The response rate in each of the enumeration sites and in the online only survey follows in the table below.
+
+\vspace{.5cm}
+
+| Country    | Enumeration Place | Type             | Total | Phone  | Online |
+|:-----------|:------------------|:-----------------|------:|-------:|-------:|
+| Argentina  | Rio de Janeiro    | Online and Phone | 300   | 33     | 17     |
+| Bolivia    | Rio de Janeiro    | Online and Phone | 372   | 31     | 11     |
+| Brazil     | Rio de Janeiro    | Online and Phone | 346   | 34     | 12     |
+| Chile      | Rio de Janeiro    | Online and Phone | 417   | 35     | 12     |
+| Colombia   | Rio de Janeiro    | Online and Phone | 445   | 35     | 21     |
+| Costa Rica | Rio de Janeiro    | Online and Phone | 409   | 32     | 11     |
+| Ecuador    | Rio de Janeiro    | Online and Phone | 512   | 30     | 12     |
+| Mexico     | Rio de Janeiro    | Online and Phone | 468   | 41     | 17     |
+| Panama     | Rio de Janeiro    | Online and Phone | 291   | 30     | 14     |
+| Peru       | Rio de Janeiro    | Online and Phone | 243   | 32     | 11     |
+| *TOTAL*    |                   | Online and Phone | 3803  | 333    | 138    |
+|            |                   |                  |       |        |        |
+| Argentina  | Sao Paulo         | Online and Phone | 292   | 48     | 16     |
+| Bolivia    | Sao Paulo         | Online and Phone | 373   | 50     | 13     |
+| Brazil     | Sao Paulo         | Online and Phone | 344   | 43     | 15     |
+| Chile      | Sao Paulo         | Online and Phone | 416   | 41     | 15     |
+| Colombia   | Sao Paulo         | Online and Phone | 448   | 42     | 19     |
+| Costa Rica | Sao Paulo         | Online and Phone | 412   | 44     | 20     |
+| Ecuador    | Sao Paulo         | Online and Phone | 507   | 43     | 18     |
+| Mexico     | Sao Paulo         | Online and Phone | 464   | 41     | 17     |
+| Panama     | Sao Paulo         | Online and Phone | 291   | 50     | 19     |
+| Peru       | Sao Paulo         | Online and Phone | 248   | 44     | 9      |
+| *TOTAL*    |                   | Online and Phone | 3803  | 446    | 161    |
+|            |                   |                  |       |        |        |
+| Argentina  |                   | Online Only      | 517   |        | 19     |
+| Bolivia    |                   | Online Only      | 132   |        | 12     |
+| Brazil     |                   | Online Only      | 1183  |        | 52     |
+| Chile      |                   | Online Only      | 470   |        | 31     |
+| Colombia   |                   | Online Only      | 522   |        | 29     |
+| Costa Rica |                   | Online Only      | 325   |        | 20     |
+| Ecuador    |                   | Online Only      | 460   |        | 37     |
+| Mexico     |                   | Online Only      | 955   |        | 29     |
+| Panama     |                   | Online Only      | 319   |        | 26     |
+| Peru       |                   | Online Only      | 540   |        | 25     |
+| *TOTAL*    |                   | Online Only      | 5569  |        | 293    |
+Table: Survey response rates.
+
+The response rate was 10.24 percent of the original population in the telephone survey (779 of 7606 possible respondents). We had an attrition of 61.62 percent from the telephone (779) to the online survey (299). The response rate for the online only survey was 5.26 percent (293 of 5569 invited by email).
+
+The conjoint experiment analyzed in this paper was in the online and online-only dataset. Therefore, the relevant column for our data is the last one.
+
+## Allocation Methods
+
+**Random Assignment:** We programmed the experiment using a Python application provided by @strezhnev2013conjoint. We translated the original survey questions (as shown in the text) into Portuguese and Spanish, and then embedded the PHP file with the randomization parameters in a Qualtrics survey. The PHP code we used to randomize the values of the attributes is available at the project's GitHub repository: <http://github.com/danilofreire/climate-governance>.
+
+For each attribute, the probability of selecting a given component follows a uniform distribution function. The table below describes the results.
+
+\vspace{.5cm}
+
+| **Attribute**                          | **Values**                                   | **Probabilities** |
+|:---------------------------------------|:---------------------------------------------|------------------:|
+| **Who makes the rules?**               | International organizations                  | 1/5               | 
+|                                        | Federal government                           | 1/5               |
+|                                        | Local government                             | 1/5               |
+|                                        | Local community members                      | 1/5               |
+|                                        | Non-governmental organizations               | 1/5               |
+|                                        |                                              |                   |
+| **Conflict resolution mechanism**      | United Nations                               | 1/5               |
+|                                        | Government bureaucracy                       | 1/5               |
+|                                        | Local courts                                 | 1/5               |
+|                                        | Private arbitration                          | 1/5               |
+|                                        | Informal norms                               | 1/5               |
+|                                        |                                              |                   |
+| **Punishment**                         | Imprisonment                                 | 1/4               |
+|                                        | Fines                                        | 1/4               |
+|                                        | Blacklist                                    | 1/4               |
+|                                        | None                                         | 1/4               |
+|                                        |                                              |                   |
+| **Punishment for repeated violations** | More penalty                                 | 1/3               |
+|                                        | Same                                         | 1/3               |
+|                                        | Less penalty                                 | 1/3               |
+|                                        |                                              |                   |
+| **Agreement costs**                    | Rich countries pay more than poor countries  | 1/4               |
+|                                        | Proportional to history of emissions         | 1/4               |
+|                                        | Proportional to current emissions            | 1/4               |
+|                                        | Only rich countries pay                      | 1/4               |
+|                                        |                                              |                   |
+| **Renegotiation**                      | Never                                        | 1/5               |
+|                                        | Fifty years                                  | 1/5               |
+|                                        | Twenty years                                 | 1/5               |
+|                                        | Five years                                   | 1/5               |
+|                                        | One year                                     | 1/5               |
+Table: Conjoint experiment attributes and their respective probabilities.
+
+We added one logical restriction to the set climate change treaties: **Punishment = None** can never appear together with **Punishment for repeated violations = Less penalty**. The number of possible treaties are the product of the attributes ($5\times 5 \times 4 \times 3 \times 4 \times 5 = 6,000$) minus the number of removed possibilities ($5\times 5  \times 4 \times 5 = 500$). The total number of possible treaties is $5,500$.
+
+## Treatments
+
+**Descriptions of the intervention:** Our treatment was the randomization of components in the conjoined climate mitigation treaties. We provided the following description before the conjoint experiment starts, in Spanish and Portuguese:
+
+\vspace{.5cm}
+
+```
+For the following questions, read carefully the instructions below.
+ 
+Imagine that your country would sign an international treaty to mitigate climate change. 
+A climate mitigation treaty has, in general, the following attributes:
+ 
+1. Who defines the rules? Which group will define the parameters for the treaty?
+2. How are the conflicts that might happen when the treaty begin be resolved?
+3. What punishments should be applied to ensure compliance?
+4. How will repeated violations be punished?
+5. How are costs for implementing the treaty be distributed?
+6. How often the treaty has to be renegotiated?
+
+In the following questions, you will see variations in treaties on these six attributes.
+Please select the treaty that has the characteristics that you believe are best for your country.
+```
+
+\vspace{.5cm}
+
+The conjoint experiment consisted in comparing two treaties that vary in these six attributes, repeating the application for seven times for each respondent.
+
+\noindent \textbf{Software:} To program the PHP randomization device we used the Python application provided by @strezhnev2013conjoint. We used Qualtrics to administer the survey.
+
+\noindent \textbf{Delivery:} We repeated the conjoint experiment seven times, to improve test power.
+
+\noindent \textbf{Dataset description:} Each line in the dataset represents a given treaty, varying for the selection status (selected versus non-selected) for a given respondent. When a respondent finished an entire response set, this adds 14 rows to the dataset. Seven rows with the selected treaties and other seven rows with the non-selected treaties.
+
+\noindent \textbf{Deception:} We used no deception in this survey experiment.
+
+## Results
+
+\noindent \textbf{Outcome measures and covariates:} The main outcome is a binary indicator for the selection of a given conjoined package. We added two covariates to measure heterogeneous effects: *Country* and *Elite type*.
+
+\noindent \textbf{Questionnaire:} For the English translation of the entire survey instrument, with both the telephone and the online components, see the attachment below.
+
+\noindent \textbf{Statistical analysis:} We fit a marginal means estimator and an AMCE estimator. The estimation conditions the results within subjects and the presented conjoined packages. The results are available in sections \ref{sec:features} and \ref{sec:amce}.
+
+\noindent \textbf{Missing data and attrition:} Conditional on having started the conjoint experiment, for each task we had the following completion rates:
+
+```{r, fig.width = 7, fig.height = 8}
+barplot(100*table(cj$task)/max(table(cj$task)), xlab = 'Conjoint task', ylab = 'Percentage completed')
+```
+
+## Other information
+
+\noindent \textbf{IRB:} This research received IRB approval from Brown University (Protocol 2195/2018) and Funda\c{c}\~{a}o Get\'{u}lio Vargas (Protocol 83/2018).
+
+\noindent \textbf{Pre-registration:} The result was not pre-registered.
+
+\noindent \textbf{Funding:} The research was funded by Konrad Adenauer Stiftung (KAS). KAS provided EUR$ 55,000.00 for this research. They have not interfered in the research design and in the question choices.
+
+\noindent \textbf{Replication materials:} The replication materials are <http://github.com/danilofreire/climate-governance>.
 
 # Bibliography
