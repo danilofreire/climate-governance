@@ -11,7 +11,7 @@
 \usepackage{microtype}
 \usepackage{libertine}
 \usepackage[libertine]{newtxmath}
-\usepackage[scale=.8]{FiraMono}
+\usepackage[scale=.9]{inconsolata}
 \usepackage[usenames, dvipsnames]{xcolor}
 \usepackage{setspace}
 \usepackage{float}
@@ -22,12 +22,10 @@
 \usepackage{dcolumn}
 \usepackage{mathtools}
 \usepackage{caption}
-\usepackage[UKenglish]{babel}
-\usepackage[UKenglish]{isodate}
+\usepackage[english]{babel}
 \usepackage[authoryear]{natbib}
 \usepackage{babelbib}
 \usepackage{bibentry}
-\cleanlookdateon
 \exhyphenpenalty=10000
 \hyphenpenalty=10000
 \widowpenalty=10000
@@ -69,7 +67,7 @@
 
 \doublespacing
 
-\title{Institutional Design and Elite Support for Climate Policies: Evidence from Latin American Countries\thanks{We thank Nigel Ashford, F\'{a}bio Barros, Frans Berkhout, Daniel D'Amico, Guilherme Fasolin, Manoel Galdino, Malte Hendricks, Stephen Herzog, Christian H\"{u}bner, Karina Marzano, Davi Moreira, Emily Skarbek and the participants at the FGV IR Seminar for their valuable comments. Special thanks to Natalia Liberato, Lucas Mingardi, Ingrid Oliveira, Catarina Roman, Leticia Santana and Larissa Santos for their excellent research assistance. This research received IRB approval from Brown University (Protocol 2195/2018) and Funda\c{c}\~{a}o Get\'{u}lio Vargas (Protocol 83/2018). We acknowledge financial support from the Konrad Adenauer Stiftung Latin American Regional Programme for Energy Security and Climate (EKLA-KAS) and declare there are no conflicts of interest. The data, code and additional materials required to replicate all analyses in this article are available at \href{http://github.com/danilofreire/climate-governance}{\texttt{http://github.com/danilofreire/climate-governance}}.}
+\title{Institutional Design and Elite Support for Climate Policies: Evidence from Latin American Countries\thanks{We thank Nigel Ashford, F\'{a}bio Barros, Frans Berkhout, Daniel D'Amico, Guilherme Fasolin, Manoel Galdino, Malte Hendricks, Stephen Herzog, Christian H\"{u}bner, Karina Marzano, Davi Moreira, Emily Skarbek, Paula Vedovelli, and the participants at the FGV IR Seminar for their valuable comments. Special thanks to Natalia Liberato, Lucas Mingardi, Ingrid Oliveira, Catarina Roman, Leticia Santana, and Larissa Santos for their excellent research assistance. This research received IRB approval from Brown University (Protocol 2195/2018) and Funda\c{c}\~{a}o Getulio Vargas (Protocol 83/2018). We acknowledge financial support from the Konrad Adenauer Stiftung Latin American Regional Programme for Energy Security and Climate (EKLA-KAS) and declare there are no conflicts of interest. The data, code, and additional materials required to replicate all analyses in this article are available at \href{http://github.com/danilofreire/climate-governance}{\texttt{http://github.com/danilofreire/climate-governance}}.}
 }
 
 \author{Danilo Freire\thanks{Postdoctoral Research Associate, The Political Theory Project, Brown University, Providence, RI 02912, USA, \href{mailto:danilo_freire@brown.edu}{\texttt{danilo\_freire@brown.edu}}, \href{http://danilofreire.github.io}{\texttt{http://danilofreire.github.io}}, \href{http://twitter.com/danilofreire}{\texttt{http://twitter.com/danilofreire}}, Voice: +1 (401) 584-2494. Corresponding author.}
@@ -77,7 +75,7 @@
 \and David Skarbek\thanks{The Department of Political Science and the Political Theory Project, Brown University, Providence, RI, USA, \href{mailto:david_skarbek@brown.edu}{\texttt{david\_skarbek@brown.edu}}, \href{http://davidskarbek.com}{\texttt{http://davidskarbek.com}}, \href{http://twitter.com/davidskarbek}{\texttt{http://twitter.com/davidskarbek}}.}
 }
 
-\date{20 July 2019}
+\date{\today}
 
 \begin{document}
 \maketitle
@@ -85,7 +83,7 @@
 \begin{abstract}
 \onehalfspacing
 \noindent 
-Which institutional features do Latin American elites favor for climate change policies? Climate change mitigation requires global scale governance, but it remains unclear which institutional arrangements maximize the support for environmental agreements. In this paper, we run a conjoint experiment with elite members of 10 Latin American countries and ask respondents to evaluate institutional designs drawn from a pool of 5,500 possible climate change treaties. We find that Latin American elites prefer international organizations to formulate climate policies, support imposing increasing fines on violators and favor renewing agreements every five years. We also find that elites support both international institutions and local courts to mediate conflicts, but they distrust non-governmental organizations and reject informal norms as an means of conflict resolution. Our results identify possible challenges in crafting regional climate mitigation policies and offer new insights about how to integrate interventions at the local and international levels. % reescrever essa última frase
+Which institutional features do Latin American elites favor for climate change policies? Climate change mitigation requires global scale governance, but it remains unclear which institutional arrangements maximize the support for environmental agreements. In this paper, we run a conjoint experiment with elite members of 10 Latin American countries and ask respondents to evaluate institutional designs drawn from a pool of 5,500 possible climate change treaties. We find that Latin American elites prefer international organizations to formulate climate policies, support imposing increasing fines on violators, and favor renewing agreements every five years. We also find that elites support both international institutions and local courts to mediate conflicts, but they distrust non-governmental organizations and reject informal norms as an means of conflict resolution. Our results identify possible challenges in crafting climate mitigation policies and offer new insights about how to integrate local and international levels in environmental agreements. 
 
 \vspace{.5cm}
 
@@ -95,7 +93,7 @@ Which institutional features do Latin American elites favor for climate change p
 \vspace{.5cm}
 
 \noindent 
-\textbf{Word count:} 3884
+\textbf{Word count:} 3908
 \end{abstract}
 
 \newpage
@@ -105,41 +103,44 @@ Which institutional features do Latin American elites favor for climate change p
 \section{Introduction}%
 \label{sec:introduction}
 
-There is an emerging consensus in public opinion about the causes and consequences of anthropogenic climate change. Despite some variation in climate risk beliefs, mostly due to cultural worldviews and political orientation \citep{hornsey2016meta}, recent surveys show that the public is increasingly aware of the dangers of greenhouse gas emissions. For example, 59\% of Americans are sure the Earth's temperature is increasing \citep{stanfordearth2018}; 74\% of European Union citizens consider global warming a `very serious problem' \citep{europe2018survey}; and 90\% of Brazilians believe climate change is already harming people around the world \citep{pew2018climate}.
+Despite the emerging consensus about the causes and consequences of global warming, international climate summits have often fallen short of expectations \citep{rogelj2010copenhagen, rosen2015wrong, victor2017prove}. Multilateral negotiations have progressed slowly under the guidelines of the United Nations Framework Convention on Climate Change (UNFCCC), and there is widespread skepticism that international talks will advance more quickly in the coming years \citep{cole2015advantages, hjerpe2015views}. As carbon dioxide emissions continue to increase, scientists believe current efforts may not be sufficient to meet the target of $2^{\circ}$C temperature rise above pre-industrial levels \citep{jordan2015emergence}.
 
-Yet this consensus does not automatically translate itself into effective political action. Global climate negotiations have progressed slowly under the guidelines of the United Nations Framework Convention on Climate Change (UNFCCC), and there is widespread skepticism that multilateral talks will advance more quickly in the coming years \citep{cole2015advantages, hjerpe2015views}. As carbon dioxide emissions continue to increase, current efforts may not be sufficient to meet the target of $2^{\circ}$C temperature rise above pre-industrial levels \citep{jordan2015emergence}.
+These concerns have motivated a growing debate about which institutional characteristics lead to successful climate agreements \citep[e.g.,][]{aklin2013understanding, bechtel2013mass, bechtel2017interests, keohane2011regime, ostrom2014polycentric}. Climate treaties are incomplete contracts, in which members purposefully design flexible provisions that take domestic circumstances into account \citep[607]{brauninger2000making}. For instance, the Paris Agreement relies on Nationally Determined Contributions (NDCs), a set of greenhouse gas reduction targets each member state voluntarily pledges to achieve \citep{winning2019nationally}. This decentralization increases the importance of national stakeholders in climate negotiations, and studies have shown that the behavior of elite groups, like advocacy coalitions and political parties, largely explain countries' climate policy performance \citep{jahn2016politics, karapin2012explaining}. 
 
-In this scenario, there has been a growing discussion about the desirable features for successful climate change agreements \citep{bechtel2013mass, bechtel2017interests, keohane2011regime}. Climate treaties are incomplete contracts, in which members purposefully design flexible provisions that take domestic circumstances into account \citep[607]{brauninger2000making}. For instance, the Paris Agreement relies on Nationally Determined Contributions (NDCs), a set of greenhouse gas reduction targets each member state voluntarily pledges to achieve. This decentralization of competences increases the importance of national stakeholders in climate negotiations, and studies have shown that local advocacy coalitions largely explain countries' climate policy performance \citep{jahn2016politics,karapin2012explaining}. Although there is extensive research on the public opinion on global warming in developed economies \citep{bechtel2013mass, bechtel2017interests, beiser2019commitment, buntaine2018preferences, mildenberger2017beliefs}, less is known about the preferences of other key players in climate policy-making: elites in developing countries. % reescrever esse também
+Elites engage in different forms of `societal steering' to achieve policy goals, such as information sharing or rule setting \citep{andonova2009transnational, bulkeley2014transnational}. For example, non-governmental organizations have played a major role in the fossil fuel divestment movement by highlighting the urgency of the topic in developed countries \citep{ayling2017non}. In contrast, Brazil's rural caucus, an informal coalition of landholders and mining industrialists, have successfully lobbied for legislation that undermines previous carbon emission policies \citep{rochedo2018threat, simionatto2012dominantes}. Therefore, understanding the preferences of elite groups provides policy-makers with key information for designing effective, politically viable climate agreements.
 
-We help remedy this gap by assessing which climate change governance systems Latin American elites are willing to support. In our survey experiment, we asked 654 respondents -- academics, members of the executive power, legislators, businesspeople and members of non-governmental organizations -- to select their preferred agreement among 7 repetitions of binary choices. We vary the agreements across six dimensions commonly debated in the climate change and institutional design literatures: rule-making capabilities \citep{dubash2013developments, massey2014climate}; conflict resolution mechanisms \citep{huntjens2012institutional, ostrom2014polycentric}; enforcement methods \citep{barrett2008climate}; punishment for repeated violators \citep{ostrom1990governing}; cost sharing \citep{bechtel2013mass}; and agreement duration \citep{copelovitch2014design, marcoux2009institutional}. Variations in any of those features can substantially change the potential outcomes of climate institutions \citep{bodin2017collaborative, ostrom2014polycentric}.
+Although research on public opinion about climate change has increased significantly in the last years \citep[e.g.,][]{aklin2013understanding, bechtel2013mass, bechtel2017interests, mildenberger2017beliefs}, elite preferences are not well documented in the literature. This is a significant omission considering their importance as lobbyists or veto players in domestic climate politics. Elites in developing countries are specially understudied, despite the fact that emerging economies account for 63\% of the world's carbon emissions \citep{busch2015developing}. It is unclear which climate strategies face lower internal resistance from these groups, or whether their environmental preferences are fundamentally different from those of their developed countries counterparts \citep[28]{aklin2013understanding}.
 
-We find that interviewees prefer international organizations to design climate policies and are favorable to imposing increasing fines on violators and renewing agreements every five years. Survey participants also want both international institutions and local courts to mediate conflicts, but they are skeptical about non-governmental organizations and consistently reject informal norms as an instrument to solve disputes. The results lend support to theories that define climate governance as a loose `regime complex' instead of a cohesive, integrated institution \citep{abbott2012transnational, colgan2012punctuated, de2014global, keohane2011regime}. A regime complex is one characterised by `an array of partially overlapping and non-hierarchical institutions governing a particular issue area' \citep[279]{raustiala2004regime}. Our findings suggest that Latin American elites embrace the complexity of climate policy and believe that policies should incorporate several layers of governance simultaneously.
+We help remedy this gap by assessing which climate change governance systems Latin American elites are willing to support. In our survey experiment, we asked 654 respondents -- academics, members of the executive power, legislators, businesspeople and members of non-governmental organizations -- to select their preferred agreement among 7 repetitions of binary choices. We vary the agreements across six dimensions commonly debated in the climate change and institutional design literatures: rule-making capabilities \citep{dubash2013developments, massey2014climate}; conflict resolution mechanisms \citep{huntjens2012institutional, ostrom2014polycentric}; enforcement methods \citep{barrett2008climate}; punishment for repeated violators \citep{ostrom1990governing}; cost sharing \citep{bechtel2013mass}; and agreement duration \citep{copelovitch2014design, marcoux2009institutional}. Variations in any of those features can substantially change the outcomes of climate institutions \citep{bodin2017collaborative, ostrom2014polycentric}.
 
-This article contributes to three strands of the literature. First, we add experimental evidence to the literature on institutional design. Our results confirm previous studies that stress the importance of institutional features on support for climate change policies \citep{bechtel2013mass, bechtel2017interests}. We show that institutional support varies markedly according to elite type and country of origin, and that this heterogeneity has an important impact on collective choice and preference aggregation.
+We find that interviewees prefer international organizations to design climate policies and are favorable to imposing increasing fines on violators and renewing agreements every five years. Survey participants also want both international institutions and local courts to mediate conflicts, but they are skeptical about non-governmental organizations and consistently reject informal norms as an instrument to solve disputes. The results lend support to theories that define climate governance as a `regime complex' \citep{colgan2012punctuated,keohane2011regime}, that is, `an array of partially overlapping and non-hierarchical institutions govern a particular issue area' \citep[279]{raustiala2004regime}. Our findings suggest that Latin American elites embrace the complexity of climate policy and believe mitigation policies should incorporate several layers of governance simultaneously.
 
-Second, we contribute to classical theories on international regimes. \citet{abbott2000hard} introduce the idea of hard versus soft international law to explain why actors pursue a variety of legal agreements to foster their interests in the international realm. \citet{mildenberger2017beliefs} and \citet{rosendorff2001optimal} add to this view by positing that the superiority of soft, incomplete contracts is due to observability issues: when compliance is hard to observe, incompleteness is superior than rigid contracts as it avoids unnecessary punishments and improves long-run cooperation stability. \citet{keohane2011regime}, in turn, argue that non-hierarchical international rulings help states to avoid gridlocks by reducing contracting costs and embracing `problem diversity', in which each particular climate problem requires a specific solution. Our results confirm that institutional features should be adapted to the issue at hand, and that flexible regime designs are decisive to foster international cooperation.
+This article contributes to three strands of the literature. First, we add experimental evidence to studies on institutional design. Our results confirm previous research that stresses the importance of institutional features on support for climate change policies \citep{aklin2013understanding, bechtel2013mass, bechtel2017interests}. We show that institutional support varies markedly according to elite type and country of origin, and that this heterogeneity has an important impact on collective choice and preference aggregation. In particular, we find that climate negotiations may not have a clear Condorcet winner.
 
-Finally, we also present novel information on Latin American elite behavior regarding climate institutions. Our findings indicate that elites in Latin America favor institutions that do not fit into the broad categories of `centralized' or `polycentric' arrangements, but they rather opt for a balance between the two. The results are consistent with the Latin American tradition of heavier reliance on the state than on self-governed solutions, but we find that local elites also believe that both international and local-level institutions should engage in climate policy design. The data provide new insights on how Latin American policy-makers can form domestic coalitions and which climate mitigation agreement faces lower resistance from potential veto players \citep{beiser2019commitment, hovi2019club}.
+Second, we contribute to classical theories on international regimes. \citet{abbott2000hard} introduce the idea of hard versus soft international law to explain why actors pursue a variety of legal agreements to foster their interests in the international realm. \citet{mildenberger2017beliefs} and \citet{rosendorff2001optimal} posit that when compliance is hard to observe, incomplete contracts are superior as they avoid unnecessary punishments and improve long-run cooperation stability. \citet{keohane2011regime}, in turn, argue that non-hierarchical international rulings help states to avoid gridlocks by reducing contracting costs and embracing `problem diversity', in which each particular climate problem requires a specific solution. Our results confirm that flexible regime designs are decisive to foster international cooperation.
+
+Finally, we also present novel information on Latin American elite behavior regarding climate institutions. Our findings indicate that elites in Latin America favor agreements that do not fit into the broad categories of `centralization' or `polycentrism'; instead, they prefer a combination of the two. The results are consistent with the Latin American tradition of heavier reliance on the state than on self-governed solutions, but local elites also believe that both international and local-level institutions should engage in climate policy design. The data provide new insights on how Latin American policy-makers can form domestic coalitions and which climate mitigation agreement faces lower resistance from potential veto players \citep{beiser2019commitment, hovi2019club}.
 
 \section{Data and Methods}%
 \label{sec:data_and_methods}
 
 We use conjoint experiments to estimate the effect of institutional features on climate mitigation agreements. A conjoint experiment is a statistical technique that allows individuals to express their preferences on multiple attributes of a single topic \citep{bansak2016economic, hainmueller2014causal}. Individuals are presented with two hypothetical scenarios, each containing a randomly assigned series of characteristics a researcher wants to evaluate. The individual selects one of them. As the attributes are randomized, we can estimate how individuals value each of the conjoined elements.
 
-We focus on Latin American elites for three reasons. First, elites have an important impact on public decisions, as they are often closer to the policy-making process. Second, Latin American countries are in a region where extreme weather events are likely to produce substantial damages. According to \citet{eckstein2017global}, Central America alone has four countries in the top ten most affected by extreme weather events. Lastly, Latin America is the most biodiverse region in the world and plays a major role in global climate mitigation projects. For instance, the Amazon basin contains about half of the world's carbon stock, so local elites are essential for the success of emissions trading markets \citep{benitez2006site, yang2018post}. % aqui tem que entrar mais um resumo do argumento das elites
+We focus on Latin American elites for three reasons. First, elites have an important impact on public decisions, as they are often closer to the policy-making process. Second, Latin American countries are in a region where extreme weather events are likely to produce substantial damages. According to \citet{eckstein2017global}, Central America alone has four countries in the top ten most affected by extreme weather events. Lastly, Latin America is the most biodiverse region in the world and plays a major role in global climate mitigation projects. For instance, the Amazon basin contains about half of the world's carbon stock, so local elites are essential for the success of emissions trading markets \citep{benitez2006site, yang2018post}. 
 
 We use a dataset compiled specifically for this study. From October 1 to December 5, 2018, we ran an elite survey with respondents from Argentina, Bolivia, Brazil, Chile, Colombia, Costa Rica, Ecuador, Mexico, Panama and Peru. We started by gathering information on potential interviewees. For each country, we collected the profiles of 100 members of the Executive, 100 members of the Legislative, 150 academics in the energy sector and 150 members of the civil society. We then sampled these profiles until we achieved a minimum of 10\% of responses within each group. We ran our survey both online and by telephone, collecting information on the climate change agreements and other related questions in a non-intrusive manner \citep{loewen2010help}. We had two teams of enumerators, one based in S\~{a}o Paulo and another based in Rio de Janeiro, Brazil, comprised of Portuguese and Spanish native speakers. Please refer to the Supplementary Material for more information about the sampling process and descriptive statistics.
 
-The hypothetical climate change agreements include six attributes: 1) which organizations defines the rules; 2) how would conflicts be resolved; 3) what punishment should be applied to rule-breakers; 4) how should repeated violations be sanctioned; 5) which countries should bear the costs of the agreement; 6) how often should the agreement be renegotiated. Table~\ref{tab:categories} describes the values we included in each treaty attribute. \\
+The hypothetical climate change agreements include six attributes: 1) which organizations defines the rules; 2) how would conflicts be resolved; 3) what punishment should be applied to rule-breakers; 4) how should repeated violations be sanctioned; 5) which countries should bear the costs of the agreement; 6) how often should the agreement be renegotiated. Table~\ref{tab:categories} describes the values we included in each treaty attribute. 
 
-\begin{table}[ht]
+\begin{table}[H]
+\small
 \begin{center}
 \caption{\textbf{Attributes and values for climate change mitigation conjoint experiments}}
 \label{tab:categories} 
 \begin{tabular}{l !{\vrule width 1pt}p{9cm}}
 \Xhline{2\arrayrulewidth}
 \textbf{Attribute} & \multicolumn{1}{c}{\textbf{Values}} \\
-\Xhline{2\arrayrulewidth} \\
+\Xhline{2\arrayrulewidth} 
 Who makes the rules? & International organizations; federal government; local government; local community members; non-governmental organizations \\
 & \\
 Conflict resolution mechanism & United Nations; government bureaucracy; local courts; private arbitration; informal norms \\
@@ -156,11 +157,12 @@ Renegotiation & Never; fifty years; twenty years; five years; one year \\
 \end{center}
 \end{table}
 
-We give no prior indication of whether a certain value is more prevalent in actual agreements to elicit truthful responses from the interviewees. We also randomize the values to ensure that they all have the same probability of being selected. In total, there are 5,500 possible value combinations. Figure~\ref{fig:conjoint} illustrates how a typical conjoint element appeared in the respondents' screen.
+
+We give no prior indication of whether a certain value is more prevalent in actual agreements to elicit truthful responses from the interviewees. We also randomize the values to ensure that they all have the same probability of being selected. In total, there are 5,500 possible value combinations. Figure~\ref{fig:conjoint} illustrates how a typical conjoint element appeared in the respondents' screen.\\
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=13cm]{conjoint-cropped.pdf}
+	\includegraphics[width=15cm]{conjoint-cropped.pdf}
 	\caption{\textbf{Example of conjoint table presented to respondents}}
 	\label{fig:conjoint}
 \end{figure}
@@ -174,7 +176,7 @@ Figure~\ref{fig:pooled} shows our main results. The graph illustrates the prefer
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.9\linewidth,height=11.5cm]{pooled.pdf}
+	\includegraphics[height=12cm]{MM_all.pdf}
 	\caption{\textbf{Effect of institutional attributes on the probability of support for climate change agreements in 10 Latin American countries (pooled data)}}
 	\label{fig:pooled}
 \end{figure}
@@ -195,7 +197,7 @@ We also examine how our results vary across countries and types of elites. Figur
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth, height=20cm]{countries.pdf}
+	\includegraphics[width=\linewidth, height=20cm]{MM_country.pdf}
 	\caption{\textbf{Effect of institutional attributes on the probability of support for climate change agreement by country}}
 	\label{fig:countries}
 \end{figure}
@@ -206,7 +208,7 @@ Figure~\ref{fig:types} shows the results disaggregated by elite type. Academics,
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth]{types.pdf}
+	\includegraphics[height=12cm]{MM_membertype.pdf}
 	\caption{\textbf{Effect of institutional attributes on the probability of support for climate change agreement by elite type}}
 	\label{fig:types}
 \end{figure}
@@ -227,7 +229,7 @@ With regards to environmental policies, we identify that Latin American elites a
 \section*{Supplementary Material}
 \label{sec:supplementary}
 
-The data, code and any additional materials required to replicate all analyses in this article are available at \href{http://github.com/danilofreire/climate-governance}{\texttt{http://github.com/danilofreire/climate-governance}}.
+For supplementary material for this article, please visit \href{http://github.com/danilofreire/climate-governance}{\texttt{http://github.com/danilofreire/climate-governance}}.
 
 \bibliographystyle{apalike}
 \bibliography{references.bib}

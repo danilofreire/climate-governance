@@ -5,7 +5,7 @@ author:
 - "Danilo Freire[^freire]"
 - "Umberto Mignozzetti[^mignozzetti]"
 - "David Skarbek[^skarbek]"
-date: July 22, 2019
+date: July 25, 2019
 fontfamily: libertine
 fontawesome: yes
 fontsize: 12pt
@@ -30,775 +30,532 @@ output:
 
 [^skarbek]: The Department of Political Science and the Political Theory Project, Brown University, Providence, RI, USA, <davidskarbek@brown.edu>, <http://davidskarbek.com>.
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(plm); library(tidyverse)
-library(haven); library(clusterSEs)
-library(stargazer); library(cjoint)
-library(sp); library(cregg)
-library(kableExtra)
-load('freire-mignozzetti-skarbek.RData')
-
-plot_mm <- function(
-  x,
-  group = attr(x, "by"),
-  feature_headers = TRUE,
-  header_fmt = "%s",
-  size = 2,
-  xlab = "Marginal Mean",
-  ylab = "",
-  legend_title = if (is.null(group)) "Feature" else group,
-  legend_pos = "bottom",
-  xlim = NULL,
-  vline = 0,
-  vline_color = "gray",
-  theme = ggplot2::theme_bw(),
-  ...
-) {
-  
-  # function used in cj and ammplot to produce "fancy" feature labels
-  clean_feature_labels <- function(data, RHS, feature_labels) {
-    if (inherits(data, "cj_df") | inherits(data, "data.frame")) {
-      fancy_labels <- stats::setNames(lapply(data[RHS], attr, "label"), RHS)
-    } else if (inherits(data, "survey.design")) {
-      fancy_labels <- stats::setNames(lapply(data[["variables"]][RHS], attr, "label"), RHS)
-    } else {
-      stop("'data' is not a 'data.frame' or 'survey.design' object")
-    }
-    ## check `feature_labels`, if present
-    missing_labels <- RHS[!RHS %in% names(feature_labels)]
-    feature_labels <- c(feature_labels, stats::setNames(rep(list(NULL), length(missing_labels)), missing_labels))
-    ## clean fancy labels (use variable name if variable has no "label" attribute)
-    for (i in seq_along(feature_labels)) {
-      if (is.null(feature_labels[[i]]) || feature_labels[[i]] == "") {
-        if (is.null(fancy_labels[[RHS[i]]])) {
-          feature_labels[[i]] <- RHS[i]
-        } else {
-          feature_labels[[i]] <- fancy_labels[[RHS[i]]]
-        }
-      }
-    }
-    return(feature_labels)
-  }
-  
-  # function to cleanup term labels (due to factor variable blah blah)
-  clean_term_names <- function(x, RHS) {
-    out <- data.frame(feature = character(length(x)), 
-                      level = character(length(x)), 
-                      stringsAsFactors = FALSE)
-    for (i in seq_along(RHS)) {
-      w <- grepl(RHS[i], x)
-      out$feature[w] <- RHS[i]
-      out$level[w] <- sub(paste0("^`?", RHS[i], "`?"), "", x[w])
-    }
-    
-    # check whether levels are all unique
-    if (any(duplicated(out$level))) {
-      warning("Some level labels are duplicated across features. This may cause problems!")
-    }
-    
-    return(out)
-  }
-  
-  # function used to produce a data frame of features and levels
-  make_term_labels_df <- function(data, feature_names, level_order = c("ascending", "descending")) {
-    # setup data
-    if (inherits(data, "data.frame")) {
-      term_levels_list <- lapply(data[feature_names], levels)
-    } else if (inherits(data, "survey.design")) {
-      term_levels_list <- lapply(data[["variables"]][feature_names], levels)
-    } else {
-      stop("'data' is not a 'data.frame' or 'survey.design' object")
-    }
-    
-    # figure out level order
-    level_order <- match.arg(level_order)
-    if (level_order == "descending") {
-      term_levels_list[] <- lapply(term_levels_list, rev)
-    }
-    
-    # construct data frame
-    term_levels <- rev(unlist(term_levels_list))
-    term_labels <- stats::setNames(rep(feature_names, lengths(term_levels_list)), rev(term_levels))
-    data.frame(feature = unlist(term_labels), level = unlist(names(term_labels)), stringsAsFactors = FALSE)
-  }
-  
-  # function used in plot() methods to make pretty feature headers
-  make_feature_headers <- function(x, fmt = "(%s)") {
-    feature_levels <- rev(split(x$level, x$feature))
-    for (i in seq_along(feature_levels)) {
-      feature_levels[[i]] <- levels(x$level)[match(feature_levels[[i]], levels(x$level))]
-      feature_levels[[i]] <- c(feature_levels[[i]], sprintf(fmt, names(feature_levels)[i]))
-    }
-    factor(as.character(x$level), levels = unique(unname(unlist(feature_levels))))
-  }
-  
-  # function used to check whether, if specified, the 'feature_order' argument is valid
-  check_feature_order <- function(feature_order, RHS) {
-    if (!is.null(feature_order)) {
-      if (length(RHS) > length(feature_order)) {
-        stop("'feature_order' appears to be missing values")
-      } else if (length(RHS) < length(feature_order)) {
-        stop("'feature_order' appears to have excess values")
-      } else if (any(!names(feature_order) %in% RHS)) {
-        stop("'feature_order' appears to contain erroneous values")
-      }
-    } else {
-      feature_order <- RHS
-    }
-    return(feature_order)
-  }
-  
-  # optionally, add gaps between features
-  if (isTRUE(feature_headers)) {
-    x$level <- make_feature_headers(x, fmt = header_fmt)
-    to_merge <- data.frame(feature = unique(x$feature), level = sprintf(header_fmt, unique(x$feature)))
-    if ("BY" %in% names(x)) {
-      to_merge <- do.call("rbind", lapply(unique(x[["BY"]]), function(lev) {
-        to_merge[["BY"]] <- lev
-        to_merge
-      }))
-    } else if (!is.null(group)) {
-      to_merge <- do.call("rbind", lapply(unique(x[[group]]), function(lev) {
-        to_merge[[group]] <- lev
-        to_merge
-      }))
-    }
-    x <- merge(x, to_merge, all = TRUE)
-  }
-  
-  if (is.null(group)) {
-    p <- ggplot2::ggplot(data = x, ggplot2::aes_string(x = "estimate", y = "level", colour = "feature"))
-  } else {
-    p <- ggplot2::ggplot(data = x, ggplot2::aes_string(x = "estimate", y = "level", colour = group, group = group))
-  }
-  
-  if (is.null(xlim)) {
-    xmin <- min(x$lower, na.rm = TRUE)
-    xmin <- if (xmin < 0) 1.04*xmin else .96*xmin
-    xmax <- max(x$upper, na.rm = TRUE)
-    xmax <- if (xmax > 0) 1.04*xmax else .96*xmax
-    xlim <- c(xmin, xmax)
-  }
-  
-  if (!is.null(vline)) {
-    p <- p + ggplot2::geom_vline(xintercept = vline, colour = vline_color)
-  }
-  
-  ggplotColours <- function(n = 6, h = c(0, 360) + 15){
-    if ((diff(h) %% 360) < 1) h[2] <- h[2] - 360/n
-    hcl(h = (seq(h[1], h[2], length = n)), c = 100, l = 65)
-  }
-  myColors <- ggplotColours(length(unique(x$feature)))
-  myColors <- c(rep(myColors[1], 6), rep(myColors[2], 5),
-                rep(myColors[3], 4), rep(myColors[4], 5),
-                rep(myColors[5], 6), rep(myColors[6], 6))
-  myFaces <- c(rep('plain', 5), "bold",
-               rep('plain', 4), "bold",
-               rep('plain', 3), "bold",
-               rep('plain', 4), "bold",
-               rep('plain', 5), "bold",
-               rep('plain', 5), "bold")
-  mySizes <-  c(rep(10, 5), 11,
-               rep(10, 4), 11,
-               rep(10, 3), 11,
-               rep(10, 4), 11,
-               rep(10, 5), 11,
-               rep(10, 5), 11)
-  myColors <- rep(myColors, ifelse(length(unique(x[,group])), length(unique(x[,group])), 1))
-  
-  p <- p + ggplot2::geom_point(position = ggstance::position_dodgev(height = 0.75), 
-                               size = size, na.rm = TRUE, color = myColors) +
-    ggplot2::geom_errorbarh(ggplot2::aes_string(xmin = "lower", xmax = "upper"),  
-                            size = 0.7, height = 0, na.rm = TRUE, color = myColors,
-                            position = ggstance::position_dodgev(height = 0.75))
-  if (is.null(group)) {
-    p <- p + ggplot2::scale_colour_discrete(guide = ggplot2::guide_legend(title = legend_title))
-  } else {
-    p <- p + ggplot2::scale_colour_discrete(breaks = levels(x[[group]]),
-                                            labels = levels(x[[group]]),
-                                            guide = ggplot2::guide_legend(title = legend_title))
-  }
-  p <- p + theme_bw() +
-    ggplot2::scale_x_continuous(limits = xlim, oob = scales::rescale_none) +
-    ggplot2::xlab(xlab) + 
-    ggplot2::ylab(ylab) + 
-    theme + ggplot2::theme(
-      legend.position = legend_pos,
-      panel.grid.major = ggplot2::element_blank(),
-      panel.grid.minor = ggplot2::element_blank(),
-      axis.text.y = element_text(face=myFaces, size = mySizes)
-    ) + 
-    ggplot2::guides(colour = ggplot2::guide_legend(title = legend_title))
-  return(p)
-}
-
+```{r setup, echo=FALSE}
 plotAMCE <- 
-  function (x, main = "", xlab = "Change in E[Y]", 
-            ci = 0.95, colors = NULL, 
-            xlim = NULL, breaks = NULL, 
-            labels = NULL, attribute.names = NULL, 
-            level.names = NULL, label.baseline = TRUE, 
-            text.size = 11, 
-            text.color = "black", 
-            point.size = 0.5, dodge.size = 0.9, 
-            plot.theme = NULL, plot.display = "all", 
-            facet.names = NULL, 
-            facet.levels = NULL, 
-            group.order = NULL, font.family = NULL, 
-            tblfy = F, ...) {
-    amce_obj <- x
-    ylim <- xlim
-    pe <- NULL
-    se <- NULL
-    group <- NULL
-    lower <- NULL
-    upper <- NULL
-    var <- NULL
-    printvar <- NULL
-    facet <- NULL
-    raw_attributes <- names(amce_obj$estimates)
-    raw_levels <- lapply(amce_obj$estimates, colnames)
-    for (effect in names(raw_levels)) {
-        effect_elements <- strsplit(effect, ":")[[1]]
-        baseline_interactions <- c()
-        for (elem in effect_elements) {
-            base_coef <- paste(c(elem, amce_obj$baselines[[elem]]), 
-                collapse = "")
-            baseline_interactions <- c(baseline_interactions, 
-                base_coef)
-        }
-        interaction_str <- paste(baseline_interactions, sep = "", 
-            collapse = ":")
-        raw_levels[[effect]] <- c(interaction_str, raw_levels[[effect]])
-    }
-    if (ci < 1 & ci > 0) {
-        zscr <- qnorm(1 - ((1 - ci)/2))
-    }
-    else {
-        cat("Invalid confidence interval -- Defaulting to 95%")
-        zscr <- qnorm(1 - ((1 - 0.95)/2))
-    }
-    if (!is.null(attribute.names)) {
-        attribute.names <- unique(attribute.names)
-        if (length(attribute.names) != length(raw_attributes)) {
-            cat(paste("Error: The number of unique elements in attribute.names ", 
-                length(attribute.names), " does not match the attributes in amce object for which estimates were obtained: ", 
-                paste(raw_attributes, collapse = ", "), "\n", 
-                sep = ""))
-            cat("Defaulting attribute.names to attribute names in AMCE object\n")
-            attribute.names <- NULL
-        }
-    }
-    if (!is.null(level.names)) {
-        names(level.names) <- clean.names(names(level.names))
-        for (name in names(level.names)) {
-            if (name %in% names(raw_levels)) {
-                if (length(level.names[[name]]) != length(raw_levels[[name]])) {
-                  cat(paste("Error: level.names lengths do not match levels for attribute ", 
-                    name, "\n", sep = ""))
-                  cat(paste("Defaulting level.names for attribute ", 
-                    name, " to level names in AMCE object", "\n", 
-                    sep = ""))
-                  level.names[[name]] <- NULL
-                }
+    function (x, main = "", xlab = "Change in E[Y]", 
+              ci = 0.95, colors = NULL, 
+              xlim = NULL, breaks = NULL, 
+              labels = NULL, attribute.names = NULL, 
+              level.names = NULL, label.baseline = TRUE, 
+              text.size = 11, 
+              text.color = "black", 
+              point.size = 0.5, dodge.size = 0.9, 
+              plot.theme = NULL, plot.display = "all", 
+              facet.names = NULL, 
+              facet.levels = NULL, 
+              group.order = NULL, font.family = NULL, 
+              tblfy = F, ...) {
+        amce_obj <- x
+        ylim <- xlim
+        pe <- NULL
+        se <- NULL
+        group <- NULL
+        lower <- NULL
+        upper <- NULL
+        var <- NULL
+        printvar <- NULL
+        facet <- NULL
+        raw_attributes <- names(amce_obj$estimates)
+        raw_levels <- lapply(amce_obj$estimates, colnames)
+        for (effect in names(raw_levels)) {
+            effect_elements <- strsplit(effect, ":")[[1]]
+            baseline_interactions <- c()
+            for (elem in effect_elements) {
+                base_coef <- paste(c(elem, amce_obj$baselines[[elem]]), 
+                                   collapse = "")
+                baseline_interactions <- c(baseline_interactions, 
+                                           base_coef)
             }
-            else {
-                cat(paste("Error: level.names entry ", name, 
-                  " not in AMCE object. Removing level.names for attribute.", 
-                  "\n", sep = ""))
-                level.names[[name]] <- NULL
-            }
+            interaction_str <- paste(baseline_interactions, sep = "", 
+                                     collapse = ":")
+            raw_levels[[effect]] <- c(interaction_str, raw_levels[[effect]])
         }
-    }
-    if (is.null(attribute.names)) {
-        attribute.names <- c()
-        for (attr in names(amce_obj$estimates)) {
-            attr_split <- strsplit(attr, ":")[[1]]
-            attr_lookup <- paste(unlist(sapply(attr_split, function(x) amce_obj$user.names[x])), 
-                collapse = ":")
-            attribute.names <- c(attribute.names, attr_lookup)
-        }
-    }
-    if (is.null(level.names)) 
-        level.names <- list()
-    if (any(!names(raw_levels) %in% names(level.names))) {
-        for (attr in names(raw_levels)[!names(raw_levels) %in% 
-            names(level.names)]) {
-            attr_split <- strsplit(raw_levels[[attr]], ":")
-            level.names[[attr]] <- unlist(lapply(attr_split, 
-                function(x) paste(sapply(x, function(y) amce_obj$user.levels[y]), 
-                  collapse = ":")))
-        }
-    }
-    plot.display.opts <- c("all", "unconditional", "interaction")
-    if (!is.element(plot.display, plot.display.opts)) {
-        stop(paste(c("Error-- plot.display must be once of: ", 
-            paste(plot.display.opts, collapse = ", ")), collapse = " "))
-    }
-    if (!is.null(facet.names)) {
-        facet.names <- clean.names(facet.names)
-    }
-    else if (!is.null(facet.levels)) {
-        facet.names <- clean.names(names(facet.levels))
-    }
-    if (!is.null(facet.names)) {
-        facet.names.check <- c()
-        for (facet.name in facet.names) {
-            if (grepl(":", facet.name)) 
-                stop("Error-- cannot facet by interaction in current version.")
-            if (!facet.name %in% names(amce_obj$estimates) & 
-                !facet.name %in% names(amce_obj$cond.estimates)) {
-                stop(paste(c("Error-- cannot find facet name", 
-                  facet.name, "in AMCE object output."), collapse = " "))
-            }
-            else {
-                facet.names.check <- c(facet.names.check, facet.name)
-            }
-        }
-        facet.names <- facet.names.check
-    }
-    if ((is.null(facet.names)) & (length(amce_obj$respondent.varying) > 
-        0) & (plot.display != "unconditional")) {
-        facet.names <- amce_obj$respondent.varying
-    }
-    if (is.null(facet.names) & plot.display == "interaction") {
-        warning("Warning: no facet name or respondent varying characteristic provided to calculate conditional estimates. Will display unconditional only")
-        plot.display <- "unconditional"
-    }
-    if (plot.display == "unconditional" & !is.null(facet.names)) {
-        warning("Warning-- plot display is set to unconditional, facet names will be ignored")
-        facet.names <- NULL
-        facet.levels <- NULL
-    }
-    if (!is.null(facet.levels)) {
-        names(facet.levels) <- clean.names(names(facet.levels))
-        for (facet.name in names(facet.levels)) {
-            if (facet.name %in% names(amce_obj$baselines)) {
-                facet.levels[[facet.name]] <- clean.names(facet.levels[[facet.name]])
-                if (facet.name %in% names(amce_obj$estimates) && 
-                  is.element(amce_obj$baselines[[facet.name]], 
-                    facet.levels[[facet.name]])) {
-                  stop(paste(c("Error: Facet level \"", as.character(amce_obj$baselines[[facet.name]]), 
-                    "\" is the baseline level of a profile varying attribute. Please provide alternative facet level or use defaults."), 
-                    collapse = ""))
-                }
-                if (is.null(names(facet.levels[[facet.name]]))) {
-                  fac.levs <- sapply(facet.levels[[facet.name]], 
-                    function(x) paste(facet.name, x, sep = ""))
-                  names(facet.levels[[facet.name]]) <- sapply(fac.levs, 
-                    USE.NAMES = F, function(x) amce_obj$user.levels[[x]])
-                }
-            }
-            else if (is.null(names(facet.levels[[facet.name]]))) {
-                names(facet.levels[[facet.name]]) <- as.character(facet.levels[[facet.name]])
-            }
-        }
-    }
-    if (is.null(facet.levels)) 
-        facet.levels <- list()
-    if (any(!facet.names %in% names(facet.levels))) {
-        for (facet.name in facet.names[!facet.names %in% names(facet.levels)]) {
-            if (facet.name %in% names(amce_obj$baselines)) {
-                if (facet.name %in% names(amce_obj$estimates)) {
-                  fac.levs <- colnames(amce_obj$estimates[[facet.name]])
-                }
-                else {
-                  fac.levs <- colnames(amce_obj$cond.estimates[[facet.name]])
-                }
-                facet.levels[[facet.name]] <- sub(facet.name, 
-                  "", fac.levs)
-                facet.levels[[facet.name]] <- c(amce_obj$baselines[[facet.name]], 
-                  facet.levels[[facet.name]])
-                fac.levs <- c(paste(facet.name, amce_obj$baselines[[facet.name]], 
-                  sep = ""), fac.levs)
-                names(facet.levels[[facet.name]]) <- sapply(fac.levs, 
-                  USE.NAMES = F, function(x) amce_obj$user.levels[[x]])
-            }
-            else if (facet.name %in% names(amce_obj$continuous)) {
-                facet.levels[[facet.name]] <- amce_obj$continuous[[facet.name]]
-            }
-        }
-    }
-    covariate.values <- list()
-    for (var in names(facet.levels)) {
-        if (var %in% amce_obj$respondent.varying) {
-            covariate.values[[var]] <- facet.levels[[var]]
-        }
-    }
-    d <- data.frame(pe = c(), se = c(), upper = c(), lower = c(), 
-        var = c(), printvar = c(), group = c(), facet = c())
-    if (plot.display != "interaction") {
-        if (plot.display == "all") {
-            uncond.facet.name <- "Unconditional"
+        if (ci < 1 & ci > 0) {
+            zscr <- qnorm(1 - ((1 - ci)/2))
         }
         else {
-            uncond.facet.name <- NA
+            cat("Invalid confidence interval -- Defaulting to 95%")
+            zscr <- qnorm(1 - ((1 - 0.95)/2))
         }
-        if (plot.display == "all" && !is.null(facet.names)) {
-            attr_remove <- c()
-            for (facet.name in facet.names[!is.element(facet.names, 
-                amce_obj$respondent.varying)]) {
-                attr_remove1 <- raw_attributes[grepl(":", raw_attributes)]
-                attr_remove1 <- attr_remove1[grepl(facet.name, 
-                  attr_remove1)]
-                attr_remove <- c(attr_remove, attr_remove1)
-            }
-            raw_attributes <- raw_attributes[!is.element(raw_attributes, 
-                attr_remove)]
-        }
-        for (i in 1:length(raw_attributes)) {
-            attr_name <- raw_attributes[i]
-            print_attr_name <- attribute.names[which(names(amce_obj$estimates) == 
-                raw_attributes[i])]
-            d_head <- data.frame(pe = NA, se = NA, upper = NA, 
-                lower = NA, var = attr_name, printvar = paste(print_attr_name, 
-                  ":", sep = ""), group = "<NA>", facet = uncond.facet.name)
-            d <- rbind(d, d_head)
-            for (j in 1:length(raw_levels[[attr_name]])) {
-                level_name <- raw_levels[[attr_name]][j]
-                print_level_name <- level.names[[attr_name]][j]
-                if (j == 1) {
-                  if (label.baseline) {
-                    print_level_name <- paste("(Baseline = ", 
-                      print_level_name, ")", sep = "")
-                  }
-                  d_lev <- data.frame(pe = NA, se = NA, upper = NA, 
-                    lower = NA, var = level_name, printvar = paste("   ", 
-                      print_level_name, sep = ""), group = print_attr_name, 
-                    facet = uncond.facet.name)
-                }
-                else {
-                  val_pe <- amce_obj$estimates[[attr_name]][1, 
-                    level_name]
-                  val_se <- amce_obj$estimates[[attr_name]][2, 
-                    level_name]
-                  upper_bnd <- val_pe + zscr * val_se
-                  lower_bnd <- val_pe - zscr * val_se
-                  d_lev <- data.frame(pe = val_pe, se = val_se, 
-                    upper = upper_bnd, lower = lower_bnd, var = level_name, 
-                    printvar = paste("   ", print_level_name, 
-                      sep = ""), group = print_attr_name, facet = uncond.facet.name)
-                }
-                d <- rbind(d, d_lev)
+        if (!is.null(attribute.names)) {
+            attribute.names <- unique(attribute.names)
+            if (length(attribute.names) != length(raw_attributes)) {
+                cat(paste("Error: The number of unique elements in attribute.names ", 
+                          length(attribute.names), " does not match the attributes in amce object for which estimates were obtained: ", 
+                          paste(raw_attributes, collapse = ", "), "\n", 
+                          sep = ""))
+                cat("Defaulting attribute.names to attribute names in AMCE object\n")
+                attribute.names <- NULL
             }
         }
-    }
-    if (plot.display != "unconditional" & !is.null(facet.names)) {
-        for (facet.name in facet.names) {
-            print_facet_name <- amce_obj$user.names[[facet.name]]
-            all_req_vars <- attr(terms(amce_obj$formula), "term.labels")
-            all_mod <- unlist(sapply(all_req_vars, function(x) {
-                y <- strsplit(x, ":")[[1]]
-                if (any(y == facet.name)) 
-                  x
-            }))
-            all_mod <- unlist(sapply(all_mod, function(x) {
-                subs <- strsplit(x, ":")[[1]]
-                subs <- subs[is.element(subs, names(amce_obj$estimates))]
-                subs <- subs[subs != facet.name]
-                if (length(subs) > 0) 
-                  paste(subs, collapse = ":")
-            }))
-            if (length(all_mod) == 0) {
-                stop(paste(c("Error: Facet variable", facet.name, 
-                  "not interacted with profile attributes"), 
-                  collapse = " "))
-            }
-            all_mod <- unique(all_mod)
-            if (is.element(facet.name, names(amce_obj$estimates))) {
-                facet.start <- 2
-            }
-            else {
-                facet.start <- 1
-            }
-            for (k in facet.start:length(facet.levels[[facet.name]])) {
-                facet_lev <- facet.levels[[facet.name]][k]
-                if (is.element(facet.name, names(amce_obj$estimates))) {
-                  print_facet_level <- paste(c("ACIE", paste(c(print_facet_name, 
-                    names(facet.levels[[facet.name]])[k]), collapse = " = ")), 
-                    collapse = "\n")
-                }
-                else {
-                  print_facet_level <- paste(c("Conditional on", 
-                    paste(c(print_facet_name, names(facet.levels[[facet.name]])[k]), 
-                      collapse = " = ")), collapse = "\n")
-                }
-                for (mod_var in all_mod) {
-                  print_attr_name <- attribute.names[which(names(amce_obj$estimates) == 
-                    mod_var)]
-                  d_head <- data.frame(pe = NA, se = NA, upper = NA, 
-                    lower = NA, var = mod_var, printvar = paste(print_attr_name, 
-                      ":", sep = ""), group = "<NA>", facet = print_facet_level)
-                  d <- rbind(d, d_head)
-                  if (facet.name %in% names(amce_obj$estimates)) {
-                    inter_coef <- paste(sort(c(mod_var, facet.name)), 
-                      collapse = ":")
-                    estimate.source <- amce_obj$estimates[[inter_coef]]
-                    estimate.source <- estimate.source[, grep(paste0(facet.name, 
-                      facet_lev), colnames(estimate.source))]
-                  }
-                  else {
-                    estimate.source <- get.conditional.effects(amce_obj, 
-                      covariate.values, facet.name, facet_lev, 
-                      mod_var)
-                  }
-                  mod_vars <- strsplit(mod_var, ":")[[1]]
-                  for (p in 1:length(raw_levels[[mod_var]])) {
-                    mod_coef <- raw_levels[[mod_var]][p]
-                    mod_coefs <- strsplit(mod_coef, ":")[[1]]
-                    for (lev in 1:length(mod_coefs)) {
-                      mod_lev <- sub(mod_vars[lev], "", mod_coefs[lev])
+        if (!is.null(level.names)) {
+            names(level.names) <- clean.names(names(level.names))
+            for (name in names(level.names)) {
+                if (name %in% names(raw_levels)) {
+                    if (length(level.names[[name]]) != length(raw_levels[[name]])) {
+                        cat(paste("Error: level.names lengths do not match levels for attribute ", 
+                                  name, "\n", sep = ""))
+                        cat(paste("Defaulting level.names for attribute ", 
+                                  name, " to level names in AMCE object", "\n", 
+                                  sep = ""))
+                        level.names[[name]] <- NULL
                     }
-                    print_level_name <- level.names[[mod_var]][p]
-                    if (p == 1) {
-                      if (label.baseline) {
-                        print_level_name <- paste("(Baseline = ", 
-                          print_level_name, ")", sep = "")
-                      }
-                      d_lev <- data.frame(pe = NA, se = NA, upper = NA, 
-                        lower = NA, var = mod_coef, printvar = paste("   ", 
-                          print_level_name, sep = ""), group = print_attr_name, 
-                        facet = print_facet_level)
+                }
+                else {
+                    cat(paste("Error: level.names entry ", name, 
+                              " not in AMCE object. Removing level.names for attribute.", 
+                              "\n", sep = ""))
+                    level.names[[name]] <- NULL
+                }
+            }
+        }
+        if (is.null(attribute.names)) {
+            attribute.names <- c()
+            for (attr in names(amce_obj$estimates)) {
+                attr_split <- strsplit(attr, ":")[[1]]
+                attr_lookup <- paste(unlist(sapply(attr_split, function(x) amce_obj$user.names[x])), 
+                                     collapse = ":")
+                attribute.names <- c(attribute.names, attr_lookup)
+            }
+        }
+        if (is.null(level.names)) 
+            level.names <- list()
+        if (any(!names(raw_levels) %in% names(level.names))) {
+            for (attr in names(raw_levels)[!names(raw_levels) %in% 
+                                           names(level.names)]) {
+                attr_split <- strsplit(raw_levels[[attr]], ":")
+                level.names[[attr]] <- unlist(lapply(attr_split, 
+                                                     function(x) paste(sapply(x, function(y) amce_obj$user.levels[y]), 
+                                                                       collapse = ":")))
+            }
+        }
+        plot.display.opts <- c("all", "unconditional", "interaction")
+        if (!is.element(plot.display, plot.display.opts)) {
+            stop(paste(c("Error-- plot.display must be once of: ", 
+                         paste(plot.display.opts, collapse = ", ")), collapse = " "))
+        }
+        if (!is.null(facet.names)) {
+            facet.names <- clean.names(facet.names)
+        }
+        else if (!is.null(facet.levels)) {
+            facet.names <- clean.names(names(facet.levels))
+        }
+        if (!is.null(facet.names)) {
+            facet.names.check <- c()
+            for (facet.name in facet.names) {
+                if (grepl(":", facet.name)) 
+                    stop("Error-- cannot facet by interaction in current version.")
+                if (!facet.name %in% names(amce_obj$estimates) & 
+                    !facet.name %in% names(amce_obj$cond.estimates)) {
+                    stop(paste(c("Error-- cannot find facet name", 
+                                 facet.name, "in AMCE object output."), collapse = " "))
+                }
+                else {
+                    facet.names.check <- c(facet.names.check, facet.name)
+                }
+            }
+            facet.names <- facet.names.check
+        }
+        if ((is.null(facet.names)) & (length(amce_obj$respondent.varying) > 
+                                      0) & (plot.display != "unconditional")) {
+            facet.names <- amce_obj$respondent.varying
+        }
+        if (is.null(facet.names) & plot.display == "interaction") {
+            warning("Warning: no facet name or respondent varying characteristic provided to calculate conditional estimates. Will display unconditional only")
+            plot.display <- "unconditional"
+        }
+        if (plot.display == "unconditional" & !is.null(facet.names)) {
+            warning("Warning-- plot display is set to unconditional, facet names will be ignored")
+            facet.names <- NULL
+            facet.levels <- NULL
+        }
+        if (!is.null(facet.levels)) {
+            names(facet.levels) <- clean.names(names(facet.levels))
+            for (facet.name in names(facet.levels)) {
+                if (facet.name %in% names(amce_obj$baselines)) {
+                    facet.levels[[facet.name]] <- clean.names(facet.levels[[facet.name]])
+                    if (facet.name %in% names(amce_obj$estimates) && 
+                        is.element(amce_obj$baselines[[facet.name]], 
+                                   facet.levels[[facet.name]])) {
+                        stop(paste(c("Error: Facet level \"", as.character(amce_obj$baselines[[facet.name]]), 
+                                     "\" is the baseline level of a profile varying attribute. Please provide alternative facet level or use defaults."), 
+                                   collapse = ""))
+                    }
+                    if (is.null(names(facet.levels[[facet.name]]))) {
+                        fac.levs <- sapply(facet.levels[[facet.name]], 
+                                           function(x) paste(facet.name, x, sep = ""))
+                        names(facet.levels[[facet.name]]) <- sapply(fac.levs, 
+                                                                    USE.NAMES = F, function(x) amce_obj$user.levels[[x]])
+                    }
+                }
+                else if (is.null(names(facet.levels[[facet.name]]))) {
+                    names(facet.levels[[facet.name]]) <- as.character(facet.levels[[facet.name]])
+                }
+            }
+        }
+        if (is.null(facet.levels)) 
+            facet.levels <- list()
+        if (any(!facet.names %in% names(facet.levels))) {
+            for (facet.name in facet.names[!facet.names %in% names(facet.levels)]) {
+                if (facet.name %in% names(amce_obj$baselines)) {
+                    if (facet.name %in% names(amce_obj$estimates)) {
+                        fac.levs <- colnames(amce_obj$estimates[[facet.name]])
                     }
                     else {
-                      val_pe <- estimate.source[1, p - 1]
-                      if (!is.na(val_pe)) {
-                        val_se <- estimate.source[2, p - 1]
-                        upper_bnd <- val_pe + zscr * val_se
-                        lower_bnd <- val_pe - zscr * val_se
-                      }
-                      else {
-                        val_se <- upper_bnd <- lower_bnd <- NA
-                      }
-                      d_lev <- data.frame(pe = val_pe, se = val_se, 
-                        upper = upper_bnd, lower = lower_bnd, 
-                        var = mod_coef, printvar = paste("   ", 
-                          print_level_name, sep = ""), group = print_attr_name, 
-                        facet = print_facet_level)
+                        fac.levs <- colnames(amce_obj$cond.estimates[[facet.name]])
                     }
-                    d <- rbind(d, d_lev)
-                  }
+                    facet.levels[[facet.name]] <- sub(facet.name, 
+                                                      "", fac.levs)
+                    facet.levels[[facet.name]] <- c(amce_obj$baselines[[facet.name]], 
+                                                    facet.levels[[facet.name]])
+                    fac.levs <- c(paste(facet.name, amce_obj$baselines[[facet.name]], 
+                                        sep = ""), fac.levs)
+                    names(facet.levels[[facet.name]]) <- sapply(fac.levs, 
+                                                                USE.NAMES = F, function(x) amce_obj$user.levels[[x]])
+                }
+                else if (facet.name %in% names(amce_obj$continuous)) {
+                    facet.levels[[facet.name]] <- amce_obj$continuous[[facet.name]]
                 }
             }
         }
-    }
-    else {
-        d <- d[, -which(colnames(d) == "facet")]
-    }
-    if (is.null(ylim)) {
-        max_upper <- max(d$upper, na.rm = T) + 0.05
-        min_lower <- min(d$lower, na.rm = T) - 0.05
-        ylim <- c(min_lower, max_upper)
-        d[is.na(d)] <- max_upper + 100
-    }
-    else {
-        d[is.na(d)] <- max(ylim) + 100
-    }
-    d$group[d$group == "<NA>"] <- NA
-    if (!is.null(facet.names)) 
-        d$facet[d$facet == "<NA>"] <- NA
-    d$var <- factor(d$var, levels = unique(d$var)[length(d$var):1])
-    if (!is.null(facet.names)) {
-        d$facet <- factor(d$facet, levels = unique(d$facet))
-    }
-    if (!is.null(group.order)) {
-        n.row <- length(unique(as.character(d$var)))
-        order.var <- vector("character", length = n.row)
-        i <- 1
-        while (i < n.row) {
-            for (j in group.order) {
-                order.var[i] <- unique(as.character(d$var[d$var == 
-                  gsub(" ", "", j)]))
-                i <- i + 1
-                temp.d <- d
-                temp.d$group <- gsub(" ", "", temp.d$group)
-                temp.d <- subset(temp.d, group == gsub(" ", "", 
-                  j))
-                temp.var <- unique((as.character(temp.d$var)))
-                order.var[i:(i + length(temp.var) - 1)] <- temp.var
-                i <- i + length(temp.var)
+        covariate.values <- list()
+        for (var in names(facet.levels)) {
+            if (var %in% amce_obj$respondent.varying) {
+                covariate.values[[var]] <- facet.levels[[var]]
             }
         }
-        order.var <- rev(order.var)
-        order.df <- data.frame(order.var, 1:length(order.var))
-        colnames(order.df) <- c("var", "order")
-        d$var <- factor(d$var, levels = order.var)
-        d <- merge(d, order.df, by.x = "var", by.y = "var", suffixes = c("", 
-            ""))
-    }
-    levs <- as.character(d$printvar)
-    levs <- gsub('organizations', 'organisations', levs)
-    d$printvar <- factor(levs, levels = levs)
-    if(tblfy) {
-      return(d)
-    }
-    p = ggplot(d, aes(y = pe, x = var, colour = group))
-    p = p + coord_flip(ylim = ylim)
-    p = p + geom_hline(yintercept = 0, size = 0.5, colour = "black", 
-        linetype = "dotted")
-    p = p + geom_pointrange(aes(ymin = lower, ymax = upper), 
-        position = position_dodge(width = dodge.size), size = point.size)
-    if (!is.null(facet.names)) {
-        p = p + facet_wrap(~facet)
-    }
-    if (is.null(breaks) & is.null(labels)) {
-        p = p + scale_y_continuous(name = xlab)
-    }
-    else if (is.null(breaks) & !is.null(labels)) {
-        p = p + scale_y_continuous(name = xlab, labels = labels)
-    }
-    else if (!is.null(breaks) & is.null(labels)) {
-        p = p + scale_y_continuous(name = xlab, breaks = breaks)
-    }
-    else if (!is.null(breaks) & !is.null(labels)) {
-        p = p + scale_y_continuous(name = xlab, breaks = breaks, 
-            labels = labels)
-    }
-    if (!is.null(group.order)) {
-        fix.xlabs.df <- d[!duplicated(d$var), ]
-        fix.xlabs <- fix.xlabs.df[order(-fix.xlabs.df$order), 
-            ]$printvar
-    }
-    else {
-        fix.xlabs <- as.character(d$printvar)[!duplicated(d$var)]
-    }
-    p = p + scale_x_discrete(name = "", labels = fix.xlabs[length(fix.xlabs):1])
-    if (!is.null(main)) {
-        if (main != "") {
-            p = p + ggtitle(main)
-        }
-    }
-    if (is.null(colors)) {
-        p = p + scale_colour_discrete(" ")
-    }
-    else if (is.vector(colors)) {
-        cPal <- rep(colors, ceiling(length(unique(d$group))/length(colors)))
-        p = p + scale_colour_manual(values = cPal)
-    }
-    else {
-        cat("Error: 'colors' must be a vector. Using default colors\n")
-        p = p + scale_colour_discrete(" ")
-    }
-    if (is.null(plot.theme)) {
-        theme_bw1 <- function(base_size = text.size, base_family = "") {
-            theme_grey(base_size = base_size, base_family = base_family) %+replace% 
-                theme(axis.text.x = element_text(size = base_size * 
-                  0.9, colour = text.color, hjust = 0.5, vjust = 1), 
-                  axis.text.y = element_text(size = base_size, 
-                    colour = text.color, hjust = 0, vjust = 0.5, 
-                    family = font.family), axis.ticks = element_line(colour = "grey50"), 
-                  axis.title.y = element_text(size = base_size, 
-                    angle = 90, vjust = 0.01, hjust = 0.1, family = font.family), 
-                  plot.title = element_text(face = "bold", family = font.family), 
-                  legend.position = "none")
-        }
-        p = p + theme_bw1()
-        print(p)
-    }
-    else if (is.null(class(plot.theme))) {
-        cat("Error: 'plot.theme' is not a valid ggplot theme object. Using default theme\n")
-        theme_bw1 <- function(base_size = text.size, base_family = "") {
-            theme_grey(base_size = base_size, base_family = base_family) %+replace% 
-                theme(axis.text.x = element_text(size = base_size * 
-                  0.9, colour = text.color, hjust = 0.5, vjust = 1), 
-                  axis.text.y = element_text(size = base_size, 
-                    colour = text.color, hjust = 0, vjust = 0.5, 
-                    family = font.family), axis.ticks = element_line(colour = "grey50"), 
-                  axis.title.y = element_text(size = base_size, 
-                    angle = 90, vjust = 0.01, hjust = 0.1, family = font.family), 
-                  plot.title = element_text(face = "bold", family = font.family), 
-                  legend.position = "none")
-        }
-        p = p + theme_bw1()
-        print(p)
-    }
-    else if (class(plot.theme)[1] != "theme") {
-        cat("Error: 'plot.theme' is not a valid ggplot theme object. Using default theme\n")
-        theme_bw1 <- function(base_size = text.size, base_family = "") {
-            theme_grey(base_size = base_size, base_family = base_family) %+replace% 
-                theme(axis.text.x = element_text(size = base_size * 
-                  0.9, colour = text.color, hjust = 0.5, vjust = 1), 
-                  axis.text.y = element_text(size = base_size, 
-                    colour = text.color, hjust = 0, vjust = 0.5, 
-                    family = font.family), axis.ticks = element_line(colour = "grey50"), 
-                  axis.title.y = element_text(size = base_size, 
-                    angle = 90, vjust = 0.01, hjust = 0.1, family = font.family), 
-                  plot.title = element_text(face = "bold", family = font.family), 
-                  legend.position = "none")
-        }
-        p = p + theme_bw1()
-        print(p)
-    }
-    else {
-        p = p + plot.theme
-        print(p)
-    }
-    if (length(covariate.values) > 1) {
-        resp.message <- c("Note:")
-        for (this.var in names(covariate.values)) {
-            resp.message <- paste(c(resp.message, " For AMCE and ACIE conditional on ", 
-                this.var, ", "), collapse = "")
-            other.vars <- names(covariate.values)[names(covariate.values) != 
-                this.var]
-            other.levels <- c()
-            for (var in other.vars) {
-                other.levels <- c(other.levels, paste(c(var, 
-                  " will be held at level \"", names(covariate.values[[var]])[1], 
-                  "\""), collapse = ""))
+        d <- data.frame(pe = c(), se = c(), upper = c(), lower = c(), 
+                        var = c(), printvar = c(), group = c(), facet = c())
+        if (plot.display != "interaction") {
+            if (plot.display == "all") {
+                uncond.facet.name <- "Unconditional"
             }
-            other.levels <- paste(other.levels, collapse = ", and ")
-            resp.message <- c(resp.message, other.levels, ".")
-            resp.message <- paste(resp.message, collapse = "")
+            else {
+                uncond.facet.name <- NA
+            }
+            if (plot.display == "all" && !is.null(facet.names)) {
+                attr_remove <- c()
+                for (facet.name in facet.names[!is.element(facet.names, 
+                                                           amce_obj$respondent.varying)]) {
+                    attr_remove1 <- raw_attributes[grepl(":", raw_attributes)]
+                    attr_remove1 <- attr_remove1[grepl(facet.name, 
+                                                       attr_remove1)]
+                    attr_remove <- c(attr_remove, attr_remove1)
+                }
+                raw_attributes <- raw_attributes[!is.element(raw_attributes, 
+                                                             attr_remove)]
+            }
+            for (i in 1:length(raw_attributes)) {
+                attr_name <- raw_attributes[i]
+                print_attr_name <- attribute.names[which(names(amce_obj$estimates) == 
+                                                             raw_attributes[i])]
+                d_head <- data.frame(pe = NA, se = NA, upper = NA, 
+                                     lower = NA, var = attr_name, printvar = paste(print_attr_name, 
+                                                                                   ":", sep = ""), group = "<NA>", facet = uncond.facet.name)
+                d <- rbind(d, d_head)
+                for (j in 1:length(raw_levels[[attr_name]])) {
+                    level_name <- raw_levels[[attr_name]][j]
+                    print_level_name <- level.names[[attr_name]][j]
+                    if (j == 1) {
+                        if (label.baseline) {
+                            print_level_name <- paste("(Baseline = ", 
+                                                      print_level_name, ")", sep = "")
+                        }
+                        d_lev <- data.frame(pe = NA, se = NA, upper = NA, 
+                                            lower = NA, var = level_name, printvar = paste("   ", 
+                                                                                           print_level_name, sep = ""), group = print_attr_name, 
+                                            facet = uncond.facet.name)
+                    }
+                    else {
+                        val_pe <- amce_obj$estimates[[attr_name]][1, 
+                                                                  level_name]
+                        val_se <- amce_obj$estimates[[attr_name]][2, 
+                                                                  level_name]
+                        upper_bnd <- val_pe + zscr * val_se
+                        lower_bnd <- val_pe - zscr * val_se
+                        d_lev <- data.frame(pe = val_pe, se = val_se, 
+                                            upper = upper_bnd, lower = lower_bnd, var = level_name, 
+                                            printvar = paste("   ", print_level_name, 
+                                                             sep = ""), group = print_attr_name, facet = uncond.facet.name)
+                    }
+                    d <- rbind(d, d_lev)
+                }
+            }
         }
-        cat(resp.message, "\n")
+        if (plot.display != "unconditional" & !is.null(facet.names)) {
+            for (facet.name in facet.names) {
+                print_facet_name <- amce_obj$user.names[[facet.name]]
+                all_req_vars <- attr(terms(amce_obj$formula), "term.labels")
+                all_mod <- unlist(sapply(all_req_vars, function(x) {
+                    y <- strsplit(x, ":")[[1]]
+                    if (any(y == facet.name)) 
+                        x
+                }))
+                all_mod <- unlist(sapply(all_mod, function(x) {
+                    subs <- strsplit(x, ":")[[1]]
+                    subs <- subs[is.element(subs, names(amce_obj$estimates))]
+                    subs <- subs[subs != facet.name]
+                    if (length(subs) > 0) 
+                        paste(subs, collapse = ":")
+                }))
+                if (length(all_mod) == 0) {
+                    stop(paste(c("Error: Facet variable", facet.name, 
+                                 "not interacted with profile attributes"), 
+                               collapse = " "))
+                }
+                all_mod <- unique(all_mod)
+                if (is.element(facet.name, names(amce_obj$estimates))) {
+                    facet.start <- 2
+                }
+                else {
+                    facet.start <- 1
+                }
+                for (k in facet.start:length(facet.levels[[facet.name]])) {
+                    facet_lev <- facet.levels[[facet.name]][k]
+                    if (is.element(facet.name, names(amce_obj$estimates))) {
+                        print_facet_level <- paste(c("ACIE", paste(c(print_facet_name, 
+                                                                     names(facet.levels[[facet.name]])[k]), collapse = " = ")), 
+                                                   collapse = "\n")
+                    }
+                    else {
+                        print_facet_level <- paste(c("Conditional on", 
+                                                     paste(c(print_facet_name, names(facet.levels[[facet.name]])[k]), 
+                                                           collapse = " = ")), collapse = "\n")
+                    }
+                    for (mod_var in all_mod) {
+                        print_attr_name <- attribute.names[which(names(amce_obj$estimates) == 
+                                                                     mod_var)]
+                        d_head <- data.frame(pe = NA, se = NA, upper = NA, 
+                                             lower = NA, var = mod_var, printvar = paste(print_attr_name, 
+                                                                                         ":", sep = ""), group = "<NA>", facet = print_facet_level)
+                        d <- rbind(d, d_head)
+                        if (facet.name %in% names(amce_obj$estimates)) {
+                            inter_coef <- paste(sort(c(mod_var, facet.name)), 
+                                                collapse = ":")
+                            estimate.source <- amce_obj$estimates[[inter_coef]]
+                            estimate.source <- estimate.source[, grep(paste0(facet.name, 
+                                                                             facet_lev), colnames(estimate.source))]
+                        }
+                        else {
+                            estimate.source <- get.conditional.effects(amce_obj, 
+                                                                       covariate.values, facet.name, facet_lev, 
+                                                                       mod_var)
+                        }
+                        mod_vars <- strsplit(mod_var, ":")[[1]]
+                        for (p in 1:length(raw_levels[[mod_var]])) {
+                            mod_coef <- raw_levels[[mod_var]][p]
+                            mod_coefs <- strsplit(mod_coef, ":")[[1]]
+                            for (lev in 1:length(mod_coefs)) {
+                                mod_lev <- sub(mod_vars[lev], "", mod_coefs[lev])
+                            }
+                            print_level_name <- level.names[[mod_var]][p]
+                            if (p == 1) {
+                                if (label.baseline) {
+                                    print_level_name <- paste("(Baseline = ", 
+                                                              print_level_name, ")", sep = "")
+                                }
+                                d_lev <- data.frame(pe = NA, se = NA, upper = NA, 
+                                                    lower = NA, var = mod_coef, printvar = paste("   ", 
+                                                                                                 print_level_name, sep = ""), group = print_attr_name, 
+                                                    facet = print_facet_level)
+                            }
+                            else {
+                                val_pe <- estimate.source[1, p - 1]
+                                if (!is.na(val_pe)) {
+                                    val_se <- estimate.source[2, p - 1]
+                                    upper_bnd <- val_pe + zscr * val_se
+                                    lower_bnd <- val_pe - zscr * val_se
+                                }
+                                else {
+                                    val_se <- upper_bnd <- lower_bnd <- NA
+                                }
+                                d_lev <- data.frame(pe = val_pe, se = val_se, 
+                                                    upper = upper_bnd, lower = lower_bnd, 
+                                                    var = mod_coef, printvar = paste("   ", 
+                                                                                     print_level_name, sep = ""), group = print_attr_name, 
+                                                    facet = print_facet_level)
+                            }
+                            d <- rbind(d, d_lev)
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            d <- d[, -which(colnames(d) == "facet")]
+        }
+        if (is.null(ylim)) {
+            max_upper <- max(d$upper, na.rm = T) + 0.05
+            min_lower <- min(d$lower, na.rm = T) - 0.05
+            ylim <- c(min_lower, max_upper)
+            d[is.na(d)] <- max_upper + 100
+        }
+        else {
+            d[is.na(d)] <- max(ylim) + 100
+        }
+        d$group[d$group == "<NA>"] <- NA
+        if (!is.null(facet.names)) 
+            d$facet[d$facet == "<NA>"] <- NA
+        d$var <- factor(d$var, levels = unique(d$var)[length(d$var):1])
+        if (!is.null(facet.names)) {
+            d$facet <- factor(d$facet, levels = unique(d$facet))
+        }
+        if (!is.null(group.order)) {
+            n.row <- length(unique(as.character(d$var)))
+            order.var <- vector("character", length = n.row)
+            i <- 1
+            while (i < n.row) {
+                for (j in group.order) {
+                    order.var[i] <- unique(as.character(d$var[d$var == 
+                                                                  gsub(" ", "", j)]))
+                    i <- i + 1
+                    temp.d <- d
+                    temp.d$group <- gsub(" ", "", temp.d$group)
+                    temp.d <- subset(temp.d, group == gsub(" ", "", 
+                                                           j))
+                    temp.var <- unique((as.character(temp.d$var)))
+                    order.var[i:(i + length(temp.var) - 1)] <- temp.var
+                    i <- i + length(temp.var)
+                }
+            }
+            order.var <- rev(order.var)
+            order.df <- data.frame(order.var, 1:length(order.var))
+            colnames(order.df) <- c("var", "order")
+            d$var <- factor(d$var, levels = order.var)
+            d <- merge(d, order.df, by.x = "var", by.y = "var", suffixes = c("", 
+                                                                             ""))
+        }
+        levs <- as.character(d$printvar)
+        levs <- gsub('organizations', 'organisations', levs)
+        d$printvar <- factor(levs, levels = levs)
+        if(tblfy) {
+            return(d)
+        }
+        p = ggplot(d, aes(y = pe, x = var, colour = group))
+        p = p + coord_flip(ylim = ylim)
+        p = p + geom_hline(yintercept = 0, size = 0.5, colour = "black", 
+                           linetype = "dotted")
+        p = p + geom_pointrange(aes(ymin = lower, ymax = upper), 
+                                position = position_dodge(width = dodge.size), size = point.size)
+        if (!is.null(facet.names)) {
+            p = p + facet_wrap(~facet)
+        }
+        if (is.null(breaks) & is.null(labels)) {
+            p = p + scale_y_continuous(name = xlab)
+        }
+        else if (is.null(breaks) & !is.null(labels)) {
+            p = p + scale_y_continuous(name = xlab, labels = labels)
+        }
+        else if (!is.null(breaks) & is.null(labels)) {
+            p = p + scale_y_continuous(name = xlab, breaks = breaks)
+        }
+        else if (!is.null(breaks) & !is.null(labels)) {
+            p = p + scale_y_continuous(name = xlab, breaks = breaks, 
+                                       labels = labels)
+        }
+        if (!is.null(group.order)) {
+            fix.xlabs.df <- d[!duplicated(d$var), ]
+            fix.xlabs <- fix.xlabs.df[order(-fix.xlabs.df$order), 
+                                      ]$printvar
+        }
+        else {
+            fix.xlabs <- as.character(d$printvar)[!duplicated(d$var)]
+        }
+        p = p + scale_x_discrete(name = "", labels = fix.xlabs[length(fix.xlabs):1])
+        if (!is.null(main)) {
+            if (main != "") {
+                p = p + ggtitle(main)
+            }
+        }
+        if (is.null(colors)) {
+            p = p + scale_colour_discrete(" ")
+        }
+        else if (is.vector(colors)) {
+            cPal <- rep(colors, ceiling(length(unique(d$group))/length(colors)))
+            p = p + scale_colour_manual(values = cPal)
+        }
+        else {
+            cat("Error: 'colors' must be a vector. Using default colors\n")
+            p = p + scale_colour_discrete(" ")
+        }
+        if (is.null(plot.theme)) {
+            theme_bw1 <- function(base_size = text.size, base_family = "") {
+                theme_grey(base_size = base_size, base_family = base_family) %+replace% 
+                    theme(axis.text.x = element_text(size = base_size * 
+                                                         0.9, colour = text.color, hjust = 0.5, vjust = 1), 
+                          axis.text.y = element_text(size = base_size, 
+                                                     colour = text.color, hjust = 0, vjust = 0.5, 
+                                                     family = font.family), axis.ticks = element_line(colour = "grey50"), 
+                          axis.title.y = element_text(size = base_size, 
+                                                      angle = 90, vjust = 0.01, hjust = 0.1, family = font.family), 
+                          plot.title = element_text(face = "bold", family = font.family), 
+                          legend.position = "none")
+            }
+            p = p + theme_bw1()
+            print(p)
+        }
+        else if (is.null(class(plot.theme))) {
+            cat("Error: 'plot.theme' is not a valid ggplot theme object. Using default theme\n")
+            theme_bw1 <- function(base_size = text.size, base_family = "") {
+                theme_grey(base_size = base_size, base_family = base_family) %+replace% 
+                    theme(axis.text.x = element_text(size = base_size * 
+                                                         0.9, colour = text.color, hjust = 0.5, vjust = 1), 
+                          axis.text.y = element_text(size = base_size, 
+                                                     colour = text.color, hjust = 0, vjust = 0.5, 
+                                                     family = font.family), axis.ticks = element_line(colour = "grey50"), 
+                          axis.title.y = element_text(size = base_size, 
+                                                      angle = 90, vjust = 0.01, hjust = 0.1, family = font.family), 
+                          plot.title = element_text(face = "bold", family = font.family), 
+                          legend.position = "none")
+            }
+            p = p + theme_bw1()
+            print(p)
+        }
+        else if (class(plot.theme)[1] != "theme") {
+            cat("Error: 'plot.theme' is not a valid ggplot theme object. Using default theme\n")
+            theme_bw1 <- function(base_size = text.size, base_family = "") {
+                theme_grey(base_size = base_size, base_family = base_family) %+replace% 
+                    theme(axis.text.x = element_text(size = base_size * 
+                                                         0.9, colour = text.color, hjust = 0.5, vjust = 1), 
+                          axis.text.y = element_text(size = base_size, 
+                                                     colour = text.color, hjust = 0, vjust = 0.5, 
+                                                     family = font.family), axis.ticks = element_line(colour = "grey50"), 
+                          axis.title.y = element_text(size = base_size, 
+                                                      angle = 90, vjust = 0.01, hjust = 0.1, family = font.family), 
+                          plot.title = element_text(face = "bold", family = font.family), 
+                          legend.position = "none")
+            }
+            p = p + theme_bw1()
+            print(p)
+        }
+        else {
+            p = p + plot.theme
+            print(p)
+        }
+        if (length(covariate.values) > 1) {
+            resp.message <- c("Note:")
+            for (this.var in names(covariate.values)) {
+                resp.message <- paste(c(resp.message, " For AMCE and ACIE conditional on ", 
+                                        this.var, ", "), collapse = "")
+                other.vars <- names(covariate.values)[names(covariate.values) != 
+                                                          this.var]
+                other.levels <- c()
+                for (var in other.vars) {
+                    other.levels <- c(other.levels, paste(c(var, 
+                                                            " will be held at level \"", names(covariate.values[[var]])[1], 
+                                                            "\""), collapse = ""))
+                }
+                other.levels <- paste(other.levels, collapse = ", and ")
+                resp.message <- c(resp.message, other.levels, ".")
+                resp.message <- paste(resp.message, collapse = "")
+            }
+            cat(resp.message, "\n")
+        }
     }
-}
 
-# Function
-table_mm <- function(mms, capt) {
-  dfr <- data.frame(feature = mms[,c(4)], 
-             round(mms[,c(5,6,8,9,10)], digits=3))
-  names(dfr) <- c('Feature', 'Estimate', 'Std.Error',
-                'P-Value', 'Lower', 'Upper')
-  return(kable(dfr, "latex", caption = capt, booktabs = T) %>%
-    kable_styling(font_size = 10) %>%
-    group_rows('Who makes the rules?', 1, 5) %>%
-    group_rows('How are conflicts resolved?', 6, 10) %>%
-    group_rows('What punishments do they use?', 11, 14) %>%
-    group_rows('How are repeated violations punished?', 15, 17) %>%
-    group_rows('How are costs distributed?', 18, 21) %>%
-    group_rows('How often will the agreement be renegotiated?', 22, 26))
-}
 
-tableAMCE <- function(results, capt = 'Main Model') {
-  aux <- plotAMCE(results, ci=0.9, point.size = .8, dodge.size = 1,
-     text.size = 10, main = 'AMCE -- Full Model',
-     attribute.names = attrs, tblfy = T)
-  aux <- aux %>%
-    filter(!is.na(group))%>%
-    select(printvar, pe, se, lower, upper)
-  indx <- grep('Baseline =', aux$printvar)
-  aux$pe <- round(aux$pe, digits = 3)
-  aux$se <- round(aux$se, digits = 3)
-  aux$lower <- round(aux$lower, digits = 3)
-  aux$upper <- round(aux$upper, digits = 3)
-  aux$pe[indx] = ''
-  aux$se[indx] = ''
-  aux$lower[indx] = ''
-  aux$upper[indx] = ''
-  names(aux) <- c('Feature', 'Estimate', 'Std.Error', 
-                  'Lower', 'Upper')
-  return(kable(aux, "latex", caption = capt, booktabs = T, align = c('l', rep('c', 4))) %>%
-    kable_styling(font_size = 10) %>%
-    group_rows('How are conflicts resolved?', 1, 5) %>%
-    group_rows('How are costs distributed?', 6, 9) %>%
-    group_rows('How are repeated violations punished?', 10, 12) %>%
-    group_rows('How often will the agreement be renegotiated?', 13, 17) %>%
-    group_rows('What punishments do they use?', 18, 21) %>%
-    group_rows('Who makes the rules?', 22, 26))
-}
 ```
+
 
 # Latin American Elite Survey \label{sec:latam}
 
@@ -838,6 +595,13 @@ Conjoint experiments have many advantages. First, as each individual chooses bet
 The main demographic statistics collected were the country and elite types, and the geolocation of the respondents. They follow in the graphs below.
 
 ```{r demogGraph, echo=FALSE, fig.align='center', fig.height=3.5, message=FALSE,warning=F}
+library(plm); library(tidyverse)
+library(haven); library(clusterSEs)
+library(stargazer); library(cjoint)
+library(sp); library(cregg)
+library(kableExtra)
+load('freire-mignozzetti-skarbek.RData')
+
 aux <- cj %>%
   select(Response.ID, countryOrigin, groupOrigin, LocationLongitude, LocationLatitude) %>%
   unique()
@@ -845,9 +609,9 @@ aux <- cj %>%
 # Country
 tab <- data.frame(table(aux$countryOrigin))
 names(tab) <- c('Country', 'Frequency')
-p<-ggplot(data=tab, aes(x = Country, y=Frequency)) +
-  geom_bar(stat="identity") +
-  geom_hline(yintercept=50, linetype="dashed", color = "black") + 
+p<- ggplot(data = tab, aes(x = Country, y = Frequency)) +
+  geom_bar(stat = "identity") +
+  geom_hline(yintercept = 50, linetype = "dashed", color = "black") + 
   theme_bw() + annotate(geom = "text", label = tab$Frequency,
                         x = tab$Country, y = tab$Frequency + 2)
 p
@@ -855,8 +619,8 @@ p
 # Elite type
 tab <- data.frame(table(aux$groupOrigin))
 names(tab) <- c('Group Origin', 'Frequency')
-p<-ggplot(data=tab, aes(x = `Group Origin`, y=Frequency)) +
-  geom_bar(stat="identity") +
+p<- ggplot(data = tab, aes(x = `Group Origin`, y = Frequency)) +
+  geom_bar(stat = "identity") +
   theme_bw() + annotate(geom = "text", label = tab$Frequency,
                         x = tab$`Group Origin`, y = tab$Frequency + 5)
 p
@@ -880,7 +644,7 @@ aux <- cj %>%
 # Who makes the rules
 tab <- data.frame(table(aux$`Who makes the rules?`))
 names(tab) <- c('Levels', 'Frequency')
-p<-ggplot(data=tab, aes(x = Levels, y=Frequency)) +
+p <- ggplot(data=tab, aes(x = Levels, y = Frequency)) +
   geom_bar(stat="identity") +
   theme_bw() + xlab('Who makes the rules?') +
   annotate(geom = "text", label = tab$Frequency,
@@ -891,7 +655,7 @@ p
 # How are conflicts resolved?
 tab <- data.frame(table(aux$`How are conflicts resolved?`))
 names(tab) <- c('Levels', 'Frequency')
-p<-ggplot(data=tab, aes(x = Levels, y=Frequency)) +
+p <- ggplot(data=tab, aes(x = Levels, y = Frequency)) +
   geom_bar(stat="identity") +
   theme_bw() + xlab('How are conflicts resolved?') +
   annotate(geom = "text", label = tab$Frequency,
@@ -902,7 +666,7 @@ p
 # What punishments do they use?
 tab <- data.frame(table(aux$`What punishments do they use?`))
 names(tab) <- c('Levels', 'Frequency')
-p<-ggplot(data=tab, aes(x = Levels, y=Frequency)) +
+p <- ggplot(data=tab, aes(x = Levels, y = Frequency)) +
   geom_bar(stat="identity") +
   theme_bw() + xlab('What punishments do they use?') +
   annotate(geom = "text", label = tab$Frequency,
@@ -913,7 +677,7 @@ p
 # How are repeated violations punished?
 tab <- data.frame(table(aux$`How are repeated violations punished?`))
 names(tab) <- c('Levels', 'Frequency')
-p<-ggplot(data=tab, aes(x = Levels, y=Frequency)) +
+p <- ggplot(data=tab, aes(x = Levels, y = Frequency)) +
   geom_bar(stat="identity") +
   theme_bw() + xlab('How are repeated violations punished?') +
   annotate(geom = "text", label = tab$Frequency,
@@ -924,7 +688,7 @@ p
 # How are costs distributed?
 tab <- data.frame(table(aux$`How are costs distributed?`))
 names(tab) <- c('Levels', 'Frequency')
-p<-ggplot(data=tab, aes(x = Levels, y=Frequency)) +
+p <- ggplot(data=tab, aes(x = Levels, y = Frequency)) +
   geom_bar(stat="identity") +
   theme_bw() + xlab('How are costs distributed?') +
   annotate(geom = "text", label = tab$Frequency,
@@ -935,7 +699,7 @@ p
 # How often will the agreement be renegotiated?
 tab <- data.frame(table(aux$`How often will the agreement be renegotiated?`))
 names(tab) <- c('Levels', 'Frequency')
-p<-ggplot(data=tab, aes(x = Levels, y=Frequency)) +
+p <- ggplot(data=tab, aes(x = Levels, y = Frequency)) +
   geom_bar(stat="identity") +
   theme_bw() + xlab('How often will the agreement be renegotiated?') +
   annotate(geom = "text", label = tab$Frequency,
@@ -948,7 +712,7 @@ The two remarkable issues are the low frequency of *Less penalty* in the attribu
 
 # Code for the Main Paper
 
-The code for Figure 2 of the paper follows below, with also the point estimates in a companion table.
+The code for Figure 2 of the paper follows below. We also include the point estimates in companion tables.
 
 ```{r codefig2}
 ## Main plot
@@ -961,12 +725,44 @@ fm <- selected ~ `Who makes the rules?` +
   `How often will the agreement be renegotiated?`
 
 # Plot
-mms <- mm(cj, fm, id = ~Response.ID, alpha = .1, h0=0.5)
-p <- plot(mms, vline = 0.5)
+mms <- mm(cj, fm, id = ~Response.ID, alpha = .1, h0 = 0.5)
+
+myFaces <- c(rep('plain', 5), "bold",
+             rep('plain', 4), "bold",
+             rep('plain', 3), "bold",
+             rep('plain', 4), "bold",
+             rep('plain', 5), "bold",
+             rep('plain', 5), "bold")
+
+p <- plot(mms, vline = 0.5, header_fmt = "%s", size = 2) +
+  ggplot2::theme(
+    legend.position = "none",
+    panel.grid.major = ggplot2::element_blank(),
+    panel.grid.minor = ggplot2::element_blank(),
+    axis.text.y = element_text(face=myFaces, size = 11)) + 
+    ggplot2::geom_errorbarh(ggplot2::aes_string(xmin = "lower",
+                                                xmax = "upper"),
+                            size = 0.5, height = 0, na.rm = TRUE)
 p
+
 ggsave(filename = 'MM_all.pdf', plot = p, width = 6, height = 5)
 
 # Table
+table_mm <- function(mms, capt) {
+  dfr <- data.frame(feature = mms[,c(4)], 
+             round(mms[,c(5,6,8,9,10)], digits=3))
+  names(dfr) <- c('Feature', 'Estimate', 'Std.Error',
+                'P-Value', 'Lower', 'Upper')
+  return(kable(dfr, "latex", caption = capt, booktabs = T) %>%
+    kable_styling(font_size = 10) %>%
+    group_rows('Who makes the rules?', 1, 5) %>%
+    group_rows('How are conflicts resolved?', 6, 10) %>%
+    group_rows('What punishments do they use?', 11, 14) %>%
+    group_rows('How are repeated violations punished?', 15, 17) %>%
+    group_rows('How are costs distributed?', 18, 21) %>%
+    group_rows('How often will the agreement be renegotiated?', 22, 26))
+}
+
 table_mm(mms, capt = 'Marginal Means -- Full Dataset')
 ```
 
@@ -1066,7 +862,7 @@ table_mm(per, capt = 'Marginal Means -- Peru Only')
 
 \newpage
 
-```{r, fig.width = 10, fig.height = 10}
+```{r, fig.width = 13, fig.height = 13}
 # Changing country labels
 arg$country <- 'Argentina'
 bol$country <- 'Bolivia'
@@ -1081,16 +877,22 @@ per$country <- 'Peru'
 # Plot by country
 p <- plot(rbind(arg, bol, bra, chi, col, 
               cri, ecu, mex, pan, per), 
-        group = 'country', vline = 0.5, nr = 10) +
-  facet_wrap( ~ country, ncol = 5)
+        group = 'country', vline = 0.5, nr = 10,
+        header_fmt = "%s", size = 2) +
+  facet_wrap( ~ country, ncol = 5) +
+  ggplot2::theme(
+    axis.text.y = element_text(face=myFaces, size = 13)) + 
+    ggplot2::geom_errorbarh(ggplot2::aes_string(xmin = "lower",
+                                                xmax = "upper"),
+                            size = 0.75, height = 0, na.rm = TRUE)
 
 p
 
 ggsave(filename = 'MM_country.pdf', 
-       plot = p, width = 12, height = 12)
+       plot = p, width = 10, height = 12)
 ```
 
-The code for Figure 4 of the paper follows below, with also the point estimates in a companion table.
+The code for Figure 4 of the paper is available below. Tables displaying the point estimates are also included.
 
 ```{r}
 ## Elite type graphs and estimates
@@ -1131,7 +933,7 @@ table_mm(res4, capt = 'Marginal Means -- Academia Only')
 
 \newpage
 
-```{r, fig.width = 7, fig.height = 8}
+```{r, fig.width = 10, fig.height = 8}
 # Changing labels
 res1$MemberType <- 'Executive'
 res2$MemberType <- 'Legislative'
@@ -1140,12 +942,19 @@ res4$MemberType <- 'Academia'
 
 # Plot by Elite Type
 p <- plot(rbind(res1, res2, res3, res4), 
-     group = 'MemberType', vline = 0.5, nr=4) + 
-  facet_wrap( ~ MemberType, ncol=4)
+     group = 'MemberType', vline = 0.5, nr = 4,
+        header_fmt = "%s", size = 2) + 
+  facet_wrap( ~ MemberType, ncol = 4) +
+  ggplot2::theme(
+    axis.text.y = element_text(face=myFaces, size = 11)) + 
+    ggplot2::geom_errorbarh(ggplot2::aes_string(xmin = "lower",
+                                                xmax = "upper"),
+                            size = 0.5, height = 0, na.rm = TRUE,
+                            position = ggstance::position_dodgev(height = 1))
 p
 
-ggsave(filename = 'MM_membertype.pdf', plot = p, 
-       width = 8, height = 5)
+ggsave(filename = 'MM_membertype.pdf', plot = p,
+       width = 8, height = 6)
 ```
 
 # Average Marginal Component Effect (AMCE) Estimator \label{sec:amce}
@@ -1165,21 +974,47 @@ baselines$`How are conflicts resolved?` <- 'Government bureaucracy'
 baselines$`How are costs distributed?` <- 'Rich countries pay more than poor countries'
 baselines$`Who makes the rules?` <- 'Federal government'
 
-attrs <- 
-  c("Who makes the rules?",
-    "How are conflicts resolved?",
-    "What punishments do they use?",
-    "How are repeated violations punished?",
-    "How are costs distributed?",
-    "How often will the agreement be renegotiated?")
+attrs <- c("Who makes the rules?",
+           "How are conflicts resolved?",
+           "What punishments do they use?",
+           "How are repeated violations punished?",
+           "How are costs distributed?",
+           "How often will the agreement be renegotiated?")
 
-results <- 
-  cjoint::amce(fm, data=cj, cluster=T, 
-               respondent.id="Response.ID", 
-               design=conjDesign, 
-               baselines = baselines, na.ignore = T)
+results <- cjoint::amce(fm, data = cj, cluster = TRUE, 
+                        respondent.id = "Response.ID", 
+                        design = conjDesign, 
+                        baselines = baselines, na.ignore = T)
 
 # Table AMCE -- Full Model 
+tableAMCE <- function(results, capt = 'Main Model') {
+  aux <- plotAMCE(results, ci = 0.9, point.size = .8, dodge.size = 1,
+     text.size = 10, main = 'AMCE -- Full Model',
+     attribute.names = attrs, tblfy = T)
+  aux <- aux %>%
+    filter(!is.na(group)) %>%
+    select(printvar, pe, se, lower, upper)
+  indx <- grep('Baseline =', aux$printvar)
+  aux$pe <- round(aux$pe, digits = 3)
+  aux$se <- round(aux$se, digits = 3)
+  aux$lower <- round(aux$lower, digits = 3)
+  aux$upper <- round(aux$upper, digits = 3)
+  aux$pe[indx] = ''
+  aux$se[indx] = ''
+  aux$lower[indx] = ''
+  aux$upper[indx] = ''
+  names(aux) <- c('Feature', 'Estimate', 'Std.Error', 
+                  'Lower', 'Upper')
+  return(kable(aux, "latex", caption = capt, booktabs = T, align = c('l', rep('c', 4))) %>%
+    kable_styling(font_size = 10) %>%
+    group_rows('How are conflicts resolved?', 1, 5) %>%
+    group_rows('How are costs distributed?', 6, 9) %>%
+    group_rows('How are repeated violations punished?', 10, 12) %>%
+    group_rows('How often will the agreement be renegotiated?', 13, 17) %>%
+    group_rows('What punishments do they use?', 18, 21) %>%
+    group_rows('Who makes the rules?', 22, 26))
+}
+
 tableAMCE(results, capt = 'AMCE -- Full Model')
 ```
 
@@ -1187,7 +1022,7 @@ tableAMCE(results, capt = 'AMCE -- Full Model')
 
 ```{r, fig.width = 7, fig.height = 8}
 # Plot AMCE -- Full Model
-plot(results, ci=0.9, point.size = .8, dodge.size = 1,
+plot(results, ci = 0.9, point.size = .8, dodge.size = 1,
      text.size = 10, main = 'AMCE -- Full Model',
      attribute.names = attrs)
 ```
@@ -1198,10 +1033,10 @@ plot(results, ci=0.9, point.size = .8, dodge.size = 1,
 ## Country subsample
 
 ## Argentina
-results <- cjoint::amce(fm, data=cj, cluster=TRUE,
-                        respondent.id="Response.ID", 
-                        design=conjDesign, baselines = baselines,
-                        subset = cj$countryOrigin=='Argentina')
+results <- cjoint::amce(fm, data = cj, cluster = TRUE,
+                        respondent.id = "Response.ID", 
+                        design = conjDesign, baselines = baselines,
+                        subset = cj$countryOrigin == 'Argentina')
 # AMCE -- Argentina Only
 tableAMCE(results, capt = 'AMCE -- Argentina Only')
 ```
@@ -1218,9 +1053,10 @@ plot(results, ci=0.9, point.size = .8, dodge.size = 1,
 
 ```{r}
 ## Bolivia
-results <- cjoint::amce(fm, data=cj, cluster=TRUE, respondent.id="Response.ID", 
-                        design=conjDesign, baselines = baselines,
-                        subset = cj$countryOrigin=='Bolivia')
+results <- cjoint::amce(fm, data = cj, cluster = TRUE,
+                        respondent.id = "Response.ID", 
+                        design = conjDesign, baselines = baselines,
+                        subset = cj$countryOrigin == 'Bolivia')
 # Table AMCE -- Full Model 
 tableAMCE(results, capt = 'AMCE -- Bolivia Only')
 ```
@@ -1237,9 +1073,10 @@ plot(results, ci=0.9, point.size = .8, dodge.size = 1,
 
 ```{r}
 ## Brazil
-results <- cjoint::amce(fm, data=cj, cluster=TRUE, respondent.id="Response.ID", 
-                        design=conjDesign, baselines = baselines,
-                        subset = cj$countryOrigin=='Brazil')
+results <- cjoint::amce(fm, data = cj, cluster = TRUE,
+                        respondent.id = "Response.ID", 
+                        design = conjDesign, baselines = baselines,
+                        subset = cj$countryOrigin == 'Brazil')
 # Table AMCE -- Brazil Only
 tableAMCE(results, capt = 'AMCE -- Brazil Only')
 ```
@@ -1256,9 +1093,10 @@ plot(results, ci=0.9, point.size = .8, dodge.size = 1,
 
 ```{r}
 ## Chile
-results <- cjoint::amce(fm, data=cj, cluster=TRUE, respondent.id="Response.ID", 
-                        design=conjDesign, baselines = baselines,
-                        subset = cj$countryOrigin=='Chile')
+results <- cjoint::amce(fm, data = cj, cluster = TRUE,
+                        respondent.id = "Response.ID", 
+                        design = conjDesign, baselines = baselines,
+                        subset = cj$countryOrigin == 'Chile')
 # Table AMCE -- Chile Only
 tableAMCE(results, capt = 'AMCE -- Chile Only')
 ```
@@ -1275,10 +1113,10 @@ plot(results, ci=0.9, point.size = .8, dodge.size = 1,
 
 ```{r}
 ## Colombia
-results <- cjoint::amce(fm, data=cj, cluster=TRUE, 
-                        respondent.id="Response.ID", 
-                        design=conjDesign, baselines = baselines,
-                        subset = cj$countryOrigin=='Colombia')
+results <- cjoint::amce(fm, data = cj, cluster = TRUE,
+                        respondent.id = "Response.ID", 
+                        design = conjDesign, baselines = baselines,
+                        subset = cj$countryOrigin == 'Colombia')
 # Table AMCE -- Colombia Only
 tableAMCE(results, capt = 'AMCE -- Colombia Only')
 ```
@@ -1295,10 +1133,10 @@ plot(results, ci=0.9, point.size = .8, dodge.size = 1,
 
 ```{r}
 ## Costa Rica
-results <- cjoint::amce(fm, data=cj, cluster=TRUE,
-                        respondent.id="Response.ID", 
-                        design=conjDesign, baselines = baselines,
-                        subset = cj$countryOrigin=='Costa Rica')
+results <- cjoint::amce(fm, data = cj, cluster = TRUE,
+                        respondent.id = "Response.ID", 
+                        design = conjDesign, baselines = baselines,
+                        subset = cj$countryOrigin == 'Costa Rica')
 # Table AMCE -- Costa Rica Only
 tableAMCE(results, capt = 'AMCE -- Costa Rica Only')
 ```
@@ -1315,9 +1153,10 @@ plot(results, ci=0.9, point.size = .8, dodge.size = 1,
 
 ```{r}
 ## Ecuador
-results <- cjoint::amce(fm, data=cj, cluster=TRUE, respondent.id="Response.ID", 
-                        design=conjDesign, baselines = baselines,
-                        subset = cj$countryOrigin=='Ecuador')
+results <- cjoint::amce(fm, data = cj, cluster = TRUE,
+                        respondent.id = "Response.ID", 
+                        design = conjDesign, baselines = baselines,
+                        subset = cj$countryOrigin == 'Ecuador')
 # Table AMCE -- Ecuador Only
 tableAMCE(results, capt = 'AMCE -- Ecuador Only')
 ```
@@ -1334,9 +1173,10 @@ plot(results, ci=0.9, point.size = .8, dodge.size = 1,
 
 ```{r}
 ## Mexico
-results <- cjoint::amce(fm, data=cj, cluster=TRUE, respondent.id="Response.ID", 
-                        design=conjDesign, baselines = baselines,
-                        subset = cj$countryOrigin=='Mexico')
+results <- cjoint::amce(fm, data = cj, cluster = TRUE,
+                        respondent.id = "Response.ID", 
+                        design = conjDesign, baselines = baselines,
+                        subset = cj$countryOrigin == 'Mexico')
 # Table AMCE -- Full Model 
 tableAMCE(results, capt = 'AMCE -- Mexico Only')
 ```
@@ -1353,9 +1193,10 @@ plot(results, ci=0.9, point.size = .8, dodge.size = 1,
 
 ```{r}
 ## Panama
-results <- cjoint::amce(fm, data=cj, cluster=TRUE, respondent.id="Response.ID", 
-                        design=conjDesign, baselines = baselines,
-                        subset = cj$countryOrigin=='Panama')
+results <- cjoint::amce(fm, data = cj, cluster = TRUE,
+                        respondent.id = "Response.ID", 
+                        design = conjDesign, baselines = baselines,
+                        subset = cj$countryOrigin == 'Panama')
 # Table AMCE -- Panama Only
 tableAMCE(results, capt = 'AMCE -- Panama Only')
 ```
@@ -1372,9 +1213,10 @@ plot(results, ci=0.9, point.size = .8, dodge.size = 1,
 
 ```{r}
 ## Peru
-results <- cjoint::amce(fm, data=cj, cluster=TRUE, respondent.id="Response.ID", 
-                        design=conjDesign, baselines = baselines,
-                        subset = cj$countryOrigin=='Peru')
+results <- cjoint::amce(fm, data = cj, cluster = TRUE,
+                        respondent.id = "Response.ID", 
+                        design = conjDesign, baselines = baselines,
+                        subset = cj$countryOrigin == 'Peru')
 # Table AMCE -- Peru Only
 tableAMCE(results, capt = 'AMCE -- Peru Only')
 ```
@@ -1393,10 +1235,10 @@ plot(results, ci=0.9, point.size = .8, dodge.size = 1,
 ## Elite Subsample
 
 # Executive
-results <- cjoint::amce(fm, data=cj, cluster=TRUE,
-                        respondent.id="Response.ID", 
-                        design=conjDesign, baselines = baselines,
-                        subset = cj$groupOrigin=='Executive')
+results <- cjoint::amce(fm, data = cj, cluster = TRUE,
+                        respondent.id = "Response.ID", 
+                        design = conjDesign, baselines = baselines,
+                        subset = cj$groupOrigin == 'Executive')
 # Table AMCE -- Executive Only
 tableAMCE(results, capt = 'AMCE -- Executive Only')
 ```
@@ -1413,9 +1255,10 @@ plot(results, ci=0.9, point.size = .8, dodge.size = 1,
 
 ```{r}
 ## Legislative
-results <- cjoint::amce(fm, data=cj, cluster=TRUE, respondent.id="Response.ID", 
-                        design=conjDesign, baselines = baselines,
-                        subset = cj$groupOrigin=='Legislative')
+results <- cjoint::amce(fm, data = cj, cluster = TRUE,
+                        respondent.id = "Response.ID", 
+                        design = conjDesign, baselines = baselines,
+                        subset = cj$groupOrigin == 'Legislative')
 # Table AMCE -- Legislative Only
 tableAMCE(results, capt = 'AMCE -- Legislative Only')
 ```
@@ -1432,10 +1275,10 @@ plot(results, ci=0.9, point.size = .8, dodge.size = 1,
 
 ```{r}
 ## Civil society
-results <- cjoint::amce(fm, data=cj, cluster=TRUE, 
-                        respondent.id="Response.ID", 
-                        design=conjDesign, baselines = baselines,
-                        subset = (cj$groupOrigin=='Civil Society'))
+results <- cjoint::amce(fm, data = cj, cluster = TRUE,
+                        respondent.id = "Response.ID", 
+                        design = conjDesign, baselines = baselines,
+                        subset = cj$groupOrigin == 'Civil Society')
 # Table AMCE -- Civil Society Only 
 tableAMCE(results, capt = 'AMCE -- Civil Society Only')
 ```
@@ -1452,9 +1295,10 @@ plot(results, ci=0.9, point.size = .8, dodge.size = 1,
 
 ```{r}
 ## Academia Only
-results <- cjoint::amce(fm, data=cj, cluster=TRUE, respondent.id="Response.ID", 
-                        design=conjDesign, baselines = baselines,
-                        subset = cj$groupOrigin=='Academia')
+results <- cjoint::amce(fm, data = cj, cluster = TRUE,
+                        respondent.id = "Response.ID", 
+                        design = conjDesign, baselines = baselines,
+                        subset = cj$groupOrigin == 'Academia')
 # Table AMCE -- Full Model 
 tableAMCE(results, capt = 'AMCE -- Academia Only')
 ```
@@ -1640,7 +1484,7 @@ barplot(100*table(cj$task)/max(table(cj$task)), xlab = 'Conjoint task', ylab = '
 
 ## Other information
 
-\noindent \textbf{IRB:} This research received IRB approval from Brown University (Protocol 2195/2018) and Funda\c{c}\~{a}o Get\'{u}lio Vargas (Protocol 83/2018).
+\noindent \textbf{IRB:} This research received IRB approval from Brown University (Protocol 2195/2018) and Fundação Getulio Vargas (Protocol 83/2018).
 
 \noindent \textbf{Pre-registration:} The result was not pre-registered.
 
