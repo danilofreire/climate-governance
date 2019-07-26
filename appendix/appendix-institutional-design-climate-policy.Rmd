@@ -5,7 +5,7 @@ author:
 - "Danilo Freire[^freire]"
 - "Umberto Mignozzetti[^mignozzetti]"
 - "David Skarbek[^skarbek]"
-date: July 25, 2019
+date: July 26, 2019
 fontfamily: libertine
 fontawesome: yes
 fontsize: 12pt
@@ -594,13 +594,13 @@ Conjoint experiments have many advantages. First, as each individual chooses bet
 
 The main demographic statistics collected were the country and elite types, and the geolocation of the respondents. They follow in the graphs below.
 
-```{r demogGraph, echo=FALSE, fig.align='center', fig.height=3.5, message=FALSE,warning=F}
+```{r demogGraph, fig.align='center', fig.height=3.5, message=FALSE,warning=F}
 library(plm); library(tidyverse)
 library(haven); library(clusterSEs)
 library(stargazer); library(cjoint)
 library(sp); library(cregg)
 library(kableExtra)
-load('freire-mignozzetti-skarbek.RData')
+load('data.RData')
 
 aux <- cj %>%
   select(Response.ID, countryOrigin, groupOrigin, LocationLongitude, LocationLatitude) %>%
@@ -636,7 +636,7 @@ In the map, we can see that the answers concentrate on the country's capitals, w
 
 The figures below display the freature frequency for each attribute, by each task.
 
-```{r attributes, echo=FALSE, fig.align='center', fig.height=4}
+```{r attributes, fig.align='center', fig.height=4}
 aux <- cj %>%
   select(Response.ID, `Who makes the rules?`, `How are conflicts resolved?`, `What punishments do they use?`,`How are repeated violations punished?`, `How are costs distributed?`,`How often will the agreement be renegotiated?`) %>%
   unique()
@@ -964,7 +964,7 @@ This estimator fixes one category and look at changes from this baseline categor
 ```{r, fig.width = 7, fig.height = 8}
 ## Main model
 rm(cj)
-load('freire-mignozzetti-skarbek.RData')
+load('data.RData')
 
 # Set conjoint baselines
 baselines <- list()
@@ -1390,7 +1390,7 @@ The conjoint experiment analyzed in this paper was in the online and online-only
 
 ## Allocation Methods
 
-**Random Assignment:** We programmed the experiment using a Python application provided by @strezhnev2013conjoint. We translated the original survey questions (as shown in the text) into Portuguese and Spanish, and then embedded the PHP file with the randomization parameters in a Qualtrics survey. The PHP code we used to randomize the values of the attributes is available at the project's GitHub repository: <http://github.com/danilofreire/climate-governance>.
+**Random Assignment:** We programmed the experiment using a Python application provided by @strezhnev2013conjoint. We translated the original survey questions (as shown in the text) into Portuguese and Spanish, and then embedded the PHP file with the randomization parameters in a Qualtrics survey. The PHP code we used to randomize the values of the attributes is available at the project's GitHub repository: <https://github.com/danilofreire/climate-governance>.
 
 For each attribute, the probability of selecting a given component follows a uniform distribution function. The table below describes the results.
 
@@ -1472,14 +1472,14 @@ The conjoint experiment consisted in comparing two treaties that vary in these s
 
 \noindent \textbf{Outcome measures and covariates:} The main outcome is a binary indicator for the selection of a given conjoined package. We added two covariates to measure heterogeneous effects: *Country* and *Elite type*.
 
-\noindent \textbf{Questionnaire:} For the English translation of the entire survey instrument, with both the telephone and the online components, see the attachment below.
-
 \noindent \textbf{Statistical analysis:} We fit a marginal means estimator and an AMCE estimator. The estimation conditions the results within subjects and the presented conjoined packages. The results are available in sections \ref{sec:features} and \ref{sec:amce}.
 
 \noindent \textbf{Missing data and attrition:} Conditional on having started the conjoint experiment, for each task we had the following completion rates:
 
-```{r, fig.width = 7, fig.height = 8}
-barplot(100*table(cj$task)/max(table(cj$task)), xlab = 'Conjoint task', ylab = 'Percentage completed')
+```{r, fig.width = 7, fig.height = 5, tidy=FALSE}
+barplot(100*table(cj$task)/max(table(cj$task)),
+        xlab = 'Conjoint task',
+        ylab = 'Percentage completed')
 ```
 
 ## Other information
