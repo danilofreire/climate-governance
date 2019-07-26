@@ -4,7 +4,7 @@ This GitHub repository contains data and documented R code for ["Institutional D
 
 > **Abstract**: Which institutional features do Latin American elites favor for climate change policies? Climate change mitigation requires global scale governance, but it remains unclear which institutional arrangements maximize the support for environmental agreements. In this paper, we run a conjoint experiment with elite members of 10 Latin American countries and ask respondents to evaluate institutional designs drawn from a pool of 5,500 possible climate change treaties. We find that Latin American elites prefer international organizations to formulate climate policies, support imposing increasing fines on violators, and favor renewing agreements every five years. We also find that elites support both international institutions and local courts to mediate conflicts, but they distrust non-governmental organizations and reject informal norms as an means of conflict resolution. Our results identify possible challenges in crafting climate mitigation policies and offer new insights about how to integrate local and international levels in environmental agreements.
 >
-> **Keywords**: climate change, institutional design, elites, Latin America, regime complex
+> **Keywords**: climate change, elites, institutional design, Latin America, regime complex
 
 You can cite the article as: 
 
