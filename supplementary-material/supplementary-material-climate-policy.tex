@@ -1,0 +1,3064 @@
+% !TEX program = XeLaTeX
+\documentclass[12pt,a4paper,]{article}
+
+% Fonts
+\usepackage[]{libertine}
+% This is a nice mathfont, it fits well with Libertine
+% Comment the line if you want to use a different one
+\usepackage[libertine]{newtxmath}
+% The default monofont 
+% Again, comment the line below if you want to change it
+\usepackage[scaled=.95]{inconsolata}
+
+% Add the following packages to support kableExtra
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{etoolbox}
+\usepackage{tocloft}
+
+% Dots in toc
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+
+% Colours
+\usepackage[usenames,dvipsnames]{xcolor}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.55}
+
+% Spacing
+\usepackage{setspace}
+
+% Margin
+\usepackage[top=2cm,bottom=2cm,left=2cm,right=2cm]{geometry}
+
+% Packages I've been using for different reasons...
+\usepackage[backref,pagebackref]{hyperref}
+\usepackage{dcolumn}
+\usepackage{graphicx}
+\usepackage{float}
+\floatplacement{figure}{H}
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usetikzlibrary{positioning}
+\usepackage{mathtools}
+\usepackage{caption}
+
+% UK English
+\usepackage[UKenglish]{babel}
+\usepackage[UKenglish]{isodate}
+\cleanlookdateon
+
+% Penalties
+\exhyphenpenalty=1000
+\hyphenpenalty=1000
+\widowpenalty=1000
+\clubpenalty=1000
+
+% Back references
+\renewcommand*{\backref}[1]{}
+\renewcommand*{\backrefalt}[4]{%
+    \ifcase #1 (Not cited.)%
+    \or        Cited on page~#2.%
+    \else      Cited on pages~#2.%
+    \fi}
+\renewcommand{\backreftwosep}{ and~} 
+\renewcommand{\backreflastsep}{ and~}
+
+% Hypersetup
+\hypersetup{
+  linkcolor=Mahogany,
+  citecolor=Mahogany,
+  urlcolor=darkblue, 
+  breaklinks=true, 
+  colorlinks=true,
+      pdfauthor={Danilo Freire; Umberto Mignozzetti; David Skarbek},
+    }
+
+% If XeTex, LuaLaTeX, etc
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{amssymb,amsmath}
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+
+% Language
+
+% Bibliography
+\usepackage{natbib}
+\bibliographystyle{apalike}
+\makeatletter
+% Remove comma after author
+\setcitestyle{aysep={}}
+\patchcmd{\NAT@citex}
+	  {\@citea\NAT@hyper@{%
+		 \NAT@nmfmt{\NAT@nm}%
+		 \hyper@natlinkbreak{\NAT@aysep\NAT@spacechar}{\@citeb\@extra@b@citeb}%
+		 \NAT@date}}
+	  {\@citea\NAT@nmfmt{\NAT@nm}%
+	   \NAT@aysep\NAT@spacechar\NAT@hyper@{\NAT@date}}{}{}
+	\patchcmd{\NAT@citex}
+	  {\@citea\NAT@hyper@{%
+		 \NAT@nmfmt{\NAT@nm}%
+		 \hyper@natlinkbreak{\NAT@spacechar\NAT@@open\if*#1*\else#1\NAT@spacechar\fi}%
+		   {\@citeb\@extra@b@citeb}%
+		 \NAT@date}}
+	  {\@citea\NAT@nmfmt{\NAT@nm}%
+	   \NAT@spacechar\NAT@@open\if*#1*\else#1\NAT@spacechar\fi\NAT@hyper@{\NAT@date}}
+	  {}{}
+% Patch case where name and year are separated by aysep
+\patchcmd{\NAT@citex}
+  {\@citea\NAT@hyper@{%
+     \NAT@nmfmt{\NAT@nm}%
+     \hyper@natlinkbreak{\NAT@aysep\NAT@spacechar}{\@citeb\@extra@b@citeb}%
+     \NAT@date}}
+  {\@citea\NAT@nmfmt{\NAT@nm}%
+   \NAT@aysep\NAT@spacechar\NAT@hyper@{\NAT@date}}{}{}
+% Patch case where name and year are separated by opening bracket
+\patchcmd{\NAT@citex}
+  {\@citea\NAT@hyper@{%
+     \NAT@nmfmt{\NAT@nm}%
+     \hyper@natlinkbreak{\NAT@spacechar\NAT@@open\if*#1*\else#1\NAT@spacechar\fi}%
+       {\@citeb\@extra@b@citeb}%
+     \NAT@date}}
+  {\@citea\NAT@nmfmt{\NAT@nm}%
+   \NAT@spacechar\NAT@@open\if*#1*\else#1\NAT@spacechar\fi\NAT@hyper@{\NAT@date}}
+  {}{}
+\makeatother
+
+% Listings
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+
+% Verbatim
+
+% Tables
+\usepackage{longtable,booktabs}
+
+% Graphics
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+
+% Make links footnotes instead of hotlinks:
+%  \setlength{\emergencystretch}{3em}  % prevent overfull lines
+ \providecommand{\tightlist}{%
+   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+   
+% Numbered sections
+\setcounter{secnumdepth}{5}
+% % % Redefines (sub)paragraphs to behave more like sections
+% \ifx\paragraph\undefined\else
+% \let\oldparagraph\paragraph
+% \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+% \fi
+% \ifx\subparagraph\undefined\else
+% \let\oldsubparagraph\subparagraph
+% \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+% \fi
+% 
+% Spacing
+\doublespacing
+
+% Title
+\title{Supplementary Materials for ``Institutional Design and Elite Support for
+Climate Policies: Evidence from Latin American Countries''}
+
+% Author
+\author{Danilo Freire\footnote{Postdoctoral Research Associate, The Political
+  Theory Project, Brown University, Providence, RI 02912, USA,
+  \href{mailto:danilofreire@brown.edu}{\nolinkurl{danilofreire@brown.edu}},
+  \url{http://danilofreire.github.io}. Corresponding author.} \and Umberto Mignozzetti\footnote{School of International Relations, Fundação
+  Getulio Vargas, São Paulo, SP, Brazil and Wilf Family Department of
+  Politics, NYU, NY, USA,
+  \href{mailto:umberto.mig@nyu.edu}{\nolinkurl{umberto.mig@nyu.edu}},
+  \url{http://umbertomig.com}.} \and David Skarbek\footnote{The Department of Political Science and the
+  Political Theory Project, Brown University, Providence, RI, USA,
+  \href{mailto:davidskarbek@brown.edu}{\nolinkurl{davidskarbek@brown.edu}},
+  \url{http://davidskarbek.com}.}}
+
+% Date
+\date{\today}
+
+% Begin document
+\begin{document}
+\maketitle
+
+% Abstract
+
+
+% Table of Contents
+{
+\hypersetup{linkcolor=black}
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\hypertarget{latin-american-elite-survey}{%
+\section{\texorpdfstring{Latin American Elite Survey
+\label{sec:latam}}{Latin American Elite Survey }}\label{latin-american-elite-survey}}
+
+\setlength{\parindent}{1cm}
+\setlength{\parskip}{0pt}
+
+From October 1 to December 5, 2018, we ran an elite survey with
+respondents from ten Latin American countries: Argentina, Bolivia,
+Brazil, Chile, Colombia, Costa Rica, Ecuador, Mexico, Panama, and Peru.
+The survey proceeded in two steps.
+
+We collected information on Latin American elites. The target was:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Members of the Executive branch
+\item
+  Members of the Legislative branch
+\item
+  Civil society
+\item
+  Academics
+\end{enumerate}
+
+For each profile, in each country, we aimed at surveying:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  10 members of the Executive branch
+\item
+  10 members of the Legislative branch
+\item
+  15 Civil society
+\item
+  15 Academics
+\end{enumerate}
+
+To do so, we built a prospective respondents dataset with ten times
+these members for each country. Then, we ran an online and telephone
+survey where we collected information regarding the climate change
+agreements and other climate change-related problems.
+
+After finishing this dataset, we started the surveying stage. From
+November 12 to December 5, we ran the survey by contacting elite members
+by phone or by email. We had two teams of enumerators, one based in São
+Paulo and another based in Rio de Janeiro, Brazil, comprised of
+Portuguese and Spanish native speakers. Although the overall aim of the
+survey was 500 responses, the teams managed to collect 654 interviews.
+
+\hypertarget{conjoint-experiment-analysis-identification-and-estimation}{%
+\section{\texorpdfstring{Conjoint Experiment Analysis: Identification
+and Estimation
+\label{sec:conjoint}}{Conjoint Experiment Analysis: Identification and Estimation }}\label{conjoint-experiment-analysis-identification-and-estimation}}
+
+A conjoint experiment is a statistical technique that allows individuals
+to express their preferences on multiple attributes of a single topic
+\citep{hainmueller2014causal, bansak2016economic}. Individuals are
+presented with two hypothetical scenarios, A and B, each containing a
+series of characteristics a researcher wants to evaluate. The individual
+chooses one of them. As the attributes are randomized and individuals
+choose between different pairs of hypothetical scenarios, we can
+estimate how individuals value each of the conjoined elements.
+
+In our research, we ask what features elite members would like to see
+implemented in a climate change agreement. We ask their opinion on 6
+questions: 1) who makes the rules; 2) who enforces the laws; 3) what
+punishment should be used against lawbreakers; 4) how are repeated
+violations punished; 5) how are costs distributed, and 6) how often the
+agreement will be renegotiated. Each of the questions has four to five
+different attributes. For the first two questions, we ask individuals if
+they would rather have the community, local governments, federal
+governments, or international organizations to create or enforce rules.
+As for punishments, we have options ranging from do nothing to fines and
+incarceration. We ask whether the costs of climate change agreements
+should be paid mostly or exclusively by developed countries, by polluter
+countries regardless of their wealth, or if costs should be allocated
+according to the history of emissions of a given nation. Individuals
+also state their preferences for short-term agreements, a proxy we use
+for flexibility, or for long-term ones, what we see as a proxy for the
+stability of rules. Lastly, we ask which of the two conjoined choices
+individuals perceive as more legitimate and more efficient.
+
+Conjoint experiments have many advantages \citep{hainmueller2014causal}.
+First, as each individual chooses between many pairs of possible climate
+agreements -- seven in our case -- we can drastically increase our
+sample size without incurring in further financial costs. The design
+thus maximizes our research budget. Second, individuals rarely decide
+considering one attribute at a time, as presented in other types of
+survey experiments. In that regard, the conjoint analysis mirrors how
+people naturally make their choices, that is, by simultaneously taking
+several characteristics into consideration. Finally, as the experiments
+consist of a simple choice between A and B, conjoint analyses are easy
+to understand and to implement. This research design reduces the
+cognitive load interviewees have while answering surveys and as a
+result, we can expect more accurate responses from our sample.
+
+\hypertarget{descriptive-statistics}{%
+\section{\texorpdfstring{Descriptive Statistics
+\label{sec:descstats}}{Descriptive Statistics }}\label{descriptive-statistics}}
+
+The main demographic statistics collected were the country and elite
+types, and the geolocation of the respondents. They follow in the graphs
+below.
+
+\begin{center}\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/demogGraph-1} \end{center}
+
+\begin{center}\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/demogGraph-2} \end{center}
+
+As we can see, we managed to contact more than fifty elite members for
+all countries but Bolivia and Peru. To compensate for the low collection
+rates in these two countries, note that we exceeded the sample size in
+all the remaining states.
+
+Considering the elite type, note that we have, as expected, more people
+from academia and the civil society, followed by those from the
+Executive and Legislative branches. The data collection for members of
+the Legislative branch was below the original target, but above the
+minimum mark of 5 for each country. This is expected, given the
+difficulty of accessing these elite members.
+
+In the map, we can see that the answers concentrate on the country's
+capitals, with some variation within the state, but with sample
+concentrated in the largest municipalities. This is also in line with
+our expectations, as elite members are assumed to gravitate around
+capital cities and large urban centers.
+
+\hypertarget{frequency-of-features-selected-by-each-attribute}{%
+\section{\texorpdfstring{Frequency of Features Selected by Each
+Attribute
+\label{sec:features}}{Frequency of Features Selected by Each Attribute }}\label{frequency-of-features-selected-by-each-attribute}}
+
+The figures below display the feature frequency for each attribute, by
+each task.
+
+\begin{center}\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/attributes-1} \end{center}
+
+\begin{center}\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/attributes-2} \end{center}
+
+\begin{center}\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/attributes-3} \end{center}
+
+\begin{center}\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/attributes-4} \end{center}
+
+\begin{center}\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/attributes-5} \end{center}
+
+\begin{center}\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/attributes-6} \end{center}
+
+The two remarkable issues are the low frequency of \emph{Less penalty}
+in the attribute \emph{How are repeated violations punished?} and the
+low frequency of \emph{None} for the attribute \emph{What punishments do
+they use?}. This because when we draw the level none for the attribute
+\emph{What punishments do they use?} or the level less penalty for
+\emph{How are repeated violations punished?}, then it makes no sense to
+have less penalty than the minimum possible.
+
+\hypertarget{code-for-the-main-paper}{%
+\section{Code for the Main Paper}\label{code-for-the-main-paper}}
+
+The code for Figure 2 of the paper follows below. We also include the
+point estimates in companion tables.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Main plot}
+\CommentTok{# Main estimation equation}
+\NormalTok{fm <-}\StringTok{ }\NormalTok{selected }\OperatorTok{~}\StringTok{ `}\DataTypeTok{Who makes the rules?}\StringTok{`} \OperatorTok{+}
+\StringTok{  `}\DataTypeTok{How are conflicts resolved?}\StringTok{`} \OperatorTok{+}
+\StringTok{  `}\DataTypeTok{What punishments do they use?}\StringTok{`} \OperatorTok{+}\StringTok{ }
+\StringTok{  `}\DataTypeTok{How are repeated violations punished?}\StringTok{`} \OperatorTok{+}
+\StringTok{  `}\DataTypeTok{How are costs distributed?}\StringTok{`} \OperatorTok{+}
+\StringTok{  `}\DataTypeTok{How often will the agreement be renegotiated?}\StringTok{`}
+
+\CommentTok{# Plot}
+\NormalTok{mms <-}\StringTok{ }\KeywordTok{mm}\NormalTok{(cj, fm, }\DataTypeTok{id =} \OperatorTok{~}\NormalTok{Response.ID, }\DataTypeTok{alpha =} \FloatTok{.1}\NormalTok{, }\DataTypeTok{h0 =} \FloatTok{0.5}\NormalTok{)}
+
+\NormalTok{myFaces <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\StringTok{'plain'}\NormalTok{, }\DecValTok{5}\NormalTok{), }\StringTok{"bold"}\NormalTok{,}
+             \KeywordTok{rep}\NormalTok{(}\StringTok{'plain'}\NormalTok{, }\DecValTok{4}\NormalTok{), }\StringTok{"bold"}\NormalTok{,}
+             \KeywordTok{rep}\NormalTok{(}\StringTok{'plain'}\NormalTok{, }\DecValTok{3}\NormalTok{), }\StringTok{"bold"}\NormalTok{,}
+             \KeywordTok{rep}\NormalTok{(}\StringTok{'plain'}\NormalTok{, }\DecValTok{4}\NormalTok{), }\StringTok{"bold"}\NormalTok{,}
+             \KeywordTok{rep}\NormalTok{(}\StringTok{'plain'}\NormalTok{, }\DecValTok{5}\NormalTok{), }\StringTok{"bold"}\NormalTok{,}
+             \KeywordTok{rep}\NormalTok{(}\StringTok{'plain'}\NormalTok{, }\DecValTok{5}\NormalTok{), }\StringTok{"bold"}\NormalTok{)}
+
+\NormalTok{p <-}\StringTok{ }\KeywordTok{plot}\NormalTok{(mms, }\DataTypeTok{vline =} \FloatTok{0.5}\NormalTok{, }\DataTypeTok{header_fmt =} \StringTok{"%s"}\NormalTok{, }\DataTypeTok{size =} \DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{ggplot2}\OperatorTok{::}\KeywordTok{theme}\NormalTok{(}
+    \DataTypeTok{legend.position =} \StringTok{"none"}\NormalTok{,}
+    \DataTypeTok{panel.grid.major =}\NormalTok{ ggplot2}\OperatorTok{::}\KeywordTok{element_blank}\NormalTok{(),}
+    \DataTypeTok{panel.grid.minor =}\NormalTok{ ggplot2}\OperatorTok{::}\KeywordTok{element_blank}\NormalTok{(),}
+    \DataTypeTok{axis.text.y =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{face=}\NormalTok{myFaces, }\DataTypeTok{size =} \DecValTok{11}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\NormalTok{ggplot2}\OperatorTok{::}\KeywordTok{geom_errorbarh}\NormalTok{(ggplot2}\OperatorTok{::}\KeywordTok{aes_string}\NormalTok{(}\DataTypeTok{xmin =} \StringTok{"lower"}\NormalTok{,}
+                                                \DataTypeTok{xmax =} \StringTok{"upper"}\NormalTok{),}
+                            \DataTypeTok{size =} \DecValTok{1}\NormalTok{, }\DataTypeTok{height =} \DecValTok{0}\NormalTok{, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{,}
+                            \DataTypeTok{position =}\NormalTok{ ggstance}\OperatorTok{::}\KeywordTok{position_dodgev}\NormalTok{(}\DataTypeTok{height =} \DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Vectorized input to `element_text()` is not officially supported.
+## Results may be unexpected or may change in future versions of ggplot2.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/codefig2-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggsave}\NormalTok{(}\DataTypeTok{filename =} \StringTok{'MM_all.pdf'}\NormalTok{, }\DataTypeTok{plot =}\NormalTok{ p, }\DataTypeTok{width =} \DecValTok{8}\NormalTok{, }\DataTypeTok{height =} \DecValTok{6}\NormalTok{)}
+
+\CommentTok{# Table}
+\NormalTok{table_mm <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(mms, capt) \{}
+\NormalTok{  dfr <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{feature =}\NormalTok{ mms[,}\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{)], }
+             \KeywordTok{round}\NormalTok{(mms[,}\KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{6}\NormalTok{,}\DecValTok{8}\NormalTok{,}\DecValTok{9}\NormalTok{,}\DecValTok{10}\NormalTok{)], }\DataTypeTok{digits=}\DecValTok{3}\NormalTok{))}
+  \KeywordTok{names}\NormalTok{(dfr) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'Feature'}\NormalTok{, }\StringTok{'Estimate'}\NormalTok{, }\StringTok{'Std.Error'}\NormalTok{,}
+                \StringTok{'P-Value'}\NormalTok{, }\StringTok{'Lower'}\NormalTok{, }\StringTok{'Upper'}\NormalTok{)}
+  \KeywordTok{return}\NormalTok{(}\KeywordTok{kable}\NormalTok{(dfr, }\StringTok{"latex"}\NormalTok{, }\DataTypeTok{caption =}\NormalTok{ capt, }\DataTypeTok{booktabs =}\NormalTok{ T) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{group_rows}\NormalTok{(}\StringTok{'Who makes the rules?'}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{5}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{group_rows}\NormalTok{(}\StringTok{'How are conflicts resolved?'}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{10}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{group_rows}\NormalTok{(}\StringTok{'What punishments do they use?'}\NormalTok{, }\DecValTok{11}\NormalTok{, }\DecValTok{14}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{group_rows}\NormalTok{(}\StringTok{'How are repeated violations punished?'}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{17}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{group_rows}\NormalTok{(}\StringTok{'How are costs distributed?'}\NormalTok{, }\DecValTok{18}\NormalTok{, }\DecValTok{21}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{group_rows}\NormalTok{(}\StringTok{'How often will the agreement be renegotiated?'}\NormalTok{, }\DecValTok{22}\NormalTok{, }\DecValTok{26}\NormalTok{))}
+\NormalTok{\}}
+
+\KeywordTok{table_mm}\NormalTok{(mms, }\DataTypeTok{capt =} \StringTok{'Marginal Means -- Full Dataset'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:codefig2}Marginal Means -- Full Dataset}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lrrrrr}
+\toprule
+Feature & Estimate & Std.Error & P-Value & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}NGOs & 0.455 & 0.013 & 0.000 & 0.434 & 0.476\\
+\hspace{1em}Local community members & 0.516 & 0.013 & 0.202 & 0.495 & 0.537\\
+\hspace{1em}Local government & 0.498 & 0.012 & 0.901 & 0.478 & 0.519\\
+\hspace{1em}Federal government & 0.486 & 0.013 & 0.271 & 0.466 & 0.507\\
+\hspace{1em}International organizations & 0.543 & 0.012 & 0.001 & 0.522 & 0.563\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}Informal norms & 0.410 & 0.013 & 0.000 & 0.390 & 0.431\\
+\hspace{1em}Private arbitration & 0.500 & 0.013 & 0.980 & 0.480 & 0.521\\
+\hspace{1em}Local courts & 0.546 & 0.012 & 0.000 & 0.526 & 0.567\\
+\hspace{1em}Government bureaucracy & 0.465 & 0.013 & 0.005 & 0.444 & 0.485\\
+\hspace{1em}United Nations & 0.573 & 0.012 & 0.000 & 0.553 & 0.593\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}None & 0.448 & 0.013 & 0.000 & 0.427 & 0.470\\
+\hspace{1em}Blacklist & 0.523 & 0.011 & 0.035 & 0.505 & 0.540\\
+\hspace{1em}Fines & 0.553 & 0.011 & 0.000 & 0.536 & 0.571\\
+\hspace{1em}Imprisonment & 0.458 & 0.011 & 0.000 & 0.440 & 0.476\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}Less penalty & 0.464 & 0.011 & 0.001 & 0.447 & 0.481\\
+\hspace{1em}Same & 0.497 & 0.009 & 0.739 & 0.482 & 0.512\\
+\hspace{1em}More penalty & 0.532 & 0.009 & 0.001 & 0.517 & 0.548\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}Only rich countries pay & 0.438 & 0.011 & 0.000 & 0.420 & 0.456\\
+\hspace{1em}Proportional to current emissions & 0.524 & 0.011 & 0.030 & 0.506 & 0.542\\
+\hspace{1em}Proportional to history of emissions & 0.536 & 0.011 & 0.001 & 0.518 & 0.555\\
+\hspace{1em}Rich countries pay more than poor countries & 0.505 & 0.011 & 0.684 & 0.486 & 0.523\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}One year & 0.535 & 0.012 & 0.004 & 0.515 & 0.556\\
+\hspace{1em}Five years & 0.590 & 0.012 & 0.000 & 0.570 & 0.610\\
+\hspace{1em}Twenty years & 0.519 & 0.012 & 0.121 & 0.499 & 0.540\\
+\hspace{1em}Fifty years & 0.442 & 0.013 & 0.000 & 0.421 & 0.463\\
+\hspace{1em}Never & 0.404 & 0.013 & 0.000 & 0.383 & 0.424\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The code for Figure 3 of the paper follows below, with also the point
+estimates in a companion table.
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Marginal means by Country}
+
+\CommentTok{# Argentina}
+\NormalTok{arg <-}\StringTok{ }\KeywordTok{mm}\NormalTok{(}\KeywordTok{subset}\NormalTok{(cj, countryOrigin}\OperatorTok{==}\StringTok{'Argentina'}\NormalTok{),  }
+\NormalTok{        fm, }\DataTypeTok{id =} \OperatorTok{~}\NormalTok{Response.ID, }\DataTypeTok{alpha =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{h0 =} \FloatTok{0.5}\NormalTok{)}
+\KeywordTok{table_mm}\NormalTok{(arg, }\DataTypeTok{capt =} \StringTok{'Marginal Means -- Argentina Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:codefig3}Marginal Means -- Argentina Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lrrrrr}
+\toprule
+Feature & Estimate & Std.Error & P-Value & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}NGOs & 0.417 & 0.043 & 0.052 & 0.346 & 0.487\\
+\hspace{1em}Local community members & 0.449 & 0.044 & 0.246 & 0.376 & 0.521\\
+\hspace{1em}Local government & 0.503 & 0.042 & 0.933 & 0.435 & 0.572\\
+\hspace{1em}Federal government & 0.504 & 0.045 & 0.928 & 0.429 & 0.579\\
+\hspace{1em}International organizations & 0.619 & 0.041 & 0.004 & 0.551 & 0.686\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}Informal norms & 0.377 & 0.043 & 0.004 & 0.307 & 0.447\\
+\hspace{1em}Private arbitration & 0.522 & 0.047 & 0.638 & 0.445 & 0.599\\
+\hspace{1em}Local courts & 0.574 & 0.042 & 0.074 & 0.506 & 0.643\\
+\hspace{1em}Government bureaucracy & 0.446 & 0.044 & 0.217 & 0.374 & 0.518\\
+\hspace{1em}United Nations & 0.568 & 0.041 & 0.097 & 0.501 & 0.635\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}None & 0.361 & 0.043 & 0.001 & 0.289 & 0.432\\
+\hspace{1em}Blacklist & 0.514 & 0.037 & 0.710 & 0.453 & 0.575\\
+\hspace{1em}Fines & 0.587 & 0.037 & 0.019 & 0.526 & 0.647\\
+\hspace{1em}Imprisonment & 0.494 & 0.037 & 0.882 & 0.433 & 0.556\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}Less penalty & 0.465 & 0.035 & 0.319 & 0.406 & 0.523\\
+\hspace{1em}Same & 0.516 & 0.032 & 0.608 & 0.464 & 0.569\\
+\hspace{1em}More penalty & 0.514 & 0.034 & 0.686 & 0.458 & 0.569\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}Only rich countries pay & 0.408 & 0.035 & 0.009 & 0.350 & 0.466\\
+\hspace{1em}Proportional to current emissions & 0.534 & 0.041 & 0.410 & 0.466 & 0.601\\
+\hspace{1em}Proportional to history of emissions & 0.576 & 0.038 & 0.045 & 0.514 & 0.638\\
+\hspace{1em}Rich countries pay more than poor countries & 0.500 & 0.041 & 1.000 & 0.432 & 0.568\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}One year & 0.604 & 0.039 & 0.008 & 0.539 & 0.669\\
+\hspace{1em}Five years & 0.545 & 0.043 & 0.298 & 0.474 & 0.616\\
+\hspace{1em}Twenty years & 0.438 & 0.044 & 0.157 & 0.367 & 0.510\\
+\hspace{1em}Fifty years & 0.438 & 0.044 & 0.154 & 0.365 & 0.510\\
+\hspace{1em}Never & 0.448 & 0.046 & 0.263 & 0.372 & 0.524\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Bolivia}
+\NormalTok{bol <-}\StringTok{ }\KeywordTok{mm}\NormalTok{(}\KeywordTok{subset}\NormalTok{(cj, countryOrigin}\OperatorTok{==}\StringTok{'Bolivia'}\NormalTok{),  }
+\NormalTok{        fm, }\DataTypeTok{id =} \OperatorTok{~}\NormalTok{Response.ID, }\DataTypeTok{alpha =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{h0 =} \FloatTok{0.5}\NormalTok{)}
+\KeywordTok{table_mm}\NormalTok{(bol, }\DataTypeTok{capt =} \StringTok{'Marginal Means -- Bolivia Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-1}Marginal Means -- Bolivia Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lrrrrr}
+\toprule
+Feature & Estimate & Std.Error & P-Value & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}NGOs & 0.421 & 0.051 & 0.119 & 0.338 & 0.504\\
+\hspace{1em}Local community members & 0.575 & 0.053 & 0.159 & 0.488 & 0.662\\
+\hspace{1em}Local government & 0.560 & 0.054 & 0.272 & 0.470 & 0.649\\
+\hspace{1em}Federal government & 0.467 & 0.048 & 0.498 & 0.388 & 0.547\\
+\hspace{1em}International organizations & 0.494 & 0.056 & 0.910 & 0.401 & 0.586\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}Informal norms & 0.369 & 0.053 & 0.013 & 0.282 & 0.456\\
+\hspace{1em}Private arbitration & 0.543 & 0.051 & 0.408 & 0.458 & 0.627\\
+\hspace{1em}Local courts & 0.538 & 0.052 & 0.467 & 0.453 & 0.623\\
+\hspace{1em}Government bureaucracy & 0.397 & 0.055 & 0.064 & 0.306 & 0.489\\
+\hspace{1em}United Nations & 0.612 & 0.048 & 0.020 & 0.533 & 0.691\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}None & 0.442 & 0.054 & 0.278 & 0.354 & 0.530\\
+\hspace{1em}Blacklist & 0.466 & 0.044 & 0.431 & 0.394 & 0.537\\
+\hspace{1em}Fines & 0.570 & 0.044 & 0.108 & 0.498 & 0.642\\
+\hspace{1em}Imprisonment & 0.505 & 0.048 & 0.923 & 0.425 & 0.584\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}Less penalty & 0.451 & 0.042 & 0.238 & 0.382 & 0.519\\
+\hspace{1em}Same & 0.534 & 0.038 & 0.362 & 0.472 & 0.597\\
+\hspace{1em}More penalty & 0.507 & 0.043 & 0.864 & 0.437 & 0.578\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}Only rich countries pay & 0.424 & 0.045 & 0.094 & 0.349 & 0.499\\
+\hspace{1em}Proportional to current emissions & 0.593 & 0.047 & 0.050 & 0.515 & 0.670\\
+\hspace{1em}Proportional to history of emissions & 0.427 & 0.046 & 0.112 & 0.352 & 0.503\\
+\hspace{1em}Rich countries pay more than poor countries & 0.569 & 0.047 & 0.147 & 0.491 & 0.647\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}One year & 0.485 & 0.050 & 0.763 & 0.402 & 0.567\\
+\hspace{1em}Five years & 0.624 & 0.048 & 0.010 & 0.544 & 0.703\\
+\hspace{1em}Twenty years & 0.575 & 0.053 & 0.159 & 0.488 & 0.662\\
+\hspace{1em}Fifty years & 0.385 & 0.055 & 0.036 & 0.294 & 0.475\\
+\hspace{1em}Never & 0.402 & 0.053 & 0.063 & 0.316 & 0.489\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Brazil}
+\NormalTok{bra <-}\StringTok{ }\KeywordTok{mm}\NormalTok{(}\KeywordTok{subset}\NormalTok{(cj, countryOrigin}\OperatorTok{==}\StringTok{'Brazil'}\NormalTok{),  }
+\NormalTok{        fm, }\DataTypeTok{id =} \OperatorTok{~}\NormalTok{Response.ID, }\DataTypeTok{alpha =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{h0 =} \FloatTok{0.5}\NormalTok{)}
+\KeywordTok{table_mm}\NormalTok{(bra, }\DataTypeTok{capt =} \StringTok{'Marginal Means -- Brazil Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-2}Marginal Means -- Brazil Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lrrrrr}
+\toprule
+Feature & Estimate & Std.Error & P-Value & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}NGOs & 0.492 & 0.036 & 0.829 & 0.433 & 0.551\\
+\hspace{1em}Local community members & 0.495 & 0.036 & 0.886 & 0.436 & 0.554\\
+\hspace{1em}Local government & 0.456 & 0.036 & 0.219 & 0.397 & 0.515\\
+\hspace{1em}Federal government & 0.481 & 0.036 & 0.610 & 0.422 & 0.541\\
+\hspace{1em}International organizations & 0.563 & 0.033 & 0.053 & 0.509 & 0.617\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}Informal norms & 0.434 & 0.037 & 0.079 & 0.373 & 0.496\\
+\hspace{1em}Private arbitration & 0.475 & 0.035 & 0.477 & 0.416 & 0.533\\
+\hspace{1em}Local courts & 0.556 & 0.035 & 0.114 & 0.498 & 0.615\\
+\hspace{1em}Government bureaucracy & 0.476 & 0.035 & 0.485 & 0.418 & 0.533\\
+\hspace{1em}United Nations & 0.547 & 0.033 & 0.160 & 0.492 & 0.601\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}None & 0.465 & 0.038 & 0.356 & 0.402 & 0.528\\
+\hspace{1em}Blacklist & 0.523 & 0.031 & 0.461 & 0.472 & 0.573\\
+\hspace{1em}Fines & 0.569 & 0.030 & 0.021 & 0.520 & 0.618\\
+\hspace{1em}Imprisonment & 0.434 & 0.029 & 0.024 & 0.386 & 0.482\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}Less penalty & 0.416 & 0.029 & 0.004 & 0.368 & 0.464\\
+\hspace{1em}Same & 0.518 & 0.027 & 0.490 & 0.475 & 0.562\\
+\hspace{1em}More penalty & 0.549 & 0.026 & 0.063 & 0.506 & 0.592\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}Only rich countries pay & 0.429 & 0.033 & 0.028 & 0.375 & 0.482\\
+\hspace{1em}Proportional to current emissions & 0.496 & 0.031 & 0.901 & 0.445 & 0.547\\
+\hspace{1em}Proportional to history of emissions & 0.546 & 0.032 & 0.152 & 0.493 & 0.599\\
+\hspace{1em}Rich countries pay more than poor countries & 0.524 & 0.030 & 0.431 & 0.474 & 0.574\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}One year & 0.535 & 0.034 & 0.305 & 0.479 & 0.591\\
+\hspace{1em}Five years & 0.568 & 0.036 & 0.064 & 0.508 & 0.627\\
+\hspace{1em}Twenty years & 0.537 & 0.034 & 0.275 & 0.481 & 0.593\\
+\hspace{1em}Fifty years & 0.469 & 0.035 & 0.368 & 0.412 & 0.526\\
+\hspace{1em}Never & 0.377 & 0.037 & 0.001 & 0.317 & 0.437\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Chile}
+\NormalTok{chi <-}\StringTok{ }\KeywordTok{mm}\NormalTok{(}\KeywordTok{subset}\NormalTok{(cj, countryOrigin}\OperatorTok{==}\StringTok{'Chile'}\NormalTok{),  }
+\NormalTok{        fm, }\DataTypeTok{id =} \OperatorTok{~}\NormalTok{Response.ID, }\DataTypeTok{alpha =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{h0 =} \FloatTok{0.5}\NormalTok{)}
+\KeywordTok{table_mm}\NormalTok{(chi, }\DataTypeTok{capt =} \StringTok{'Marginal Means -- Chile Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-3}Marginal Means -- Chile Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lrrrrr}
+\toprule
+Feature & Estimate & Std.Error & P-Value & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}NGOs & 0.400 & 0.043 & 0.020 & 0.329 & 0.471\\
+\hspace{1em}Local community members & 0.630 & 0.039 & 0.001 & 0.566 & 0.694\\
+\hspace{1em}Local government & 0.538 & 0.040 & 0.335 & 0.473 & 0.604\\
+\hspace{1em}Federal government & 0.403 & 0.043 & 0.025 & 0.332 & 0.474\\
+\hspace{1em}International organizations & 0.496 & 0.043 & 0.932 & 0.426 & 0.567\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}Informal norms & 0.403 & 0.042 & 0.022 & 0.333 & 0.473\\
+\hspace{1em}Private arbitration & 0.480 & 0.045 & 0.652 & 0.406 & 0.554\\
+\hspace{1em}Local courts & 0.606 & 0.039 & 0.006 & 0.543 & 0.670\\
+\hspace{1em}Government bureaucracy & 0.445 & 0.041 & 0.183 & 0.378 & 0.513\\
+\hspace{1em}United Nations & 0.545 & 0.042 & 0.275 & 0.477 & 0.614\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}None & 0.425 & 0.043 & 0.081 & 0.355 & 0.496\\
+\hspace{1em}Blacklist & 0.607 & 0.036 & 0.003 & 0.547 & 0.666\\
+\hspace{1em}Fines & 0.512 & 0.035 & 0.726 & 0.455 & 0.570\\
+\hspace{1em}Imprisonment & 0.435 & 0.036 & 0.076 & 0.376 & 0.495\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}Less penalty & 0.476 & 0.036 & 0.512 & 0.416 & 0.536\\
+\hspace{1em}Same & 0.438 & 0.030 & 0.041 & 0.388 & 0.488\\
+\hspace{1em}More penalty & 0.583 & 0.031 & 0.007 & 0.532 & 0.634\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}Only rich countries pay & 0.462 & 0.040 & 0.338 & 0.397 & 0.527\\
+\hspace{1em}Proportional to current emissions & 0.524 & 0.037 & 0.508 & 0.464 & 0.585\\
+\hspace{1em}Proportional to history of emissions & 0.497 & 0.037 & 0.940 & 0.436 & 0.559\\
+\hspace{1em}Rich countries pay more than poor countries & 0.511 & 0.037 & 0.768 & 0.450 & 0.571\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}One year & 0.418 & 0.042 & 0.050 & 0.350 & 0.487\\
+\hspace{1em}Five years & 0.645 & 0.038 & 0.000 & 0.582 & 0.708\\
+\hspace{1em}Twenty years & 0.503 & 0.042 & 0.934 & 0.435 & 0.572\\
+\hspace{1em}Fifty years & 0.489 & 0.043 & 0.795 & 0.417 & 0.560\\
+\hspace{1em}Never & 0.424 & 0.043 & 0.078 & 0.353 & 0.495\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Colombia}
+\NormalTok{col <-}\StringTok{ }\KeywordTok{mm}\NormalTok{(}\KeywordTok{subset}\NormalTok{(cj, countryOrigin}\OperatorTok{==}\StringTok{'Colombia'}\NormalTok{),  }
+\NormalTok{        fm, }\DataTypeTok{id =} \OperatorTok{~}\NormalTok{Response.ID, }\DataTypeTok{alpha =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{h0 =} \FloatTok{0.5}\NormalTok{)}
+\KeywordTok{table_mm}\NormalTok{(col, }\DataTypeTok{capt =} \StringTok{'Marginal Means -- Colombia Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-4}Marginal Means -- Colombia Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lrrrrr}
+\toprule
+Feature & Estimate & Std.Error & P-Value & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}NGOs & 0.430 & 0.042 & 0.090 & 0.361 & 0.498\\
+\hspace{1em}Local community members & 0.595 & 0.038 & 0.012 & 0.533 & 0.658\\
+\hspace{1em}Local government & 0.465 & 0.038 & 0.359 & 0.403 & 0.528\\
+\hspace{1em}Federal government & 0.463 & 0.037 & 0.327 & 0.402 & 0.525\\
+\hspace{1em}International organizations & 0.544 & 0.041 & 0.285 & 0.476 & 0.611\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}Informal norms & 0.410 & 0.038 & 0.018 & 0.347 & 0.472\\
+\hspace{1em}Private arbitration & 0.510 & 0.040 & 0.808 & 0.443 & 0.576\\
+\hspace{1em}Local courts & 0.533 & 0.039 & 0.394 & 0.469 & 0.596\\
+\hspace{1em}Government bureaucracy & 0.466 & 0.039 & 0.385 & 0.401 & 0.531\\
+\hspace{1em}United Nations & 0.584 & 0.039 & 0.031 & 0.520 & 0.648\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}None & 0.497 & 0.038 & 0.939 & 0.434 & 0.560\\
+\hspace{1em}Blacklist & 0.531 & 0.034 & 0.370 & 0.474 & 0.587\\
+\hspace{1em}Fines & 0.551 & 0.033 & 0.123 & 0.497 & 0.606\\
+\hspace{1em}Imprisonment & 0.414 & 0.035 & 0.013 & 0.357 & 0.471\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}Less penalty & 0.479 & 0.034 & 0.537 & 0.423 & 0.535\\
+\hspace{1em}Same & 0.492 & 0.029 & 0.772 & 0.444 & 0.539\\
+\hspace{1em}More penalty & 0.523 & 0.029 & 0.417 & 0.476 & 0.571\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}Only rich countries pay & 0.475 & 0.034 & 0.459 & 0.420 & 0.530\\
+\hspace{1em}Proportional to current emissions & 0.516 & 0.034 & 0.633 & 0.460 & 0.572\\
+\hspace{1em}Proportional to history of emissions & 0.538 & 0.035 & 0.286 & 0.480 & 0.596\\
+\hspace{1em}Rich countries pay more than poor countries & 0.468 & 0.038 & 0.402 & 0.406 & 0.531\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}One year & 0.547 & 0.038 & 0.221 & 0.484 & 0.609\\
+\hspace{1em}Five years & 0.558 & 0.039 & 0.137 & 0.494 & 0.621\\
+\hspace{1em}Twenty years & 0.547 & 0.039 & 0.232 & 0.482 & 0.612\\
+\hspace{1em}Fifty years & 0.423 & 0.042 & 0.069 & 0.354 & 0.493\\
+\hspace{1em}Never & 0.417 & 0.037 & 0.026 & 0.356 & 0.478\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Costa Rica}
+\NormalTok{cri <-}\StringTok{ }\KeywordTok{mm}\NormalTok{(}\KeywordTok{subset}\NormalTok{(cj, countryOrigin}\OperatorTok{==}\StringTok{'Costa Rica'}\NormalTok{),  }
+\NormalTok{        fm, }\DataTypeTok{id =} \OperatorTok{~}\NormalTok{Response.ID, }\DataTypeTok{alpha =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{h0 =} \FloatTok{0.5}\NormalTok{)}
+\KeywordTok{table_mm}\NormalTok{(cri, }\DataTypeTok{capt =} \StringTok{'Marginal Means -- Costa Rica Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-5}Marginal Means -- Costa Rica Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lrrrrr}
+\toprule
+Feature & Estimate & Std.Error & P-Value & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}NGOs & 0.524 & 0.044 & 0.593 & 0.451 & 0.597\\
+\hspace{1em}Local community members & 0.439 & 0.042 & 0.146 & 0.370 & 0.508\\
+\hspace{1em}Local government & 0.565 & 0.043 & 0.134 & 0.494 & 0.636\\
+\hspace{1em}Federal government & 0.511 & 0.043 & 0.798 & 0.441 & 0.581\\
+\hspace{1em}International organizations & 0.459 & 0.048 & 0.387 & 0.380 & 0.537\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}Informal norms & 0.402 & 0.043 & 0.021 & 0.331 & 0.472\\
+\hspace{1em}Private arbitration & 0.496 & 0.044 & 0.930 & 0.424 & 0.569\\
+\hspace{1em}Local courts & 0.497 & 0.042 & 0.934 & 0.428 & 0.565\\
+\hspace{1em}Government bureaucracy & 0.500 & 0.048 & 1.000 & 0.421 & 0.579\\
+\hspace{1em}United Nations & 0.609 & 0.043 & 0.011 & 0.538 & 0.680\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}None & 0.383 & 0.045 & 0.010 & 0.308 & 0.457\\
+\hspace{1em}Blacklist & 0.477 & 0.038 & 0.541 & 0.414 & 0.539\\
+\hspace{1em}Fines & 0.588 & 0.036 & 0.014 & 0.529 & 0.647\\
+\hspace{1em}Imprisonment & 0.506 & 0.039 & 0.877 & 0.442 & 0.569\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}Less penalty & 0.461 & 0.035 & 0.261 & 0.403 & 0.518\\
+\hspace{1em}Same & 0.481 & 0.034 & 0.584 & 0.425 & 0.537\\
+\hspace{1em}More penalty & 0.554 & 0.033 & 0.107 & 0.499 & 0.608\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}Only rich countries pay & 0.396 & 0.039 & 0.007 & 0.332 & 0.460\\
+\hspace{1em}Proportional to current emissions & 0.582 & 0.040 & 0.041 & 0.516 & 0.647\\
+\hspace{1em}Proportional to history of emissions & 0.515 & 0.039 & 0.695 & 0.451 & 0.580\\
+\hspace{1em}Rich countries pay more than poor countries & 0.509 & 0.039 & 0.816 & 0.445 & 0.573\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}One year & 0.598 & 0.046 & 0.034 & 0.522 & 0.674\\
+\hspace{1em}Five years & 0.674 & 0.040 & 0.000 & 0.608 & 0.740\\
+\hspace{1em}Twenty years & 0.471 & 0.042 & 0.498 & 0.402 & 0.541\\
+\hspace{1em}Fifty years & 0.381 & 0.042 & 0.004 & 0.312 & 0.450\\
+\hspace{1em}Never & 0.380 & 0.044 & 0.007 & 0.308 & 0.453\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Ecuador}
+\NormalTok{ecu <-}\StringTok{ }\KeywordTok{mm}\NormalTok{(}\KeywordTok{subset}\NormalTok{(cj, countryOrigin}\OperatorTok{==}\StringTok{'Ecuador'}\NormalTok{),  }
+\NormalTok{        fm, }\DataTypeTok{id =} \OperatorTok{~}\NormalTok{Response.ID, }\DataTypeTok{alpha =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{h0 =} \FloatTok{0.5}\NormalTok{)}
+\KeywordTok{table_mm}\NormalTok{(ecu, }\DataTypeTok{capt =} \StringTok{'Marginal Means -- Ecuador Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-6}Marginal Means -- Ecuador Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lrrrrr}
+\toprule
+Feature & Estimate & Std.Error & P-Value & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}NGOs & 0.427 & 0.038 & 0.053 & 0.365 & 0.489\\
+\hspace{1em}Local community members & 0.548 & 0.038 & 0.215 & 0.484 & 0.611\\
+\hspace{1em}Local government & 0.518 & 0.039 & 0.643 & 0.454 & 0.581\\
+\hspace{1em}Federal government & 0.475 & 0.039 & 0.529 & 0.411 & 0.540\\
+\hspace{1em}International organizations & 0.531 & 0.038 & 0.405 & 0.469 & 0.593\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}Informal norms & 0.420 & 0.039 & 0.039 & 0.356 & 0.484\\
+\hspace{1em}Private arbitration & 0.500 & 0.036 & 1.000 & 0.440 & 0.560\\
+\hspace{1em}Local courts & 0.556 & 0.037 & 0.131 & 0.495 & 0.617\\
+\hspace{1em}Government bureaucracy & 0.424 & 0.039 & 0.053 & 0.359 & 0.489\\
+\hspace{1em}United Nations & 0.596 & 0.039 & 0.014 & 0.532 & 0.661\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}None & 0.490 & 0.040 & 0.810 & 0.424 & 0.556\\
+\hspace{1em}Blacklist & 0.572 & 0.033 & 0.030 & 0.517 & 0.627\\
+\hspace{1em}Fines & 0.544 & 0.033 & 0.184 & 0.490 & 0.598\\
+\hspace{1em}Imprisonment & 0.397 & 0.032 & 0.001 & 0.345 & 0.450\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}Less penalty & 0.468 & 0.032 & 0.329 & 0.415 & 0.522\\
+\hspace{1em}Same & 0.480 & 0.029 & 0.490 & 0.433 & 0.527\\
+\hspace{1em}More penalty & 0.544 & 0.029 & 0.121 & 0.497 & 0.591\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}Only rich countries pay & 0.412 & 0.033 & 0.007 & 0.359 & 0.466\\
+\hspace{1em}Proportional to current emissions & 0.581 & 0.034 & 0.016 & 0.526 & 0.637\\
+\hspace{1em}Proportional to history of emissions & 0.546 & 0.036 & 0.197 & 0.487 & 0.604\\
+\hspace{1em}Rich countries pay more than poor countries & 0.468 & 0.035 & 0.363 & 0.411 & 0.526\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}One year & 0.465 & 0.040 & 0.379 & 0.399 & 0.530\\
+\hspace{1em}Five years & 0.554 & 0.038 & 0.149 & 0.492 & 0.616\\
+\hspace{1em}Twenty years & 0.531 & 0.038 & 0.405 & 0.469 & 0.593\\
+\hspace{1em}Fifty years & 0.447 & 0.038 & 0.165 & 0.384 & 0.510\\
+\hspace{1em}Never & 0.497 & 0.039 & 0.938 & 0.433 & 0.561\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Mexico}
+\NormalTok{mex <-}\StringTok{ }\KeywordTok{mm}\NormalTok{(}\KeywordTok{subset}\NormalTok{(cj, countryOrigin}\OperatorTok{==}\StringTok{'Mexico'}\NormalTok{),  }
+\NormalTok{        fm, }\DataTypeTok{id =} \OperatorTok{~}\NormalTok{Response.ID, }\DataTypeTok{alpha =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{h0 =} \FloatTok{0.5}\NormalTok{)}
+\KeywordTok{table_mm}\NormalTok{(mex, }\DataTypeTok{capt =} \StringTok{'Marginal Means -- Mexico Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-7}Marginal Means -- Mexico Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lrrrrr}
+\toprule
+Feature & Estimate & Std.Error & P-Value & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}NGOs & 0.457 & 0.042 & 0.309 & 0.388 & 0.526\\
+\hspace{1em}Local community members & 0.470 & 0.043 & 0.489 & 0.399 & 0.541\\
+\hspace{1em}Local government & 0.438 & 0.040 & 0.122 & 0.372 & 0.504\\
+\hspace{1em}Federal government & 0.497 & 0.040 & 0.937 & 0.432 & 0.562\\
+\hspace{1em}International organizations & 0.620 & 0.038 & 0.001 & 0.559 & 0.682\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}Informal norms & 0.405 & 0.040 & 0.019 & 0.339 & 0.472\\
+\hspace{1em}Private arbitration & 0.520 & 0.041 & 0.626 & 0.453 & 0.586\\
+\hspace{1em}Local courts & 0.507 & 0.042 & 0.867 & 0.438 & 0.576\\
+\hspace{1em}Government bureaucracy & 0.461 & 0.040 & 0.329 & 0.394 & 0.527\\
+\hspace{1em}United Nations & 0.601 & 0.039 & 0.009 & 0.537 & 0.665\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}None & 0.472 & 0.044 & 0.534 & 0.400 & 0.545\\
+\hspace{1em}Blacklist & 0.478 & 0.035 & 0.531 & 0.421 & 0.535\\
+\hspace{1em}Fines & 0.571 & 0.035 & 0.040 & 0.514 & 0.629\\
+\hspace{1em}Imprisonment & 0.470 & 0.034 & 0.374 & 0.414 & 0.526\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}Less penalty & 0.505 & 0.035 & 0.888 & 0.447 & 0.563\\
+\hspace{1em}Same & 0.503 & 0.029 & 0.908 & 0.456 & 0.551\\
+\hspace{1em}More penalty & 0.492 & 0.031 & 0.802 & 0.441 & 0.544\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}Only rich countries pay & 0.429 & 0.036 & 0.047 & 0.369 & 0.488\\
+\hspace{1em}Proportional to current emissions & 0.500 & 0.035 & 1.000 & 0.442 & 0.558\\
+\hspace{1em}Proportional to history of emissions & 0.620 & 0.038 & 0.001 & 0.559 & 0.682\\
+\hspace{1em}Rich countries pay more than poor countries & 0.466 & 0.036 & 0.348 & 0.407 & 0.525\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}One year & 0.507 & 0.041 & 0.871 & 0.440 & 0.573\\
+\hspace{1em}Five years & 0.616 & 0.038 & 0.002 & 0.553 & 0.678\\
+\hspace{1em}Twenty years & 0.487 & 0.041 & 0.746 & 0.420 & 0.554\\
+\hspace{1em}Fifty years & 0.493 & 0.043 & 0.864 & 0.422 & 0.563\\
+\hspace{1em}Never & 0.385 & 0.040 & 0.004 & 0.319 & 0.451\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Panama}
+\NormalTok{pan <-}\StringTok{ }\KeywordTok{mm}\NormalTok{(}\KeywordTok{subset}\NormalTok{(cj, countryOrigin}\OperatorTok{==}\StringTok{'Panama'}\NormalTok{),  }
+\NormalTok{        fm, }\DataTypeTok{id =} \OperatorTok{~}\NormalTok{Response.ID, }\DataTypeTok{alpha =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{h0 =} \FloatTok{0.5}\NormalTok{)}
+\KeywordTok{table_mm}\NormalTok{(pan, }\DataTypeTok{capt =} \StringTok{'Marginal Means -- Panama Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-8}Marginal Means -- Panama Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lrrrrr}
+\toprule
+Feature & Estimate & Std.Error & P-Value & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}NGOs & 0.478 & 0.040 & 0.578 & 0.413 & 0.543\\
+\hspace{1em}Local community members & 0.526 & 0.040 & 0.521 & 0.460 & 0.591\\
+\hspace{1em}Local government & 0.477 & 0.041 & 0.566 & 0.409 & 0.544\\
+\hspace{1em}Federal government & 0.497 & 0.040 & 0.936 & 0.431 & 0.563\\
+\hspace{1em}International organizations & 0.522 & 0.040 & 0.576 & 0.457 & 0.588\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}Informal norms & 0.439 & 0.040 & 0.127 & 0.374 & 0.505\\
+\hspace{1em}Private arbitration & 0.488 & 0.039 & 0.756 & 0.424 & 0.552\\
+\hspace{1em}Local courts & 0.549 & 0.041 & 0.241 & 0.480 & 0.617\\
+\hspace{1em}Government bureaucracy & 0.477 & 0.040 & 0.571 & 0.411 & 0.544\\
+\hspace{1em}United Nations & 0.551 & 0.040 & 0.198 & 0.486 & 0.617\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}None & 0.455 & 0.042 & 0.275 & 0.386 & 0.523\\
+\hspace{1em}Blacklist & 0.522 & 0.035 & 0.531 & 0.465 & 0.579\\
+\hspace{1em}Fines & 0.531 & 0.033 & 0.349 & 0.476 & 0.586\\
+\hspace{1em}Imprisonment & 0.475 & 0.035 & 0.481 & 0.417 & 0.533\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}Less penalty & 0.432 & 0.033 & 0.042 & 0.378 & 0.487\\
+\hspace{1em}Same & 0.466 & 0.030 & 0.253 & 0.416 & 0.515\\
+\hspace{1em}More penalty & 0.588 & 0.030 & 0.003 & 0.540 & 0.637\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}Only rich countries pay & 0.473 & 0.035 & 0.442 & 0.416 & 0.531\\
+\hspace{1em}Proportional to current emissions & 0.497 & 0.036 & 0.942 & 0.438 & 0.557\\
+\hspace{1em}Proportional to history of emissions & 0.513 & 0.037 & 0.715 & 0.453 & 0.573\\
+\hspace{1em}Rich countries pay more than poor countries & 0.518 & 0.036 & 0.614 & 0.459 & 0.577\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}One year & 0.605 & 0.040 & 0.008 & 0.540 & 0.670\\
+\hspace{1em}Five years & 0.552 & 0.038 & 0.170 & 0.490 & 0.614\\
+\hspace{1em}Twenty years & 0.573 & 0.040 & 0.069 & 0.507 & 0.640\\
+\hspace{1em}Fifty years & 0.418 & 0.041 & 0.044 & 0.351 & 0.485\\
+\hspace{1em}Never & 0.344 & 0.038 & 0.000 & 0.281 & 0.407\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Peru}
+\NormalTok{per <-}\StringTok{ }\KeywordTok{mm}\NormalTok{(}\KeywordTok{subset}\NormalTok{(cj, countryOrigin}\OperatorTok{==}\StringTok{'Peru'}\NormalTok{),  }
+\NormalTok{        fm, }\DataTypeTok{id =} \OperatorTok{~}\NormalTok{Response.ID, }\DataTypeTok{alpha =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{h0 =} \FloatTok{0.5}\NormalTok{)}
+\KeywordTok{table_mm}\NormalTok{(per, }\DataTypeTok{capt =} \StringTok{'Marginal Means -- Peru Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-9}Marginal Means -- Peru Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lrrrrr}
+\toprule
+Feature & Estimate & Std.Error & P-Value & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}NGOs & 0.442 & 0.049 & 0.236 & 0.362 & 0.522\\
+\hspace{1em}Local community members & 0.410 & 0.048 & 0.059 & 0.331 & 0.488\\
+\hspace{1em}Local government & 0.568 & 0.047 & 0.151 & 0.490 & 0.645\\
+\hspace{1em}Federal government & 0.537 & 0.048 & 0.440 & 0.458 & 0.616\\
+\hspace{1em}International organizations & 0.533 & 0.046 & 0.464 & 0.458 & 0.608\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}Informal norms & 0.351 & 0.048 & 0.002 & 0.271 & 0.430\\
+\hspace{1em}Private arbitration & 0.607 & 0.045 & 0.018 & 0.533 & 0.681\\
+\hspace{1em}Local courts & 0.505 & 0.051 & 0.919 & 0.422 & 0.589\\
+\hspace{1em}Government bureaucracy & 0.488 & 0.045 & 0.788 & 0.414 & 0.562\\
+\hspace{1em}United Nations & 0.527 & 0.047 & 0.570 & 0.449 & 0.604\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}None & 0.441 & 0.047 & 0.214 & 0.364 & 0.519\\
+\hspace{1em}Blacklist & 0.500 & 0.043 & 1.000 & 0.430 & 0.570\\
+\hspace{1em}Fines & 0.564 & 0.042 & 0.125 & 0.495 & 0.633\\
+\hspace{1em}Imprisonment & 0.484 & 0.040 & 0.692 & 0.419 & 0.549\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}Less penalty & 0.472 & 0.042 & 0.501 & 0.403 & 0.541\\
+\hspace{1em}Same & 0.536 & 0.035 & 0.298 & 0.479 & 0.593\\
+\hspace{1em}More penalty & 0.482 & 0.036 & 0.618 & 0.424 & 0.541\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}Only rich countries pay & 0.468 & 0.040 & 0.419 & 0.401 & 0.534\\
+\hspace{1em}Proportional to current emissions & 0.497 & 0.040 & 0.936 & 0.430 & 0.563\\
+\hspace{1em}Proportional to history of emissions & 0.571 & 0.047 & 0.127 & 0.495 & 0.648\\
+\hspace{1em}Rich countries pay more than poor countries & 0.481 & 0.044 & 0.660 & 0.408 & 0.553\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}One year & 0.548 & 0.045 & 0.279 & 0.475 & 0.622\\
+\hspace{1em}Five years & 0.583 & 0.047 & 0.079 & 0.505 & 0.661\\
+\hspace{1em}Twenty years & 0.517 & 0.054 & 0.748 & 0.429 & 0.605\\
+\hspace{1em}Fifty years & 0.420 & 0.047 & 0.085 & 0.343 & 0.496\\
+\hspace{1em}Never & 0.436 & 0.046 & 0.162 & 0.360 & 0.511\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Changing country labels}
+\NormalTok{arg}\OperatorTok{$}\NormalTok{country <-}\StringTok{ 'Argentina'}
+\NormalTok{bol}\OperatorTok{$}\NormalTok{country <-}\StringTok{ 'Bolivia'}
+\NormalTok{bra}\OperatorTok{$}\NormalTok{country <-}\StringTok{ 'Brazil'}
+\NormalTok{chi}\OperatorTok{$}\NormalTok{country <-}\StringTok{ 'Chile'}
+\NormalTok{col}\OperatorTok{$}\NormalTok{country <-}\StringTok{ 'Colombia'}
+\NormalTok{cri}\OperatorTok{$}\NormalTok{country <-}\StringTok{ 'Costa Rica'}
+\NormalTok{ecu}\OperatorTok{$}\NormalTok{country <-}\StringTok{ 'Ecuador'}
+\NormalTok{mex}\OperatorTok{$}\NormalTok{country <-}\StringTok{ 'Mexico'}
+\NormalTok{pan}\OperatorTok{$}\NormalTok{country <-}\StringTok{ 'Panama'}
+\NormalTok{per}\OperatorTok{$}\NormalTok{country <-}\StringTok{ 'Peru'}
+\CommentTok{# Plot by country}
+\NormalTok{p <-}\StringTok{ }\KeywordTok{plot}\NormalTok{(}\KeywordTok{rbind}\NormalTok{(arg, bol, bra, chi, col, }
+\NormalTok{              cri, ecu, mex, pan, per), }
+        \DataTypeTok{group =} \StringTok{'country'}\NormalTok{, }\DataTypeTok{vline =} \FloatTok{0.5}\NormalTok{, }\DataTypeTok{nr =} \DecValTok{10}\NormalTok{,}
+        \DataTypeTok{header_fmt =} \StringTok{"%s"}\NormalTok{, }\DataTypeTok{size =} \DecValTok{2}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{country, }\DataTypeTok{ncol =} \DecValTok{5}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\NormalTok{ggplot2}\OperatorTok{::}\KeywordTok{theme}\NormalTok{(}
+    \DataTypeTok{axis.text.y =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{face=}\NormalTok{myFaces, }\DataTypeTok{size =} \DecValTok{11}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\NormalTok{ggplot2}\OperatorTok{::}\KeywordTok{geom_errorbarh}\NormalTok{(ggplot2}\OperatorTok{::}\KeywordTok{aes_string}\NormalTok{(}\DataTypeTok{xmin =} \StringTok{"lower"}\NormalTok{,}
+                                                \DataTypeTok{xmax =} \StringTok{"upper"}\NormalTok{),}
+                            \DataTypeTok{size =} \DecValTok{1}\NormalTok{, }\DataTypeTok{height =} \DecValTok{0}\NormalTok{, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{,}
+                            \DataTypeTok{position =}\NormalTok{ ggstance}\OperatorTok{::}\KeywordTok{position_dodgev}\NormalTok{(}\DataTypeTok{height =} \DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Vectorized input to `element_text()` is not officially supported.
+## Results may be unexpected or may change in future versions of ggplot2.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/unnamed-chunk-10-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggsave}\NormalTok{(}\DataTypeTok{filename =} \StringTok{'MM_country.pdf'}\NormalTok{, }
+       \DataTypeTok{plot =}\NormalTok{ p, }\DataTypeTok{width =} \DecValTok{12}\NormalTok{, }\DataTypeTok{height =} \DecValTok{12}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+The code for Figure 4 of the paper is available below. Tables displaying
+the point estimates are also included.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Elite type graphs and estimates}
+
+\CommentTok{# Table for the Executive branch}
+\NormalTok{res1 <-}\StringTok{ }\KeywordTok{mm}\NormalTok{(}\KeywordTok{subset}\NormalTok{(cj, groupOrigin}\OperatorTok{==}\StringTok{'Executive'}\NormalTok{), }
+\NormalTok{           fm, }\DataTypeTok{id =} \OperatorTok{~}\NormalTok{Response.ID, }\DataTypeTok{alpha =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{h0 =} \FloatTok{0.5}\NormalTok{)}
+\KeywordTok{table_mm}\NormalTok{(res1, }\DataTypeTok{capt =} \StringTok{'Marginal Means -- Executive Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-11}Marginal Means -- Executive Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lrrrrr}
+\toprule
+Feature & Estimate & Std.Error & P-Value & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}NGOs & 0.392 & 0.034 & 0.001 & 0.336 & 0.447\\
+\hspace{1em}Local community members & 0.516 & 0.031 & 0.618 & 0.464 & 0.567\\
+\hspace{1em}Local government & 0.502 & 0.030 & 0.952 & 0.452 & 0.552\\
+\hspace{1em}Federal government & 0.529 & 0.032 & 0.365 & 0.476 & 0.582\\
+\hspace{1em}International organizations & 0.545 & 0.031 & 0.150 & 0.494 & 0.596\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}Informal norms & 0.429 & 0.034 & 0.037 & 0.373 & 0.485\\
+\hspace{1em}Private arbitration & 0.508 & 0.032 & 0.797 & 0.455 & 0.561\\
+\hspace{1em}Local courts & 0.523 & 0.031 & 0.456 & 0.472 & 0.574\\
+\hspace{1em}Government bureaucracy & 0.462 & 0.031 & 0.214 & 0.411 & 0.512\\
+\hspace{1em}United Nations & 0.564 & 0.030 & 0.036 & 0.514 & 0.614\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}None & 0.480 & 0.034 & 0.545 & 0.424 & 0.535\\
+\hspace{1em}Blacklist & 0.541 & 0.028 & 0.144 & 0.495 & 0.587\\
+\hspace{1em}Fines & 0.568 & 0.026 & 0.010 & 0.524 & 0.611\\
+\hspace{1em}Imprisonment & 0.406 & 0.026 & 0.000 & 0.363 & 0.450\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}Less penalty & 0.447 & 0.026 & 0.039 & 0.405 & 0.489\\
+\hspace{1em}Same & 0.501 & 0.023 & 0.963 & 0.463 & 0.539\\
+\hspace{1em}More penalty & 0.549 & 0.025 & 0.050 & 0.508 & 0.590\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}Only rich countries pay & 0.442 & 0.029 & 0.043 & 0.395 & 0.489\\
+\hspace{1em}Proportional to current emissions & 0.550 & 0.028 & 0.072 & 0.504 & 0.596\\
+\hspace{1em}Proportional to history of emissions & 0.524 & 0.028 & 0.396 & 0.478 & 0.570\\
+\hspace{1em}Rich countries pay more than poor countries & 0.480 & 0.029 & 0.491 & 0.433 & 0.527\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}One year & 0.543 & 0.030 & 0.159 & 0.493 & 0.593\\
+\hspace{1em}Five years & 0.586 & 0.030 & 0.005 & 0.536 & 0.636\\
+\hspace{1em}Twenty years & 0.500 & 0.032 & 1.000 & 0.448 & 0.552\\
+\hspace{1em}Fifty years & 0.438 & 0.032 & 0.052 & 0.386 & 0.490\\
+\hspace{1em}Never & 0.414 & 0.033 & 0.009 & 0.359 & 0.468\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Legislative branch}
+\NormalTok{res2 <-}\StringTok{ }\KeywordTok{mm}\NormalTok{(}\KeywordTok{subset}\NormalTok{(cj, groupOrigin}\OperatorTok{==}\StringTok{'Legislative'}\NormalTok{), }
+\NormalTok{           fm, }\DataTypeTok{id =} \OperatorTok{~}\NormalTok{Response.ID, }\DataTypeTok{alpha =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{h0 =} \FloatTok{0.5}\NormalTok{)}
+\KeywordTok{table_mm}\NormalTok{(res2, }\DataTypeTok{capt =} \StringTok{'Marginal Means -- Legislative Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-12}Marginal Means -- Legislative Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lrrrrr}
+\toprule
+Feature & Estimate & Std.Error & P-Value & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}NGOs & 0.400 & 0.038 & 0.008 & 0.338 & 0.462\\
+\hspace{1em}Local community members & 0.519 & 0.039 & 0.637 & 0.454 & 0.583\\
+\hspace{1em}Local government & 0.549 & 0.039 & 0.209 & 0.485 & 0.613\\
+\hspace{1em}Federal government & 0.517 & 0.041 & 0.680 & 0.449 & 0.585\\
+\hspace{1em}International organizations & 0.524 & 0.042 & 0.558 & 0.456 & 0.593\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}Informal norms & 0.420 & 0.037 & 0.032 & 0.358 & 0.481\\
+\hspace{1em}Private arbitration & 0.506 & 0.039 & 0.876 & 0.442 & 0.570\\
+\hspace{1em}Local courts & 0.547 & 0.039 & 0.235 & 0.482 & 0.611\\
+\hspace{1em}Government bureaucracy & 0.500 & 0.041 & 1.000 & 0.432 & 0.568\\
+\hspace{1em}United Nations & 0.539 & 0.042 & 0.353 & 0.470 & 0.608\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}None & 0.438 & 0.042 & 0.143 & 0.368 & 0.508\\
+\hspace{1em}Blacklist & 0.546 & 0.034 & 0.172 & 0.491 & 0.602\\
+\hspace{1em}Fines & 0.581 & 0.033 & 0.013 & 0.528 & 0.635\\
+\hspace{1em}Imprisonment & 0.403 & 0.034 & 0.005 & 0.347 & 0.459\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}Less penalty & 0.455 & 0.033 & 0.178 & 0.400 & 0.510\\
+\hspace{1em}Same & 0.521 & 0.029 & 0.481 & 0.472 & 0.569\\
+\hspace{1em}More penalty & 0.515 & 0.030 & 0.629 & 0.465 & 0.564\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}Only rich countries pay & 0.411 & 0.033 & 0.007 & 0.357 & 0.465\\
+\hspace{1em}Proportional to current emissions & 0.475 & 0.035 & 0.481 & 0.417 & 0.533\\
+\hspace{1em}Proportional to history of emissions & 0.552 & 0.039 & 0.181 & 0.488 & 0.616\\
+\hspace{1em}Rich countries pay more than poor countries & 0.584 & 0.035 & 0.017 & 0.526 & 0.642\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}One year & 0.533 & 0.040 & 0.416 & 0.466 & 0.599\\
+\hspace{1em}Five years & 0.557 & 0.038 & 0.139 & 0.494 & 0.620\\
+\hspace{1em}Twenty years & 0.526 & 0.040 & 0.519 & 0.460 & 0.592\\
+\hspace{1em}Fifty years & 0.485 & 0.039 & 0.695 & 0.420 & 0.549\\
+\hspace{1em}Never & 0.393 & 0.040 & 0.007 & 0.328 & 0.459\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Civil society}
+\NormalTok{res3 <-}\StringTok{ }\KeywordTok{mm}\NormalTok{(}\KeywordTok{subset}\NormalTok{(cj, groupOrigin}\OperatorTok{==}\StringTok{'Civil Society'}\NormalTok{), }
+\NormalTok{           fm, }\DataTypeTok{id =} \OperatorTok{~}\NormalTok{Response.ID, }\DataTypeTok{alpha =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{h0 =} \FloatTok{0.5}\NormalTok{)}
+\KeywordTok{table_mm}\NormalTok{(res3, }\DataTypeTok{capt =} \StringTok{'Marginal Means -- Civil Society Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-13}Marginal Means -- Civil Society Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lrrrrr}
+\toprule
+Feature & Estimate & Std.Error & P-Value & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}NGOs & 0.500 & 0.023 & 1.000 & 0.463 & 0.537\\
+\hspace{1em}Local community members & 0.520 & 0.022 & 0.368 & 0.483 & 0.557\\
+\hspace{1em}Local government & 0.462 & 0.023 & 0.093 & 0.425 & 0.499\\
+\hspace{1em}Federal government & 0.478 & 0.022 & 0.309 & 0.441 & 0.514\\
+\hspace{1em}International organizations & 0.538 & 0.022 & 0.080 & 0.502 & 0.574\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}Informal norms & 0.410 & 0.022 & 0.000 & 0.373 & 0.446\\
+\hspace{1em}Private arbitration & 0.503 & 0.023 & 0.892 & 0.466 & 0.540\\
+\hspace{1em}Local courts & 0.551 & 0.022 & 0.021 & 0.515 & 0.587\\
+\hspace{1em}Government bureaucracy & 0.430 & 0.022 & 0.002 & 0.393 & 0.467\\
+\hspace{1em}United Nations & 0.594 & 0.021 & 0.000 & 0.559 & 0.629\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}None & 0.453 & 0.023 & 0.036 & 0.416 & 0.490\\
+\hspace{1em}Blacklist & 0.518 & 0.020 & 0.364 & 0.485 & 0.550\\
+\hspace{1em}Fines & 0.548 & 0.019 & 0.011 & 0.517 & 0.579\\
+\hspace{1em}Imprisonment & 0.467 & 0.019 & 0.089 & 0.436 & 0.499\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}Less penalty & 0.469 & 0.019 & 0.112 & 0.437 & 0.501\\
+\hspace{1em}Same & 0.479 & 0.016 & 0.203 & 0.452 & 0.506\\
+\hspace{1em}More penalty & 0.545 & 0.017 & 0.007 & 0.517 & 0.572\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}Only rich countries pay & 0.449 & 0.019 & 0.008 & 0.417 & 0.481\\
+\hspace{1em}Proportional to current emissions & 0.520 & 0.020 & 0.315 & 0.487 & 0.553\\
+\hspace{1em}Proportional to history of emissions & 0.560 & 0.020 & 0.003 & 0.527 & 0.593\\
+\hspace{1em}Rich countries pay more than poor countries & 0.476 & 0.020 & 0.230 & 0.443 & 0.509\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}One year & 0.548 & 0.022 & 0.026 & 0.513 & 0.584\\
+\hspace{1em}Five years & 0.595 & 0.022 & 0.000 & 0.559 & 0.630\\
+\hspace{1em}Twenty years & 0.493 & 0.022 & 0.757 & 0.457 & 0.530\\
+\hspace{1em}Fifty years & 0.448 & 0.023 & 0.026 & 0.409 & 0.486\\
+\hspace{1em}Never & 0.404 & 0.022 & 0.000 & 0.368 & 0.441\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Academia}
+\NormalTok{res4 <-}\StringTok{ }\KeywordTok{mm}\NormalTok{(}\KeywordTok{subset}\NormalTok{(cj, groupOrigin}\OperatorTok{==}\StringTok{'Academia'}\NormalTok{), }
+\NormalTok{           fm, }\DataTypeTok{id =} \OperatorTok{~}\NormalTok{Response.ID, }\DataTypeTok{alpha =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{h0 =} \FloatTok{0.5}\NormalTok{)}
+\KeywordTok{table_mm}\NormalTok{(res4, }\DataTypeTok{capt =} \StringTok{'Marginal Means -- Academia Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-14}Marginal Means -- Academia Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lrrrrr}
+\toprule
+Feature & Estimate & Std.Error & P-Value & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}NGOs & 0.447 & 0.022 & 0.014 & 0.411 & 0.483\\
+\hspace{1em}Local community members & 0.515 & 0.022 & 0.483 & 0.479 & 0.551\\
+\hspace{1em}Local government & 0.524 & 0.022 & 0.260 & 0.489 & 0.560\\
+\hspace{1em}Federal government & 0.458 & 0.021 & 0.048 & 0.423 & 0.493\\
+\hspace{1em}International organizations & 0.556 & 0.021 & 0.009 & 0.521 & 0.591\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}Informal norms & 0.388 & 0.021 & 0.000 & 0.353 & 0.423\\
+\hspace{1em}Private arbitration & 0.517 & 0.022 & 0.437 & 0.481 & 0.552\\
+\hspace{1em}Local courts & 0.549 & 0.022 & 0.023 & 0.513 & 0.584\\
+\hspace{1em}Government bureaucracy & 0.476 & 0.022 & 0.275 & 0.440 & 0.512\\
+\hspace{1em}United Nations & 0.565 & 0.021 & 0.002 & 0.530 & 0.599\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}None & 0.430 & 0.022 & 0.002 & 0.393 & 0.467\\
+\hspace{1em}Blacklist & 0.510 & 0.018 & 0.582 & 0.480 & 0.540\\
+\hspace{1em}Fines & 0.554 & 0.019 & 0.004 & 0.523 & 0.585\\
+\hspace{1em}Imprisonment & 0.483 & 0.019 & 0.371 & 0.453 & 0.514\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}Less penalty & 0.461 & 0.018 & 0.030 & 0.431 & 0.490\\
+\hspace{1em}Same & 0.499 & 0.016 & 0.974 & 0.473 & 0.526\\
+\hspace{1em}More penalty & 0.532 & 0.016 & 0.048 & 0.505 & 0.559\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}Only rich countries pay & 0.434 & 0.019 & 0.001 & 0.403 & 0.466\\
+\hspace{1em}Proportional to current emissions & 0.540 & 0.019 & 0.036 & 0.509 & 0.571\\
+\hspace{1em}Proportional to history of emissions & 0.519 & 0.020 & 0.327 & 0.487 & 0.551\\
+\hspace{1em}Rich countries pay more than poor countries & 0.507 & 0.020 & 0.723 & 0.475 & 0.539\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}One year & 0.509 & 0.022 & 0.664 & 0.474 & 0.545\\
+\hspace{1em}Five years & 0.595 & 0.021 & 0.000 & 0.560 & 0.629\\
+\hspace{1em}Twenty years & 0.549 & 0.022 & 0.023 & 0.514 & 0.585\\
+\hspace{1em}Fifty years & 0.422 & 0.021 & 0.000 & 0.386 & 0.457\\
+\hspace{1em}Never & 0.421 & 0.022 & 0.000 & 0.386 & 0.456\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Changing labels}
+\NormalTok{res1}\OperatorTok{$}\NormalTok{MemberType <-}\StringTok{ 'Executive'}
+\NormalTok{res2}\OperatorTok{$}\NormalTok{MemberType <-}\StringTok{ 'Legislative'}
+\NormalTok{res3}\OperatorTok{$}\NormalTok{MemberType <-}\StringTok{ 'Civil Society'}
+\NormalTok{res4}\OperatorTok{$}\NormalTok{MemberType <-}\StringTok{ 'Academia'}
+
+\CommentTok{# Plot by Elite Type}
+\NormalTok{p <-}\StringTok{ }\KeywordTok{plot}\NormalTok{(}\KeywordTok{rbind}\NormalTok{(res1, res2, res3, res4), }
+     \DataTypeTok{group =} \StringTok{'MemberType'}\NormalTok{, }\DataTypeTok{vline =} \FloatTok{0.5}\NormalTok{, }\DataTypeTok{nr =} \DecValTok{4}\NormalTok{,}
+        \DataTypeTok{header_fmt =} \StringTok{"%s"}\NormalTok{, }\DataTypeTok{size =} \DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{MemberType, }\DataTypeTok{ncol =} \DecValTok{4}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\NormalTok{ggplot2}\OperatorTok{::}\KeywordTok{theme}\NormalTok{(}
+    \DataTypeTok{axis.text.y =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{face=}\NormalTok{myFaces, }\DataTypeTok{size =} \DecValTok{11}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\NormalTok{ggplot2}\OperatorTok{::}\KeywordTok{geom_errorbarh}\NormalTok{(ggplot2}\OperatorTok{::}\KeywordTok{aes_string}\NormalTok{(}\DataTypeTok{xmin =} \StringTok{"lower"}\NormalTok{,}
+                                                \DataTypeTok{xmax =} \StringTok{"upper"}\NormalTok{),}
+                            \DataTypeTok{size =} \DecValTok{1}\NormalTok{, }\DataTypeTok{height =} \DecValTok{0}\NormalTok{, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{,}
+                            \DataTypeTok{position =}\NormalTok{ ggstance}\OperatorTok{::}\KeywordTok{position_dodgev}\NormalTok{(}\DataTypeTok{height =} \DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Vectorized input to `element_text()` is not officially supported.
+## Results may be unexpected or may change in future versions of ggplot2.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/unnamed-chunk-15-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggsave}\NormalTok{(}\DataTypeTok{filename =} \StringTok{'MM_membertype.pdf'}\NormalTok{, }\DataTypeTok{plot =}\NormalTok{ p, }
+       \DataTypeTok{width =} \DecValTok{8}\NormalTok{, }\DataTypeTok{height =} \DecValTok{6}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{average-marginal-component-effect-amce-estimator}{%
+\section{\texorpdfstring{Average Marginal Component Effect (AMCE)
+Estimator
+\label{sec:amce}}{Average Marginal Component Effect (AMCE) Estimator }}\label{average-marginal-component-effect-amce-estimator}}
+
+This estimator fixes one category and look at changes from this baseline
+category. Below follows the plots for the main model and the country and
+elite type subsamples.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Main model}
+\KeywordTok{rm}\NormalTok{(cj)}
+\KeywordTok{load}\NormalTok{(}\StringTok{'freire-mignozzetti-skarbek.RData'}\NormalTok{)}
+
+\CommentTok{# Set conjoint baselines}
+\NormalTok{baselines <-}\StringTok{ }\KeywordTok{list}\NormalTok{()}
+\NormalTok{baselines}\OperatorTok{$}\StringTok{`}\DataTypeTok{How often will the agreement be renegotiated?}\StringTok{`}\NormalTok{ <-}\StringTok{ "One year"}
+\NormalTok{baselines}\OperatorTok{$}\StringTok{`}\DataTypeTok{What punishments do they use?}\StringTok{`}\NormalTok{ <-}\StringTok{ 'None'}
+\NormalTok{baselines}\OperatorTok{$}\StringTok{`}\DataTypeTok{How are conflicts resolved?}\StringTok{`}\NormalTok{ <-}\StringTok{ 'Government bureaucracy'}
+\NormalTok{baselines}\OperatorTok{$}\StringTok{`}\DataTypeTok{How are costs distributed?}\StringTok{`}\NormalTok{ <-}\StringTok{ 'Rich countries pay more than poor countries'}
+\NormalTok{baselines}\OperatorTok{$}\StringTok{`}\DataTypeTok{Who makes the rules?}\StringTok{`}\NormalTok{ <-}\StringTok{ 'Federal government'}
+
+\NormalTok{attrs <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Who makes the rules?"}\NormalTok{,}
+           \StringTok{"How are conflicts resolved?"}\NormalTok{,}
+           \StringTok{"What punishments do they use?"}\NormalTok{,}
+           \StringTok{"How are repeated violations punished?"}\NormalTok{,}
+           \StringTok{"How are costs distributed?"}\NormalTok{,}
+           \StringTok{"How often will the agreement be renegotiated?"}\NormalTok{)}
+
+\NormalTok{results <-}\StringTok{ }\NormalTok{cjoint}\OperatorTok{::}\KeywordTok{amce}\NormalTok{(fm, }\DataTypeTok{data =}\NormalTok{ cj, }\DataTypeTok{cluster =} \OtherTok{TRUE}\NormalTok{, }
+                        \DataTypeTok{respondent.id =} \StringTok{"Response.ID"}\NormalTok{, }
+                        \DataTypeTok{design =}\NormalTok{ conjDesign, }
+                        \DataTypeTok{baselines =}\NormalTok{ baselines, }\DataTypeTok{na.ignore =}\NormalTok{ T)}
+
+\CommentTok{# Table AMCE -- Full Model }
+\NormalTok{tableAMCE <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(results, }\DataTypeTok{capt =} \StringTok{'Main Model'}\NormalTok{) \{}
+\NormalTok{  aux <-}\StringTok{ }\KeywordTok{plotAMCE}\NormalTok{(results, }\DataTypeTok{ci =} \FloatTok{0.9}\NormalTok{, }\DataTypeTok{point.size =} \FloatTok{.8}\NormalTok{, }\DataTypeTok{dodge.size =} \DecValTok{1}\NormalTok{,}
+     \DataTypeTok{text.size =} \DecValTok{10}\NormalTok{, }\DataTypeTok{main =} \StringTok{'AMCE -- Full Model'}\NormalTok{,}
+     \DataTypeTok{attribute.names =}\NormalTok{ attrs, }\DataTypeTok{tblfy =}\NormalTok{ T)}
+\NormalTok{  aux <-}\StringTok{ }\NormalTok{aux }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{filter}\NormalTok{(}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(group)) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{select}\NormalTok{(printvar, pe, se, lower, upper)}
+\NormalTok{  indx <-}\StringTok{ }\KeywordTok{grep}\NormalTok{(}\StringTok{'Baseline ='}\NormalTok{, aux}\OperatorTok{$}\NormalTok{printvar)}
+\NormalTok{  aux}\OperatorTok{$}\NormalTok{pe <-}\StringTok{ }\KeywordTok{round}\NormalTok{(aux}\OperatorTok{$}\NormalTok{pe, }\DataTypeTok{digits =} \DecValTok{3}\NormalTok{)}
+\NormalTok{  aux}\OperatorTok{$}\NormalTok{se <-}\StringTok{ }\KeywordTok{round}\NormalTok{(aux}\OperatorTok{$}\NormalTok{se, }\DataTypeTok{digits =} \DecValTok{3}\NormalTok{)}
+\NormalTok{  aux}\OperatorTok{$}\NormalTok{lower <-}\StringTok{ }\KeywordTok{round}\NormalTok{(aux}\OperatorTok{$}\NormalTok{lower, }\DataTypeTok{digits =} \DecValTok{3}\NormalTok{)}
+\NormalTok{  aux}\OperatorTok{$}\NormalTok{upper <-}\StringTok{ }\KeywordTok{round}\NormalTok{(aux}\OperatorTok{$}\NormalTok{upper, }\DataTypeTok{digits =} \DecValTok{3}\NormalTok{)}
+\NormalTok{  aux}\OperatorTok{$}\NormalTok{pe[indx] =}\StringTok{ ''}
+\NormalTok{  aux}\OperatorTok{$}\NormalTok{se[indx] =}\StringTok{ ''}
+\NormalTok{  aux}\OperatorTok{$}\NormalTok{lower[indx] =}\StringTok{ ''}
+\NormalTok{  aux}\OperatorTok{$}\NormalTok{upper[indx] =}\StringTok{ ''}
+  \KeywordTok{names}\NormalTok{(aux) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'Feature'}\NormalTok{, }\StringTok{'Estimate'}\NormalTok{, }\StringTok{'Std.Error'}\NormalTok{, }
+                  \StringTok{'Lower'}\NormalTok{, }\StringTok{'Upper'}\NormalTok{)}
+  \KeywordTok{return}\NormalTok{(}\KeywordTok{kable}\NormalTok{(aux, }\StringTok{"latex"}\NormalTok{, }\DataTypeTok{caption =}\NormalTok{ capt, }\DataTypeTok{booktabs =}\NormalTok{ T, }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{'l'}\NormalTok{, }\KeywordTok{rep}\NormalTok{(}\StringTok{'c'}\NormalTok{, }\DecValTok{4}\NormalTok{))) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{group_rows}\NormalTok{(}\StringTok{'How are conflicts resolved?'}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{5}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{group_rows}\NormalTok{(}\StringTok{'How are costs distributed?'}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{9}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{group_rows}\NormalTok{(}\StringTok{'How are repeated violations punished?'}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{12}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{group_rows}\NormalTok{(}\StringTok{'How often will the agreement be renegotiated?'}\NormalTok{, }\DecValTok{13}\NormalTok{, }\DecValTok{17}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{group_rows}\NormalTok{(}\StringTok{'What punishments do they use?'}\NormalTok{, }\DecValTok{18}\NormalTok{, }\DecValTok{21}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{group_rows}\NormalTok{(}\StringTok{'Who makes the rules?'}\NormalTok{, }\DecValTok{22}\NormalTok{, }\DecValTok{26}\NormalTok{))}
+\NormalTok{\}}
+
+\KeywordTok{tableAMCE}\NormalTok{(results, }\DataTypeTok{capt =} \StringTok{'AMCE -- Full Model'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-16}AMCE -- Full Model}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lcccc}
+\toprule
+Feature & Estimate & Std.Error & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}(Baseline = Government bureaucracy) &  &  &  & \\
+\hspace{1em}Informal norms & -0.054 & 0.018 & -0.083 & -0.025\\
+\hspace{1em}Private arbitration & 0.043 & 0.018 & 0.014 & 0.072\\
+\hspace{1em}Local courts & 0.088 & 0.017 & 0.059 & 0.116\\
+\hspace{1em}United Nations & 0.111 & 0.019 & 0.081 & 0.142\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}(Baseline = Rich countries pay more than poor countries) &  &  &  & \\
+\hspace{1em}Only rich countries pay & -0.071 & 0.016 & -0.098 & -0.044\\
+\hspace{1em}Proportional to current emissions & 0.018 & 0.016 & -0.008 & 0.044\\
+\hspace{1em}Proportional to history of emissions & 0.029 & 0.017 & 0.002 & 0.056\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}(Baseline = Less penalty) &  &  &  & \\
+\hspace{1em}Same & 0.058 & 0.015 & 0.034 & 0.082\\
+\hspace{1em}More penalty & 0.096 & 0.015 & 0.072 & 0.121\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}(Baseline = One year) &  &  &  & \\
+\hspace{1em}Five years & 0.052 & 0.018 & 0.023 & 0.082\\
+\hspace{1em}Twenty years & -0.012 & 0.018 & -0.041 & 0.017\\
+\hspace{1em}Fifty years & -0.093 & 0.018 & -0.124 & -0.063\\
+\hspace{1em}Never & -0.132 & 0.018 & -0.162 & -0.102\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}(Baseline = None) &  &  &  & \\
+\hspace{1em}Blacklist & 0.102 & 0.017 & 0.074 & 0.13\\
+\hspace{1em}Fines & 0.132 & 0.016 & 0.105 & 0.158\\
+\hspace{1em}Imprisonment & 0.035 & 0.018 & 0.006 & 0.065\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}(Baseline = Federal government) &  &  &  & \\
+\hspace{1em}NGOs & -0.031 & 0.019 & -0.062 & 0\\
+\hspace{1em}Local community members & 0.024 & 0.019 & -0.008 & 0.055\\
+\hspace{1em}Local government & 0.011 & 0.018 & -0.019 & 0.041\\
+\hspace{1em}International organisations & 0.058 & 0.018 & 0.029 & 0.088\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Plot AMCE -- Full Model}
+\KeywordTok{plot}\NormalTok{(results, }\DataTypeTok{ci =} \FloatTok{0.9}\NormalTok{, }\DataTypeTok{point.size =} \FloatTok{.8}\NormalTok{, }\DataTypeTok{dodge.size =} \DecValTok{1}\NormalTok{,}
+     \DataTypeTok{text.size =} \DecValTok{10}\NormalTok{, }\DataTypeTok{main =} \StringTok{'AMCE -- Full Model'}\NormalTok{,}
+     \DataTypeTok{attribute.names =}\NormalTok{ attrs)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/unnamed-chunk-17-1.pdf}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Country subsample}
+
+\CommentTok{## Argentina}
+\NormalTok{results <-}\StringTok{ }\NormalTok{cjoint}\OperatorTok{::}\KeywordTok{amce}\NormalTok{(fm, }\DataTypeTok{data =}\NormalTok{ cj, }\DataTypeTok{cluster =} \OtherTok{TRUE}\NormalTok{,}
+                        \DataTypeTok{respondent.id =} \StringTok{"Response.ID"}\NormalTok{, }
+                        \DataTypeTok{design =}\NormalTok{ conjDesign, }\DataTypeTok{baselines =}\NormalTok{ baselines,}
+                        \DataTypeTok{subset =}\NormalTok{ cj}\OperatorTok{$}\NormalTok{countryOrigin }\OperatorTok{==}\StringTok{ 'Argentina'}\NormalTok{)}
+\CommentTok{# AMCE -- Argentina Only}
+\KeywordTok{tableAMCE}\NormalTok{(results, }\DataTypeTok{capt =} \StringTok{'AMCE -- Argentina Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-18}AMCE -- Argentina Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lcccc}
+\toprule
+Feature & Estimate & Std.Error & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}(Baseline = Government bureaucracy) &  &  &  & \\
+\hspace{1em}Informal norms & -0.09 & 0.061 & -0.191 & 0.01\\
+\hspace{1em}Private arbitration & 0.055 & 0.068 & -0.056 & 0.167\\
+\hspace{1em}Local courts & 0.103 & 0.062 & 0.001 & 0.204\\
+\hspace{1em}United Nations & 0.125 & 0.067 & 0.016 & 0.235\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}(Baseline = Rich countries pay more than poor countries) &  &  &  & \\
+\hspace{1em}Only rich countries pay & -0.078 & 0.054 & -0.166 & 0.01\\
+\hspace{1em}Proportional to current emissions & 0.031 & 0.056 & -0.062 & 0.124\\
+\hspace{1em}Proportional to history of emissions & 0.09 & 0.048 & 0.011 & 0.169\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}(Baseline = Less penalty) &  &  &  & \\
+\hspace{1em}Same & 0.095 & 0.046 & 0.018 & 0.171\\
+\hspace{1em}More penalty & 0.122 & 0.055 & 0.031 & 0.213\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}(Baseline = One year) &  &  &  & \\
+\hspace{1em}Five years & -0.061 & 0.06 & -0.159 & 0.037\\
+\hspace{1em}Twenty years & -0.132 & 0.068 & -0.243 & -0.021\\
+\hspace{1em}Fifty years & -0.166 & 0.068 & -0.278 & -0.054\\
+\hspace{1em}Never & -0.171 & 0.061 & -0.271 & -0.071\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}(Baseline = None) &  &  &  & \\
+\hspace{1em}Blacklist & 0.185 & 0.056 & 0.093 & 0.278\\
+\hspace{1em}Fines & 0.262 & 0.053 & 0.174 & 0.35\\
+\hspace{1em}Imprisonment & 0.154 & 0.062 & 0.052 & 0.256\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}(Baseline = Federal government) &  &  &  & \\
+\hspace{1em}NGOs & -0.118 & 0.069 & -0.23 & -0.005\\
+\hspace{1em}Local community members & -0.074 & 0.068 & -0.185 & 0.038\\
+\hspace{1em}Local government & 0.003 & 0.067 & -0.108 & 0.114\\
+\hspace{1em}International organisations & 0.08 & 0.06 & -0.018 & 0.178\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(results, }\DataTypeTok{ci=}\FloatTok{0.9}\NormalTok{, }\DataTypeTok{point.size =} \FloatTok{.8}\NormalTok{, }\DataTypeTok{dodge.size =} \DecValTok{1}\NormalTok{,}
+     \DataTypeTok{text.size =} \DecValTok{10}\NormalTok{, }\DataTypeTok{main =} \StringTok{'AMCE -- Argentina Only'}\NormalTok{,}
+     \DataTypeTok{attribute.names =}\NormalTok{ attrs)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/unnamed-chunk-19-1.pdf}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Bolivia}
+\NormalTok{results <-}\StringTok{ }\NormalTok{cjoint}\OperatorTok{::}\KeywordTok{amce}\NormalTok{(fm, }\DataTypeTok{data =}\NormalTok{ cj, }\DataTypeTok{cluster =} \OtherTok{TRUE}\NormalTok{,}
+                        \DataTypeTok{respondent.id =} \StringTok{"Response.ID"}\NormalTok{, }
+                        \DataTypeTok{design =}\NormalTok{ conjDesign, }\DataTypeTok{baselines =}\NormalTok{ baselines,}
+                        \DataTypeTok{subset =}\NormalTok{ cj}\OperatorTok{$}\NormalTok{countryOrigin }\OperatorTok{==}\StringTok{ 'Bolivia'}\NormalTok{)}
+\CommentTok{# Table AMCE -- Full Model }
+\KeywordTok{tableAMCE}\NormalTok{(results, }\DataTypeTok{capt =} \StringTok{'AMCE -- Bolivia Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-20}AMCE -- Bolivia Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lcccc}
+\toprule
+Feature & Estimate & Std.Error & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}(Baseline = Government bureaucracy) &  &  &  & \\
+\hspace{1em}Informal norms & -0.056 & 0.067 & -0.167 & 0.054\\
+\hspace{1em}Private arbitration & 0.127 & 0.074 & 0.005 & 0.249\\
+\hspace{1em}Local courts & 0.093 & 0.057 & -0.001 & 0.186\\
+\hspace{1em}United Nations & 0.17 & 0.08 & 0.038 & 0.302\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}(Baseline = Rich countries pay more than poor countries) &  &  &  & \\
+\hspace{1em}Only rich countries pay & -0.142 & 0.068 & -0.254 & -0.029\\
+\hspace{1em}Proportional to current emissions & 0.012 & 0.066 & -0.097 & 0.12\\
+\hspace{1em}Proportional to history of emissions & -0.149 & 0.058 & -0.245 & -0.054\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}(Baseline = Less penalty) &  &  &  & \\
+\hspace{1em}Same & 0.126 & 0.052 & 0.039 & 0.212\\
+\hspace{1em}More penalty & 0.117 & 0.061 & 0.016 & 0.218\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}(Baseline = One year) &  &  &  & \\
+\hspace{1em}Five years & 0.125 & 0.072 & 0.006 & 0.244\\
+\hspace{1em}Twenty years & 0.075 & 0.077 & -0.052 & 0.202\\
+\hspace{1em}Fifty years & -0.116 & 0.065 & -0.223 & -0.008\\
+\hspace{1em}Never & -0.114 & 0.078 & -0.243 & 0.015\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}(Baseline = None) &  &  &  & \\
+\hspace{1em}Blacklist & 0.037 & 0.075 & -0.086 & 0.16\\
+\hspace{1em}Fines & 0.155 & 0.056 & 0.063 & 0.247\\
+\hspace{1em}Imprisonment & 0.069 & 0.074 & -0.052 & 0.19\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}(Baseline = Federal government) &  &  &  & \\
+\hspace{1em}NGOs & -0.033 & 0.071 & -0.15 & 0.084\\
+\hspace{1em}Local community members & 0.122 & 0.08 & -0.009 & 0.253\\
+\hspace{1em}Local government & 0.061 & 0.07 & -0.055 & 0.176\\
+\hspace{1em}International organisations & 0.061 & 0.076 & -0.065 & 0.186\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(results, }\DataTypeTok{ci=}\FloatTok{0.9}\NormalTok{, }\DataTypeTok{point.size =} \FloatTok{.8}\NormalTok{, }\DataTypeTok{dodge.size =} \DecValTok{1}\NormalTok{,}
+     \DataTypeTok{text.size =} \DecValTok{10}\NormalTok{, }\DataTypeTok{main =} \StringTok{'AMCE -- Bolivia Only'}\NormalTok{,}
+     \DataTypeTok{attribute.names =}\NormalTok{ attrs)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/unnamed-chunk-21-1.pdf}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Brazil}
+\NormalTok{results <-}\StringTok{ }\NormalTok{cjoint}\OperatorTok{::}\KeywordTok{amce}\NormalTok{(fm, }\DataTypeTok{data =}\NormalTok{ cj, }\DataTypeTok{cluster =} \OtherTok{TRUE}\NormalTok{,}
+                        \DataTypeTok{respondent.id =} \StringTok{"Response.ID"}\NormalTok{, }
+                        \DataTypeTok{design =}\NormalTok{ conjDesign, }\DataTypeTok{baselines =}\NormalTok{ baselines,}
+                        \DataTypeTok{subset =}\NormalTok{ cj}\OperatorTok{$}\NormalTok{countryOrigin }\OperatorTok{==}\StringTok{ 'Brazil'}\NormalTok{)}
+\CommentTok{# Table AMCE -- Brazil Only}
+\KeywordTok{tableAMCE}\NormalTok{(results, }\DataTypeTok{capt =} \StringTok{'AMCE -- Brazil Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-22}AMCE -- Brazil Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lcccc}
+\toprule
+Feature & Estimate & Std.Error & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}(Baseline = Government bureaucracy) &  &  &  & \\
+\hspace{1em}Informal norms & -0.03 & 0.054 & -0.118 & 0.058\\
+\hspace{1em}Private arbitration & 0.021 & 0.044 & -0.052 & 0.093\\
+\hspace{1em}Local courts & 0.091 & 0.05 & 0.009 & 0.174\\
+\hspace{1em}United Nations & 0.082 & 0.047 & 0.004 & 0.16\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}(Baseline = Rich countries pay more than poor countries) &  &  &  & \\
+\hspace{1em}Only rich countries pay & -0.107 & 0.051 & -0.191 & -0.023\\
+\hspace{1em}Proportional to current emissions & -0.022 & 0.05 & -0.104 & 0.06\\
+\hspace{1em}Proportional to history of emissions & 0.021 & 0.049 & -0.059 & 0.101\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}(Baseline = Less penalty) &  &  &  & \\
+\hspace{1em}Same & 0.134 & 0.039 & 0.069 & 0.199\\
+\hspace{1em}More penalty & 0.169 & 0.044 & 0.097 & 0.241\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}(Baseline = One year) &  &  &  & \\
+\hspace{1em}Five years & 0.025 & 0.044 & -0.048 & 0.098\\
+\hspace{1em}Twenty years & -0.012 & 0.047 & -0.09 & 0.065\\
+\hspace{1em}Fifty years & -0.087 & 0.057 & -0.181 & 0.007\\
+\hspace{1em}Never & -0.166 & 0.054 & -0.256 & -0.077\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}(Baseline = None) &  &  &  & \\
+\hspace{1em}Blacklist & 0.13 & 0.045 & 0.055 & 0.205\\
+\hspace{1em}Fines & 0.169 & 0.042 & 0.1 & 0.238\\
+\hspace{1em}Imprisonment & 0.032 & 0.055 & -0.058 & 0.122\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}(Baseline = Federal government) &  &  &  & \\
+\hspace{1em}NGOs & 0.001 & 0.051 & -0.083 & 0.086\\
+\hspace{1em}Local community members & 0.003 & 0.054 & -0.086 & 0.092\\
+\hspace{1em}Local government & -0.017 & 0.053 & -0.105 & 0.071\\
+\hspace{1em}International organisations & 0.087 & 0.049 & 0.008 & 0.167\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(results, }\DataTypeTok{ci=}\FloatTok{0.9}\NormalTok{, }\DataTypeTok{point.size =} \FloatTok{.8}\NormalTok{, }\DataTypeTok{dodge.size =} \DecValTok{1}\NormalTok{,}
+     \DataTypeTok{text.size =} \DecValTok{10}\NormalTok{, }\DataTypeTok{main =} \StringTok{'AMCE -- Brazil Only'}\NormalTok{,}
+     \DataTypeTok{attribute.names =}\NormalTok{ attrs)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/unnamed-chunk-23-1.pdf}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Chile}
+\NormalTok{results <-}\StringTok{ }\NormalTok{cjoint}\OperatorTok{::}\KeywordTok{amce}\NormalTok{(fm, }\DataTypeTok{data =}\NormalTok{ cj, }\DataTypeTok{cluster =} \OtherTok{TRUE}\NormalTok{,}
+                        \DataTypeTok{respondent.id =} \StringTok{"Response.ID"}\NormalTok{, }
+                        \DataTypeTok{design =}\NormalTok{ conjDesign, }\DataTypeTok{baselines =}\NormalTok{ baselines,}
+                        \DataTypeTok{subset =}\NormalTok{ cj}\OperatorTok{$}\NormalTok{countryOrigin }\OperatorTok{==}\StringTok{ 'Chile'}\NormalTok{)}
+\CommentTok{# Table AMCE -- Chile Only}
+\KeywordTok{tableAMCE}\NormalTok{(results, }\DataTypeTok{capt =} \StringTok{'AMCE -- Chile Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-24}AMCE -- Chile Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lcccc}
+\toprule
+Feature & Estimate & Std.Error & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}(Baseline = Government bureaucracy) &  &  &  & \\
+\hspace{1em}Informal norms & -0.021 & 0.063 & -0.125 & 0.083\\
+\hspace{1em}Private arbitration & 0.055 & 0.049 & -0.026 & 0.136\\
+\hspace{1em}Local courts & 0.166 & 0.062 & 0.064 & 0.268\\
+\hspace{1em}United Nations & 0.089 & 0.07 & -0.026 & 0.204\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}(Baseline = Rich countries pay more than poor countries) &  &  &  & \\
+\hspace{1em}Only rich countries pay & 0.001 & 0.052 & -0.084 & 0.086\\
+\hspace{1em}Proportional to current emissions & 0.054 & 0.045 & -0.021 & 0.128\\
+\hspace{1em}Proportional to history of emissions & 0.003 & 0.054 & -0.086 & 0.092\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}(Baseline = Less penalty) &  &  &  & \\
+\hspace{1em}Same & -0.022 & 0.045 & -0.096 & 0.052\\
+\hspace{1em}More penalty & 0.106 & 0.05 & 0.024 & 0.188\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}(Baseline = One year) &  &  &  & \\
+\hspace{1em}Five years & 0.207 & 0.053 & 0.12 & 0.294\\
+\hspace{1em}Twenty years & 0.083 & 0.049 & 0.003 & 0.163\\
+\hspace{1em}Fifty years & 0.057 & 0.066 & -0.052 & 0.165\\
+\hspace{1em}Never & -0.029 & 0.062 & -0.13 & 0.072\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}(Baseline = None) &  &  &  & \\
+\hspace{1em}Blacklist & 0.193 & 0.049 & 0.112 & 0.274\\
+\hspace{1em}Fines & 0.103 & 0.044 & 0.03 & 0.176\\
+\hspace{1em}Imprisonment & 0.013 & 0.052 & -0.073 & 0.099\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}(Baseline = Federal government) &  &  &  & \\
+\hspace{1em}NGOs & 0.001 & 0.066 & -0.107 & 0.11\\
+\hspace{1em}Local community members & 0.196 & 0.063 & 0.092 & 0.301\\
+\hspace{1em}Local government & 0.119 & 0.058 & 0.024 & 0.215\\
+\hspace{1em}International organisations & 0.069 & 0.061 & -0.03 & 0.169\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(results, }\DataTypeTok{ci=}\FloatTok{0.9}\NormalTok{, }\DataTypeTok{point.size =} \FloatTok{.8}\NormalTok{, }\DataTypeTok{dodge.size =} \DecValTok{1}\NormalTok{,}
+     \DataTypeTok{text.size =} \DecValTok{10}\NormalTok{, }\DataTypeTok{main =} \StringTok{'AMCE -- Chile Only'}\NormalTok{,}
+     \DataTypeTok{attribute.names =}\NormalTok{ attrs)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/unnamed-chunk-25-1.pdf}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Colombia}
+\NormalTok{results <-}\StringTok{ }\NormalTok{cjoint}\OperatorTok{::}\KeywordTok{amce}\NormalTok{(fm, }\DataTypeTok{data =}\NormalTok{ cj, }\DataTypeTok{cluster =} \OtherTok{TRUE}\NormalTok{,}
+                        \DataTypeTok{respondent.id =} \StringTok{"Response.ID"}\NormalTok{, }
+                        \DataTypeTok{design =}\NormalTok{ conjDesign, }\DataTypeTok{baselines =}\NormalTok{ baselines,}
+                        \DataTypeTok{subset =}\NormalTok{ cj}\OperatorTok{$}\NormalTok{countryOrigin }\OperatorTok{==}\StringTok{ 'Colombia'}\NormalTok{)}
+\CommentTok{# Table AMCE -- Colombia Only}
+\KeywordTok{tableAMCE}\NormalTok{(results, }\DataTypeTok{capt =} \StringTok{'AMCE -- Colombia Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-26}AMCE -- Colombia Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lcccc}
+\toprule
+Feature & Estimate & Std.Error & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}(Baseline = Government bureaucracy) &  &  &  & \\
+\hspace{1em}Informal norms & -0.054 & 0.05 & -0.137 & 0.029\\
+\hspace{1em}Private arbitration & 0.057 & 0.053 & -0.03 & 0.144\\
+\hspace{1em}Local courts & 0.078 & 0.051 & -0.005 & 0.162\\
+\hspace{1em}United Nations & 0.132 & 0.054 & 0.043 & 0.221\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}(Baseline = Rich countries pay more than poor countries) &  &  &  & \\
+\hspace{1em}Only rich countries pay & -0.017 & 0.053 & -0.105 & 0.07\\
+\hspace{1em}Proportional to current emissions & 0.046 & 0.052 & -0.04 & 0.131\\
+\hspace{1em}Proportional to history of emissions & 0.059 & 0.06 & -0.039 & 0.158\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}(Baseline = Less penalty) &  &  &  & \\
+\hspace{1em}Same & 0.014 & 0.046 & -0.06 & 0.089\\
+\hspace{1em}More penalty & 0.051 & 0.044 & -0.021 & 0.124\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}(Baseline = One year) &  &  &  & \\
+\hspace{1em}Five years & 0.001 & 0.046 & -0.075 & 0.077\\
+\hspace{1em}Twenty years & 0.005 & 0.052 & -0.081 & 0.091\\
+\hspace{1em}Fifty years & -0.126 & 0.051 & -0.21 & -0.041\\
+\hspace{1em}Never & -0.122 & 0.048 & -0.201 & -0.043\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}(Baseline = None) &  &  &  & \\
+\hspace{1em}Blacklist & 0.037 & 0.059 & -0.059 & 0.133\\
+\hspace{1em}Fines & 0.068 & 0.052 & -0.019 & 0.154\\
+\hspace{1em}Imprisonment & -0.072 & 0.053 & -0.159 & 0.015\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}(Baseline = Federal government) &  &  &  & \\
+\hspace{1em}NGOs & -0.023 & 0.059 & -0.12 & 0.074\\
+\hspace{1em}Local community members & 0.131 & 0.06 & 0.032 & 0.229\\
+\hspace{1em}Local government & -0.003 & 0.049 & -0.083 & 0.078\\
+\hspace{1em}International organisations & 0.094 & 0.051 & 0.009 & 0.178\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(results, }\DataTypeTok{ci=}\FloatTok{0.9}\NormalTok{, }\DataTypeTok{point.size =} \FloatTok{.8}\NormalTok{, }\DataTypeTok{dodge.size =} \DecValTok{1}\NormalTok{,}
+     \DataTypeTok{text.size =} \DecValTok{10}\NormalTok{, }\DataTypeTok{main =} \StringTok{'AMCE -- Colombia Only'}\NormalTok{,}
+     \DataTypeTok{attribute.names =}\NormalTok{ attrs)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/unnamed-chunk-27-1.pdf}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Costa Rica}
+\NormalTok{results <-}\StringTok{ }\NormalTok{cjoint}\OperatorTok{::}\KeywordTok{amce}\NormalTok{(fm, }\DataTypeTok{data =}\NormalTok{ cj, }\DataTypeTok{cluster =} \OtherTok{TRUE}\NormalTok{,}
+                        \DataTypeTok{respondent.id =} \StringTok{"Response.ID"}\NormalTok{, }
+                        \DataTypeTok{design =}\NormalTok{ conjDesign, }\DataTypeTok{baselines =}\NormalTok{ baselines,}
+                        \DataTypeTok{subset =}\NormalTok{ cj}\OperatorTok{$}\NormalTok{countryOrigin }\OperatorTok{==}\StringTok{ 'Costa Rica'}\NormalTok{)}
+\CommentTok{# Table AMCE -- Costa Rica Only}
+\KeywordTok{tableAMCE}\NormalTok{(results, }\DataTypeTok{capt =} \StringTok{'AMCE -- Costa Rica Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-28}AMCE -- Costa Rica Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lcccc}
+\toprule
+Feature & Estimate & Std.Error & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}(Baseline = Government bureaucracy) &  &  &  & \\
+\hspace{1em}Informal norms & -0.085 & 0.066 & -0.193 & 0.023\\
+\hspace{1em}Private arbitration & -0.018 & 0.064 & -0.123 & 0.087\\
+\hspace{1em}Local courts & 0.013 & 0.066 & -0.095 & 0.121\\
+\hspace{1em}United Nations & 0.094 & 0.071 & -0.022 & 0.21\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}(Baseline = Rich countries pay more than poor countries) &  &  &  & \\
+\hspace{1em}Only rich countries pay & -0.106 & 0.06 & -0.205 & -0.007\\
+\hspace{1em}Proportional to current emissions & 0.058 & 0.054 & -0.031 & 0.146\\
+\hspace{1em}Proportional to history of emissions & 0.015 & 0.066 & -0.094 & 0.123\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}(Baseline = Less penalty) &  &  &  & \\
+\hspace{1em}Same & 0.083 & 0.044 & 0.01 & 0.155\\
+\hspace{1em}More penalty & 0.135 & 0.042 & 0.066 & 0.204\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}(Baseline = One year) &  &  &  & \\
+\hspace{1em}Five years & 0.108 & 0.063 & 0.004 & 0.211\\
+\hspace{1em}Twenty years & -0.115 & 0.063 & -0.219 & -0.011\\
+\hspace{1em}Fifty years & -0.183 & 0.06 & -0.282 & -0.084\\
+\hspace{1em}Never & -0.201 & 0.061 & -0.303 & -0.1\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}(Baseline = None) &  &  &  & \\
+\hspace{1em}Blacklist & 0.139 & 0.051 & 0.055 & 0.223\\
+\hspace{1em}Fines & 0.245 & 0.051 & 0.161 & 0.328\\
+\hspace{1em}Imprisonment & 0.167 & 0.057 & 0.074 & 0.261\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}(Baseline = Federal government) &  &  &  & \\
+\hspace{1em}NGOs & 0.032 & 0.063 & -0.071 & 0.136\\
+\hspace{1em}Local community members & -0.081 & 0.074 & -0.203 & 0.042\\
+\hspace{1em}Local government & 0.087 & 0.059 & -0.01 & 0.184\\
+\hspace{1em}International organisations & -0.042 & 0.068 & -0.154 & 0.069\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(results, }\DataTypeTok{ci=}\FloatTok{0.9}\NormalTok{, }\DataTypeTok{point.size =} \FloatTok{.8}\NormalTok{, }\DataTypeTok{dodge.size =} \DecValTok{1}\NormalTok{,}
+     \DataTypeTok{text.size =} \DecValTok{10}\NormalTok{, }\DataTypeTok{main =} \StringTok{'AMCE -- Costa Rica Only'}\NormalTok{,}
+     \DataTypeTok{attribute.names =}\NormalTok{ attrs)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/unnamed-chunk-29-1.pdf}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Ecuador}
+\NormalTok{results <-}\StringTok{ }\NormalTok{cjoint}\OperatorTok{::}\KeywordTok{amce}\NormalTok{(fm, }\DataTypeTok{data =}\NormalTok{ cj, }\DataTypeTok{cluster =} \OtherTok{TRUE}\NormalTok{,}
+                        \DataTypeTok{respondent.id =} \StringTok{"Response.ID"}\NormalTok{, }
+                        \DataTypeTok{design =}\NormalTok{ conjDesign, }\DataTypeTok{baselines =}\NormalTok{ baselines,}
+                        \DataTypeTok{subset =}\NormalTok{ cj}\OperatorTok{$}\NormalTok{countryOrigin }\OperatorTok{==}\StringTok{ 'Ecuador'}\NormalTok{)}
+\CommentTok{# Table AMCE -- Ecuador Only}
+\KeywordTok{tableAMCE}\NormalTok{(results, }\DataTypeTok{capt =} \StringTok{'AMCE -- Ecuador Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-30}AMCE -- Ecuador Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lcccc}
+\toprule
+Feature & Estimate & Std.Error & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}(Baseline = Government bureaucracy) &  &  &  & \\
+\hspace{1em}Informal norms & -0.007 & 0.055 & -0.098 & 0.084\\
+\hspace{1em}Private arbitration & 0.068 & 0.052 & -0.018 & 0.154\\
+\hspace{1em}Local courts & 0.122 & 0.049 & 0.042 & 0.203\\
+\hspace{1em}United Nations & 0.151 & 0.058 & 0.057 & 0.246\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}(Baseline = Rich countries pay more than poor countries) &  &  &  & \\
+\hspace{1em}Only rich countries pay & -0.044 & 0.054 & -0.134 & 0.045\\
+\hspace{1em}Proportional to current emissions & 0.114 & 0.05 & 0.032 & 0.196\\
+\hspace{1em}Proportional to history of emissions & 0.085 & 0.055 & -0.005 & 0.175\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}(Baseline = Less penalty) &  &  &  & \\
+\hspace{1em}Same & 0.01 & 0.052 & -0.075 & 0.095\\
+\hspace{1em}More penalty & 0.085 & 0.05 & 0.003 & 0.167\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}(Baseline = One year) &  &  &  & \\
+\hspace{1em}Five years & 0.085 & 0.063 & -0.018 & 0.188\\
+\hspace{1em}Twenty years & 0.076 & 0.05 & -0.006 & 0.159\\
+\hspace{1em}Fifty years & -0.017 & 0.05 & -0.1 & 0.065\\
+\hspace{1em}Never & 0.036 & 0.066 & -0.073 & 0.144\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}(Baseline = None) &  &  &  & \\
+\hspace{1em}Blacklist & 0.079 & 0.049 & -0.002 & 0.16\\
+\hspace{1em}Fines & 0.062 & 0.055 & -0.029 & 0.153\\
+\hspace{1em}Imprisonment & -0.087 & 0.055 & -0.178 & 0.003\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}(Baseline = Federal government) &  &  &  & \\
+\hspace{1em}NGOs & -0.037 & 0.054 & -0.125 & 0.051\\
+\hspace{1em}Local community members & 0.063 & 0.055 & -0.027 & 0.153\\
+\hspace{1em}Local government & 0.043 & 0.061 & -0.057 & 0.142\\
+\hspace{1em}International organisations & 0.051 & 0.055 & -0.04 & 0.141\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(results, }\DataTypeTok{ci=}\FloatTok{0.9}\NormalTok{, }\DataTypeTok{point.size =} \FloatTok{.8}\NormalTok{, }\DataTypeTok{dodge.size =} \DecValTok{1}\NormalTok{,}
+     \DataTypeTok{text.size =} \DecValTok{10}\NormalTok{, }\DataTypeTok{main =} \StringTok{'AMCE -- Ecuador Only'}\NormalTok{,}
+     \DataTypeTok{attribute.names =}\NormalTok{ attrs)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/unnamed-chunk-31-1.pdf}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Mexico}
+\NormalTok{results <-}\StringTok{ }\NormalTok{cjoint}\OperatorTok{::}\KeywordTok{amce}\NormalTok{(fm, }\DataTypeTok{data =}\NormalTok{ cj, }\DataTypeTok{cluster =} \OtherTok{TRUE}\NormalTok{,}
+                        \DataTypeTok{respondent.id =} \StringTok{"Response.ID"}\NormalTok{, }
+                        \DataTypeTok{design =}\NormalTok{ conjDesign, }\DataTypeTok{baselines =}\NormalTok{ baselines,}
+                        \DataTypeTok{subset =}\NormalTok{ cj}\OperatorTok{$}\NormalTok{countryOrigin }\OperatorTok{==}\StringTok{ 'Mexico'}\NormalTok{)}
+\CommentTok{# Table AMCE -- Full Model }
+\KeywordTok{tableAMCE}\NormalTok{(results, }\DataTypeTok{capt =} \StringTok{'AMCE -- Mexico Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-32}AMCE -- Mexico Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lcccc}
+\toprule
+Feature & Estimate & Std.Error & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}(Baseline = Government bureaucracy) &  &  &  & \\
+\hspace{1em}Informal norms & -0.048 & 0.057 & -0.142 & 0.047\\
+\hspace{1em}Private arbitration & 0.066 & 0.054 & -0.023 & 0.154\\
+\hspace{1em}Local courts & 0.036 & 0.056 & -0.056 & 0.127\\
+\hspace{1em}United Nations & 0.137 & 0.063 & 0.033 & 0.242\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}(Baseline = Rich countries pay more than poor countries) &  &  &  & \\
+\hspace{1em}Only rich countries pay & -0.059 & 0.053 & -0.146 & 0.028\\
+\hspace{1em}Proportional to current emissions & 0.039 & 0.052 & -0.046 & 0.123\\
+\hspace{1em}Proportional to history of emissions & 0.132 & 0.057 & 0.038 & 0.227\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}(Baseline = Less penalty) &  &  &  & \\
+\hspace{1em}Same & 0.017 & 0.055 & -0.073 & 0.107\\
+\hspace{1em}More penalty & 0.011 & 0.052 & -0.074 & 0.096\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}(Baseline = One year) &  &  &  & \\
+\hspace{1em}Five years & 0.107 & 0.059 & 0.011 & 0.204\\
+\hspace{1em}Twenty years & -0.023 & 0.06 & -0.122 & 0.077\\
+\hspace{1em}Fifty years & -0.032 & 0.058 & -0.127 & 0.063\\
+\hspace{1em}Never & -0.137 & 0.062 & -0.24 & -0.035\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}(Baseline = None) &  &  &  & \\
+\hspace{1em}Blacklist & 0.033 & 0.054 & -0.056 & 0.122\\
+\hspace{1em}Fines & 0.109 & 0.056 & 0.018 & 0.201\\
+\hspace{1em}Imprisonment & -0.016 & 0.053 & -0.103 & 0.071\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}(Baseline = Federal government) &  &  &  & \\
+\hspace{1em}NGOs & -0.038 & 0.068 & -0.15 & 0.074\\
+\hspace{1em}Local community members & -0.038 & 0.062 & -0.141 & 0.064\\
+\hspace{1em}Local government & -0.063 & 0.065 & -0.17 & 0.043\\
+\hspace{1em}International organisations & 0.136 & 0.056 & 0.044 & 0.229\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(results, }\DataTypeTok{ci=}\FloatTok{0.9}\NormalTok{, }\DataTypeTok{point.size =} \FloatTok{.8}\NormalTok{, }\DataTypeTok{dodge.size =} \DecValTok{1}\NormalTok{,}
+     \DataTypeTok{text.size =} \DecValTok{10}\NormalTok{, }\DataTypeTok{main =} \StringTok{'AMCE -- Mexico Only'}\NormalTok{,}
+     \DataTypeTok{attribute.names =}\NormalTok{ attrs)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/unnamed-chunk-33-1.pdf}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Panama}
+\NormalTok{results <-}\StringTok{ }\NormalTok{cjoint}\OperatorTok{::}\KeywordTok{amce}\NormalTok{(fm, }\DataTypeTok{data =}\NormalTok{ cj, }\DataTypeTok{cluster =} \OtherTok{TRUE}\NormalTok{,}
+                        \DataTypeTok{respondent.id =} \StringTok{"Response.ID"}\NormalTok{, }
+                        \DataTypeTok{design =}\NormalTok{ conjDesign, }\DataTypeTok{baselines =}\NormalTok{ baselines,}
+                        \DataTypeTok{subset =}\NormalTok{ cj}\OperatorTok{$}\NormalTok{countryOrigin }\OperatorTok{==}\StringTok{ 'Panama'}\NormalTok{)}
+\CommentTok{# Table AMCE -- Panama Only}
+\KeywordTok{tableAMCE}\NormalTok{(results, }\DataTypeTok{capt =} \StringTok{'AMCE -- Panama Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-34}AMCE -- Panama Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lcccc}
+\toprule
+Feature & Estimate & Std.Error & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}(Baseline = Government bureaucracy) &  &  &  & \\
+\hspace{1em}Informal norms & -0.049 & 0.062 & -0.151 & 0.054\\
+\hspace{1em}Private arbitration & 0.013 & 0.065 & -0.095 & 0.12\\
+\hspace{1em}Local courts & 0.079 & 0.057 & -0.014 & 0.173\\
+\hspace{1em}United Nations & 0.082 & 0.065 & -0.026 & 0.189\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}(Baseline = Rich countries pay more than poor countries) &  &  &  & \\
+\hspace{1em}Only rich countries pay & -0.085 & 0.055 & -0.175 & 0.006\\
+\hspace{1em}Proportional to current emissions & -0.043 & 0.05 & -0.124 & 0.039\\
+\hspace{1em}Proportional to history of emissions & -0.038 & 0.051 & -0.122 & 0.046\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}(Baseline = Less penalty) &  &  &  & \\
+\hspace{1em}Same & 0.065 & 0.05 & -0.017 & 0.147\\
+\hspace{1em}More penalty & 0.189 & 0.052 & 0.104 & 0.274\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}(Baseline = One year) &  &  &  & \\
+\hspace{1em}Five years & -0.067 & 0.058 & -0.162 & 0.028\\
+\hspace{1em}Twenty years & -0.045 & 0.064 & -0.151 & 0.06\\
+\hspace{1em}Fifty years & -0.196 & 0.064 & -0.301 & -0.092\\
+\hspace{1em}Never & -0.269 & 0.057 & -0.363 & -0.175\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}(Baseline = None) &  &  &  & \\
+\hspace{1em}Blacklist & 0.112 & 0.057 & 0.018 & 0.205\\
+\hspace{1em}Fines & 0.129 & 0.051 & 0.045 & 0.214\\
+\hspace{1em}Imprisonment & 0.072 & 0.061 & -0.028 & 0.172\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}(Baseline = Federal government) &  &  &  & \\
+\hspace{1em}NGOs & 0.002 & 0.057 & -0.092 & 0.096\\
+\hspace{1em}Local community members & 0.039 & 0.06 & -0.06 & 0.137\\
+\hspace{1em}Local government & -0.001 & 0.059 & -0.099 & 0.097\\
+\hspace{1em}International organisations & 0.034 & 0.059 & -0.064 & 0.131\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(results, }\DataTypeTok{ci=}\FloatTok{0.9}\NormalTok{, }\DataTypeTok{point.size =} \FloatTok{.8}\NormalTok{, }\DataTypeTok{dodge.size =} \DecValTok{1}\NormalTok{,}
+     \DataTypeTok{text.size =} \DecValTok{10}\NormalTok{, }\DataTypeTok{main =} \StringTok{'AMCE -- Panama Only'}\NormalTok{,}
+     \DataTypeTok{attribute.names =}\NormalTok{ attrs)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/unnamed-chunk-35-1.pdf}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Peru}
+\NormalTok{results <-}\StringTok{ }\NormalTok{cjoint}\OperatorTok{::}\KeywordTok{amce}\NormalTok{(fm, }\DataTypeTok{data =}\NormalTok{ cj, }\DataTypeTok{cluster =} \OtherTok{TRUE}\NormalTok{,}
+                        \DataTypeTok{respondent.id =} \StringTok{"Response.ID"}\NormalTok{, }
+                        \DataTypeTok{design =}\NormalTok{ conjDesign, }\DataTypeTok{baselines =}\NormalTok{ baselines,}
+                        \DataTypeTok{subset =}\NormalTok{ cj}\OperatorTok{$}\NormalTok{countryOrigin }\OperatorTok{==}\StringTok{ 'Peru'}\NormalTok{)}
+\CommentTok{# Table AMCE -- Peru Only}
+\KeywordTok{tableAMCE}\NormalTok{(results, }\DataTypeTok{capt =} \StringTok{'AMCE -- Peru Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-36}AMCE -- Peru Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lcccc}
+\toprule
+Feature & Estimate & Std.Error & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}(Baseline = Government bureaucracy) &  &  &  & \\
+\hspace{1em}Informal norms & -0.121 & 0.065 & -0.228 & -0.014\\
+\hspace{1em}Private arbitration & 0.123 & 0.069 & 0.01 & 0.236\\
+\hspace{1em}Local courts & 0.033 & 0.065 & -0.074 & 0.14\\
+\hspace{1em}United Nations & 0.05 & 0.066 & -0.058 & 0.158\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}(Baseline = Rich countries pay more than poor countries) &  &  &  & \\
+\hspace{1em}Only rich countries pay & -0.026 & 0.047 & -0.103 & 0.052\\
+\hspace{1em}Proportional to current emissions & 0.013 & 0.055 & -0.077 & 0.103\\
+\hspace{1em}Proportional to history of emissions & 0.086 & 0.057 & -0.008 & 0.18\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}(Baseline = Less penalty) &  &  &  & \\
+\hspace{1em}Same & 0.079 & 0.052 & -0.006 & 0.164\\
+\hspace{1em}More penalty & 0.044 & 0.05 & -0.037 & 0.126\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}(Baseline = One year) &  &  &  & \\
+\hspace{1em}Five years & 0.014 & 0.071 & -0.104 & 0.131\\
+\hspace{1em}Twenty years & -0.023 & 0.077 & -0.15 & 0.104\\
+\hspace{1em}Fifty years & -0.12 & 0.07 & -0.235 & -0.006\\
+\hspace{1em}Never & -0.12 & 0.062 & -0.222 & -0.018\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}(Baseline = None) &  &  &  & \\
+\hspace{1em}Blacklist & 0.093 & 0.075 & -0.03 & 0.215\\
+\hspace{1em}Fines & 0.128 & 0.069 & 0.014 & 0.243\\
+\hspace{1em}Imprisonment & 0.075 & 0.071 & -0.042 & 0.191\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}(Baseline = Federal government) &  &  &  & \\
+\hspace{1em}NGOs & -0.099 & 0.063 & -0.202 & 0.004\\
+\hspace{1em}Local community members & -0.119 & 0.068 & -0.232 & -0.007\\
+\hspace{1em}Local government & 0.029 & 0.075 & -0.095 & 0.153\\
+\hspace{1em}International organisations & 0.004 & 0.067 & -0.106 & 0.114\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(results, }\DataTypeTok{ci=}\FloatTok{0.9}\NormalTok{, }\DataTypeTok{point.size =} \FloatTok{.8}\NormalTok{, }\DataTypeTok{dodge.size =} \DecValTok{1}\NormalTok{,}
+     \DataTypeTok{text.size =} \DecValTok{10}\NormalTok{, }\DataTypeTok{main =} \StringTok{'AMCE -- Peru Only'}\NormalTok{,}
+     \DataTypeTok{attribute.names =}\NormalTok{ attrs)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/unnamed-chunk-37-1.pdf}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Elite Subsample}
+
+\CommentTok{# Executive branch}
+\NormalTok{results <-}\StringTok{ }\NormalTok{cjoint}\OperatorTok{::}\KeywordTok{amce}\NormalTok{(fm, }\DataTypeTok{data =}\NormalTok{ cj, }\DataTypeTok{cluster =} \OtherTok{TRUE}\NormalTok{,}
+                        \DataTypeTok{respondent.id =} \StringTok{"Response.ID"}\NormalTok{, }
+                        \DataTypeTok{design =}\NormalTok{ conjDesign, }\DataTypeTok{baselines =}\NormalTok{ baselines,}
+                        \DataTypeTok{subset =}\NormalTok{ cj}\OperatorTok{$}\NormalTok{groupOrigin }\OperatorTok{==}\StringTok{ 'Executive'}\NormalTok{)}
+\CommentTok{# Table AMCE -- Executive branch only}
+\KeywordTok{tableAMCE}\NormalTok{(results, }\DataTypeTok{capt =} \StringTok{'AMCE -- Executive Branch Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-38}AMCE -- Executive Branch Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lcccc}
+\toprule
+Feature & Estimate & Std.Error & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}(Baseline = Government bureaucracy) &  &  &  & \\
+\hspace{1em}Informal norms & -0.034 & 0.05 & -0.116 & 0.049\\
+\hspace{1em}Private arbitration & 0.057 & 0.039 & -0.008 & 0.121\\
+\hspace{1em}Local courts & 0.067 & 0.043 & -0.003 & 0.137\\
+\hspace{1em}United Nations & 0.096 & 0.047 & 0.019 & 0.174\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}(Baseline = Rich countries pay more than poor countries) &  &  &  & \\
+\hspace{1em}Only rich countries pay & -0.036 & 0.039 & -0.101 & 0.028\\
+\hspace{1em}Proportional to current emissions & 0.08 & 0.04 & 0.014 & 0.146\\
+\hspace{1em}Proportional to history of emissions & 0.055 & 0.044 & -0.017 & 0.127\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}(Baseline = Less penalty) &  &  &  & \\
+\hspace{1em}Same & 0.081 & 0.038 & 0.018 & 0.144\\
+\hspace{1em}More penalty & 0.125 & 0.039 & 0.061 & 0.188\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}(Baseline = One year) &  &  &  & \\
+\hspace{1em}Five years & 0.06 & 0.049 & -0.02 & 0.14\\
+\hspace{1em}Twenty years & -0.023 & 0.048 & -0.102 & 0.056\\
+\hspace{1em}Fifty years & -0.096 & 0.045 & -0.171 & -0.022\\
+\hspace{1em}Never & -0.119 & 0.045 & -0.193 & -0.045\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}(Baseline = None) &  &  &  & \\
+\hspace{1em}Blacklist & 0.103 & 0.037 & 0.043 & 0.163\\
+\hspace{1em}Fines & 0.125 & 0.044 & 0.053 & 0.197\\
+\hspace{1em}Imprisonment & -0.054 & 0.04 & -0.12 & 0.013\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}(Baseline = Federal government) &  &  &  & \\
+\hspace{1em}NGOs & -0.159 & 0.051 & -0.243 & -0.076\\
+\hspace{1em}Local community members & -0.027 & 0.052 & -0.113 & 0.058\\
+\hspace{1em}Local government & -0.03 & 0.045 & -0.104 & 0.044\\
+\hspace{1em}International organisations & 0.021 & 0.043 & -0.048 & 0.091\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(results, }\DataTypeTok{ci=}\FloatTok{0.9}\NormalTok{, }\DataTypeTok{point.size =} \FloatTok{.8}\NormalTok{, }\DataTypeTok{dodge.size =} \DecValTok{1}\NormalTok{,}
+     \DataTypeTok{text.size =} \DecValTok{10}\NormalTok{, }\DataTypeTok{main =} \StringTok{'AMCE -- Executive Branch Only'}\NormalTok{,}
+     \DataTypeTok{attribute.names =}\NormalTok{ attrs)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/unnamed-chunk-39-1.pdf}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Legislative branch}
+\NormalTok{results <-}\StringTok{ }\NormalTok{cjoint}\OperatorTok{::}\KeywordTok{amce}\NormalTok{(fm, }\DataTypeTok{data =}\NormalTok{ cj, }\DataTypeTok{cluster =} \OtherTok{TRUE}\NormalTok{,}
+                        \DataTypeTok{respondent.id =} \StringTok{"Response.ID"}\NormalTok{, }
+                        \DataTypeTok{design =}\NormalTok{ conjDesign, }\DataTypeTok{baselines =}\NormalTok{ baselines,}
+                        \DataTypeTok{subset =}\NormalTok{ cj}\OperatorTok{$}\NormalTok{groupOrigin }\OperatorTok{==}\StringTok{ 'Legislative'}\NormalTok{)}
+\CommentTok{# Table AMCE -- Legislative branch only}
+\KeywordTok{tableAMCE}\NormalTok{(results, }\DataTypeTok{capt =} \StringTok{'AMCE -- Legislative Branch Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-40}AMCE -- Legislative Branch Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lcccc}
+\toprule
+Feature & Estimate & Std.Error & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}(Baseline = Government bureaucracy) &  &  &  & \\
+\hspace{1em}Informal norms & -0.069 & 0.054 & -0.157 & 0.02\\
+\hspace{1em}Private arbitration & 0.018 & 0.065 & -0.09 & 0.126\\
+\hspace{1em}Local courts & 0.044 & 0.062 & -0.058 & 0.147\\
+\hspace{1em}United Nations & 0.065 & 0.06 & -0.034 & 0.164\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}(Baseline = Rich countries pay more than poor countries) &  &  &  & \\
+\hspace{1em}Only rich countries pay & -0.158 & 0.052 & -0.243 & -0.073\\
+\hspace{1em}Proportional to current emissions & -0.08 & 0.052 & -0.166 & 0.005\\
+\hspace{1em}Proportional to history of emissions & -0.019 & 0.049 & -0.099 & 0.062\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}(Baseline = Less penalty) &  &  &  & \\
+\hspace{1em}Same & 0.074 & 0.044 & 0.002 & 0.147\\
+\hspace{1em}More penalty & 0.071 & 0.044 & -0.001 & 0.143\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}(Baseline = One year) &  &  &  & \\
+\hspace{1em}Five years & 0.003 & 0.059 & -0.095 & 0.101\\
+\hspace{1em}Twenty years & 0.002 & 0.058 & -0.093 & 0.097\\
+\hspace{1em}Fifty years & -0.043 & 0.061 & -0.143 & 0.057\\
+\hspace{1em}Never & -0.129 & 0.066 & -0.237 & -0.02\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}(Baseline = None) &  &  &  & \\
+\hspace{1em}Blacklist & 0.113 & 0.055 & 0.022 & 0.204\\
+\hspace{1em}Fines & 0.145 & 0.054 & 0.056 & 0.233\\
+\hspace{1em}Imprisonment & -0.021 & 0.058 & -0.116 & 0.075\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}(Baseline = Federal government) &  &  &  & \\
+\hspace{1em}NGOs & -0.116 & 0.064 & -0.22 & -0.011\\
+\hspace{1em}Local community members & -0.003 & 0.068 & -0.115 & 0.108\\
+\hspace{1em}Local government & 0.024 & 0.063 & -0.08 & 0.128\\
+\hspace{1em}International organisations & -0.001 & 0.065 & -0.108 & 0.105\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(results, }\DataTypeTok{ci=}\FloatTok{0.9}\NormalTok{, }\DataTypeTok{point.size =} \FloatTok{.8}\NormalTok{, }\DataTypeTok{dodge.size =} \DecValTok{1}\NormalTok{,}
+     \DataTypeTok{text.size =} \DecValTok{10}\NormalTok{, }\DataTypeTok{main =} \StringTok{'AMCE -- Legislative Branch Only'}\NormalTok{,}
+     \DataTypeTok{attribute.names =}\NormalTok{ attrs)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/unnamed-chunk-41-1.pdf}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Civil society}
+\NormalTok{results <-}\StringTok{ }\NormalTok{cjoint}\OperatorTok{::}\KeywordTok{amce}\NormalTok{(fm, }\DataTypeTok{data =}\NormalTok{ cj, }\DataTypeTok{cluster =} \OtherTok{TRUE}\NormalTok{,}
+                        \DataTypeTok{respondent.id =} \StringTok{"Response.ID"}\NormalTok{, }
+                        \DataTypeTok{design =}\NormalTok{ conjDesign, }\DataTypeTok{baselines =}\NormalTok{ baselines,}
+                        \DataTypeTok{subset =}\NormalTok{ cj}\OperatorTok{$}\NormalTok{groupOrigin }\OperatorTok{==}\StringTok{ 'Civil Society'}\NormalTok{)}
+\CommentTok{# Table AMCE -- Civil Society Only }
+\KeywordTok{tableAMCE}\NormalTok{(results, }\DataTypeTok{capt =} \StringTok{'AMCE -- Civil Society Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-42}AMCE -- Civil Society Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lcccc}
+\toprule
+Feature & Estimate & Std.Error & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}(Baseline = Government bureaucracy) &  &  &  & \\
+\hspace{1em}Informal norms & -0.02 & 0.031 & -0.071 & 0.032\\
+\hspace{1em}Private arbitration & 0.073 & 0.032 & 0.021 & 0.126\\
+\hspace{1em}Local courts & 0.127 & 0.031 & 0.076 & 0.179\\
+\hspace{1em}United Nations & 0.166 & 0.031 & 0.115 & 0.218\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}(Baseline = Rich countries pay more than poor countries) &  &  &  & \\
+\hspace{1em}Only rich countries pay & -0.043 & 0.031 & -0.093 & 0.007\\
+\hspace{1em}Proportional to current emissions & 0.038 & 0.03 & -0.011 & 0.087\\
+\hspace{1em}Proportional to history of emissions & 0.069 & 0.029 & 0.022 & 0.117\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}(Baseline = Less penalty) &  &  &  & \\
+\hspace{1em}Same & 0.035 & 0.025 & -0.006 & 0.077\\
+\hspace{1em}More penalty & 0.101 & 0.026 & 0.059 & 0.143\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}(Baseline = One year) &  &  &  & \\
+\hspace{1em}Five years & 0.044 & 0.031 & -0.007 & 0.095\\
+\hspace{1em}Twenty years & -0.053 & 0.031 & -0.103 & -0.003\\
+\hspace{1em}Fifty years & -0.102 & 0.034 & -0.158 & -0.047\\
+\hspace{1em}Never & -0.147 & 0.034 & -0.203 & -0.09\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}(Baseline = None) &  &  &  & \\
+\hspace{1em}Blacklist & 0.097 & 0.03 & 0.047 & 0.146\\
+\hspace{1em}Fines & 0.13 & 0.028 & 0.085 & 0.176\\
+\hspace{1em}Imprisonment & 0.049 & 0.03 & -0.002 & 0.099\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}(Baseline = Federal government) &  &  &  & \\
+\hspace{1em}NGOs & 0.026 & 0.031 & -0.025 & 0.077\\
+\hspace{1em}Local community members & 0.037 & 0.034 & -0.019 & 0.094\\
+\hspace{1em}Local government & -0.008 & 0.033 & -0.063 & 0.047\\
+\hspace{1em}International organisations & 0.066 & 0.029 & 0.019 & 0.113\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(results, }\DataTypeTok{ci=}\FloatTok{0.9}\NormalTok{, }\DataTypeTok{point.size =} \FloatTok{.8}\NormalTok{, }\DataTypeTok{dodge.size =} \DecValTok{1}\NormalTok{,}
+     \DataTypeTok{text.size =} \DecValTok{10}\NormalTok{, }\DataTypeTok{main =} \StringTok{'AMCE -- Civil Society Only'}\NormalTok{,}
+     \DataTypeTok{attribute.names =}\NormalTok{ attrs)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/unnamed-chunk-43-1.pdf}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Academia Only}
+\NormalTok{results <-}\StringTok{ }\NormalTok{cjoint}\OperatorTok{::}\KeywordTok{amce}\NormalTok{(fm, }\DataTypeTok{data =}\NormalTok{ cj, }\DataTypeTok{cluster =} \OtherTok{TRUE}\NormalTok{,}
+                        \DataTypeTok{respondent.id =} \StringTok{"Response.ID"}\NormalTok{, }
+                        \DataTypeTok{design =}\NormalTok{ conjDesign, }\DataTypeTok{baselines =}\NormalTok{ baselines,}
+                        \DataTypeTok{subset =}\NormalTok{ cj}\OperatorTok{$}\NormalTok{groupOrigin }\OperatorTok{==}\StringTok{ 'Academia'}\NormalTok{)}
+\CommentTok{# Table AMCE -- Full Model }
+\KeywordTok{tableAMCE}\NormalTok{(results, }\DataTypeTok{capt =} \StringTok{'AMCE -- Academia Only'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-44}AMCE -- Academia Only}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{lcccc}
+\toprule
+Feature & Estimate & Std.Error & Lower & Upper\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are conflicts resolved?}}\\
+\hspace{1em}(Baseline = Government bureaucracy) &  &  &  & \\
+\hspace{1em}Informal norms & -0.089 & 0.031 & -0.139 & -0.039\\
+\hspace{1em}Private arbitration & 0.053 & 0.03 & 0.003 & 0.103\\
+\hspace{1em}Local courts & 0.082 & 0.028 & 0.036 & 0.129\\
+\hspace{1em}United Nations & 0.09 & 0.034 & 0.034 & 0.146\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are costs distributed?}}\\
+\hspace{1em}(Baseline = Rich countries pay more than poor countries) &  &  &  & \\
+\hspace{1em}Only rich countries pay & -0.07 & 0.029 & -0.117 & -0.023\\
+\hspace{1em}Proportional to current emissions & 0.029 & 0.025 & -0.012 & 0.07\\
+\hspace{1em}Proportional to history of emissions & 0.013 & 0.03 & -0.037 & 0.062\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How are repeated violations punished?}}\\
+\hspace{1em}(Baseline = Less penalty) &  &  &  & \\
+\hspace{1em}Same & 0.068 & 0.025 & 0.027 & 0.11\\
+\hspace{1em}More penalty & 0.112 & 0.027 & 0.067 & 0.156\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{How often will the agreement be renegotiated?}}\\
+\hspace{1em}(Baseline = One year) &  &  &  & \\
+\hspace{1em}Five years & 0.075 & 0.03 & 0.026 & 0.124\\
+\hspace{1em}Twenty years & 0.039 & 0.03 & -0.009 & 0.088\\
+\hspace{1em}Fifty years & -0.092 & 0.032 & -0.145 & -0.039\\
+\hspace{1em}Never & -0.101 & 0.03 & -0.15 & -0.052\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{What punishments do they use?}}\\
+\hspace{1em}(Baseline = None) &  &  &  & \\
+\hspace{1em}Blacklist & 0.121 & 0.031 & 0.07 & 0.172\\
+\hspace{1em}Fines & 0.158 & 0.028 & 0.112 & 0.204\\
+\hspace{1em}Imprisonment & 0.087 & 0.032 & 0.034 & 0.14\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Who makes the rules?}}\\
+\hspace{1em}(Baseline = Federal government) &  &  &  & \\
+\hspace{1em}NGOs & 0 & 0.031 & -0.051 & 0.051\\
+\hspace{1em}Local community members & 0.055 & 0.033 & 0.001 & 0.108\\
+\hspace{1em}Local government & 0.062 & 0.031 & 0.011 & 0.112\\
+\hspace{1em}International organisations & 0.105 & 0.032 & 0.053 & 0.157\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(results, }\DataTypeTok{ci=}\FloatTok{0.9}\NormalTok{, }\DataTypeTok{point.size =} \FloatTok{.8}\NormalTok{, }\DataTypeTok{dodge.size =} \DecValTok{1}\NormalTok{,}
+     \DataTypeTok{text.size =} \DecValTok{10}\NormalTok{, }\DataTypeTok{main =} \StringTok{'AMCE -- Academia Only'}\NormalTok{,}
+     \DataTypeTok{attribute.names =}\NormalTok{ attrs)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/unnamed-chunk-45-1.pdf}
+
+\newpage
+
+\hypertarget{apsa-experimental-section-standard-report-for-experiments}{%
+\section{APSA Experimental Section Standard Report for
+Experiments}\label{apsa-experimental-section-standard-report-for-experiments}}
+
+\hypertarget{hypothesis}{%
+\subsection{Hypothesis}\label{hypothesis}}
+
+The experiment was designed to study the characteristics of the climate
+change mitigation treaties favored by Latin American elites.
+
+\hypertarget{subjects-and-context}{%
+\subsection{Subjects and Context}\label{subjects-and-context}}
+
+The eligibility criteria for the research was to belong to one of the
+four elite profiles listed below.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Members of the Executive branch}: members of regulatory
+  agencies, politicians (mayors, governors, presidents), members of
+  ministries and secretaries at the federal and state levels.
+\item
+  \textbf{Members of the Legislative branch}: legislators and staff
+  officers from the federal and state level in the researched countries.
+\item
+  \textbf{Civil society}: environmental and energy-related NGO members;
+  oil, renewables, and environmental solutions firm owners in the
+  researched countries.
+\item
+  \textbf{Academics}: professors from energy and engineering departments
+  of the most prestigious universities in the countries researched.
+\end{enumerate}
+
+We decided to include these profiles based on the stakes and influence
+that such elites have on climate change policies. According to the IR
+constructivist theories, academics have notable influence on our topic
+of interest as they form the epistemic community around climate change
+policies. Civil society members that have stakes on climate policies are
+also influential, such as oil-extracting companies, lobby groups, and
+environmental NGOs. Members of the Executive and Legislative branches
+handle the decisions themselves, so their importance.
+
+We selected ten countries to our sample: Argentina, Bolivia, Brazil,
+Chile, Colombia, Costa Rica, Ecuador, Mexico, Panama, and Peru. Our
+selection criteria were the impact of climate change on each nation,
+their size and regional importance, and natural resources availability.
+For each country, we built a dataset of potential respondents with at
+least:
+
+\begin{itemize}
+\tightlist
+\item
+  150 potential legislative respondents
+\item
+  150 potential executive respondents
+\item
+  200 potential civil society respondents
+\item
+  200 potential academic respondents
+\end{itemize}
+
+These numbers represent ten times the number of respondents we were
+aiming to interview by the end of the survey. The dataset was build from
+October 5th to November 12th, 2018. We hired a team of enumerators that
+searched the internet for people in the countries that fulfilled our
+pre-determined elite profiles.
+
+We ranked the possible respondents in two tiers. In the first tier we
+placed people that we had complete information about their profiles:
+office telephone numbers, emails, social media contacts, and so on. In
+the second tier we included participants that had incomplete profiles,
+such as those with only online information available. The dataset
+including the first-tier respondents was randomly divided between
+enumerators in Rio de Janeiro and São Paulo to avoid any eventual biases
+from the collecting stage. Both groups conducted the interviews by phone
+from November 12th to December 5th, 2018. The second tier dataset was
+used for an online only version of the survey.
+
+The response rate in each of the enumeration sites and in the online
+only survey follows in the table below.
+
+\vspace{.5cm}
+
+\begin{longtable}[]{@{}lllrrr@{}}
+\caption{Survey response rates.}\tabularnewline
+\toprule
+Country & Enumeration Place & Type & Total & Phone &
+Online\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+Country & Enumeration Place & Type & Total & Phone &
+Online\tabularnewline
+\midrule
+\endhead
+Argentina & Rio de Janeiro & Online and Phone & 300 & 33 &
+17\tabularnewline
+Bolivia & Rio de Janeiro & Online and Phone & 372 & 31 &
+11\tabularnewline
+Brazil & Rio de Janeiro & Online and Phone & 346 & 34 &
+12\tabularnewline
+Chile & Rio de Janeiro & Online and Phone & 417 & 35 & 12\tabularnewline
+Colombia & Rio de Janeiro & Online and Phone & 445 & 35 &
+21\tabularnewline
+Costa Rica & Rio de Janeiro & Online and Phone & 409 & 32 &
+11\tabularnewline
+Ecuador & Rio de Janeiro & Online and Phone & 512 & 30 &
+12\tabularnewline
+Mexico & Rio de Janeiro & Online and Phone & 468 & 41 &
+17\tabularnewline
+Panama & Rio de Janeiro & Online and Phone & 291 & 30 &
+14\tabularnewline
+Peru & Rio de Janeiro & Online and Phone & 243 & 32 & 11\tabularnewline
+\emph{TOTAL} & & Online and Phone & 3803 & 333 & 138\tabularnewline
+& & & & &\tabularnewline
+Argentina & Sao Paulo & Online and Phone & 292 & 48 & 16\tabularnewline
+Bolivia & Sao Paulo & Online and Phone & 373 & 50 & 13\tabularnewline
+Brazil & Sao Paulo & Online and Phone & 344 & 43 & 15\tabularnewline
+Chile & Sao Paulo & Online and Phone & 416 & 41 & 15\tabularnewline
+Colombia & Sao Paulo & Online and Phone & 448 & 42 & 19\tabularnewline
+Costa Rica & Sao Paulo & Online and Phone & 412 & 44 & 20\tabularnewline
+Ecuador & Sao Paulo & Online and Phone & 507 & 43 & 18\tabularnewline
+Mexico & Sao Paulo & Online and Phone & 464 & 41 & 17\tabularnewline
+Panama & Sao Paulo & Online and Phone & 291 & 50 & 19\tabularnewline
+Peru & Sao Paulo & Online and Phone & 248 & 44 & 9\tabularnewline
+\emph{TOTAL} & & Online and Phone & 3803 & 446 & 161\tabularnewline
+& & & & &\tabularnewline
+Argentina & & Online Only & 517 & & 19\tabularnewline
+Bolivia & & Online Only & 132 & & 12\tabularnewline
+Brazil & & Online Only & 1183 & & 52\tabularnewline
+Chile & & Online Only & 470 & & 31\tabularnewline
+Colombia & & Online Only & 522 & & 29\tabularnewline
+Costa Rica & & Online Only & 325 & & 20\tabularnewline
+Ecuador & & Online Only & 460 & & 37\tabularnewline
+Mexico & & Online Only & 955 & & 29\tabularnewline
+Panama & & Online Only & 319 & & 26\tabularnewline
+Peru & & Online Only & 540 & & 25\tabularnewline
+\emph{TOTAL} & & Online Only & 5569 & & 293\tabularnewline
+\bottomrule
+\end{longtable}
+
+The response rate was 10.24 percent of the original population in the
+telephone survey (779 of 7606 possible respondents). We had an attrition
+of 61.62 percent from the telephone (779) to the online survey (299).
+The response rate for the online only survey was 5.26 percent (293 of
+5569 invited by email).
+
+The conjoint experiment analyzed in this paper was in the online and
+online-only dataset. Therefore, the relevant column for our data is the
+last one.
+
+\hypertarget{allocation-methods}{%
+\subsection{Allocation Methods}\label{allocation-methods}}
+
+\textbf{Random Assignment:} We programmed the experiment using a Python
+application provided by \citet{strezhnev2013conjoint}. We translated the
+original survey questions (as shown in the text) into Portuguese and
+Spanish, and then embedded the PHP file with the randomization
+parameters in a Qualtrics survey. The PHP code we used to randomize the
+values of the attributes is available at the project's GitHub
+repository: \url{http://github.com/danilofreire/climate-governance}.
+
+For each attribute, the probability of selecting a given component
+follows a uniform distribution function. The table below describes the
+results.
+
+\vspace{.5cm}
+
+\begin{longtable}[]{@{}llr@{}}
+\caption{Conjoint experiment attributes and their respective
+probabilities.}\tabularnewline
+\toprule
+\textbf{Attribute} & \textbf{Values} &
+\textbf{Probabilities}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\textbf{Attribute} & \textbf{Values} &
+\textbf{Probabilities}\tabularnewline
+\midrule
+\endhead
+\textbf{Who makes the rules?} & International organizations &
+1/5\tabularnewline
+& Federal government & 1/5\tabularnewline
+& Local government & 1/5\tabularnewline
+& Local community members & 1/5\tabularnewline
+& Non-governmental organizations & 1/5\tabularnewline
+& &\tabularnewline
+\textbf{Conflict resolution mechanism} & United Nations &
+1/5\tabularnewline
+& Government bureaucracy & 1/5\tabularnewline
+& Local courts & 1/5\tabularnewline
+& Private arbitration & 1/5\tabularnewline
+& Informal norms & 1/5\tabularnewline
+& &\tabularnewline
+\textbf{Punishment} & Imprisonment & 1/4\tabularnewline
+& Fines & 1/4\tabularnewline
+& Blacklist & 1/4\tabularnewline
+& None & 1/4\tabularnewline
+& &\tabularnewline
+\textbf{Punishment for repeated violations} & More penalty &
+1/3\tabularnewline
+& Same & 1/3\tabularnewline
+& Less penalty & 1/3\tabularnewline
+& &\tabularnewline
+\textbf{Agreement costs} & Rich countries pay more than poor countries &
+1/4\tabularnewline
+& Proportional to history of emissions & 1/4\tabularnewline
+& Proportional to current emissions & 1/4\tabularnewline
+& Only rich countries pay & 1/4\tabularnewline
+& &\tabularnewline
+\textbf{Renegotiation} & Never & 1/5\tabularnewline
+& Fifty years & 1/5\tabularnewline
+& Twenty years & 1/5\tabularnewline
+& Five years & 1/5\tabularnewline
+& One year & 1/5\tabularnewline
+\bottomrule
+\end{longtable}
+
+We added one logical restriction to the set climate change treaties:
+\textbf{Punishment = None} can never appear together with
+\textbf{Punishment for repeated violations = Less penalty}. The number
+of possible treaties are the product of the attributes
+(\(5\times 5 \times 4 \times 3 \times 4 \times 5 = 6,000\)) minus the
+number of removed possibilities (\(5\times 5 \times 4 \times 5 = 500\)).
+The total number of possible treaties is \(5,500\).
+
+\hypertarget{treatments}{%
+\subsection{Treatments}\label{treatments}}
+
+\textbf{Descriptions of the intervention:} Our treatment was the
+randomization of components in the conjoined climate mitigation
+treaties. We provided the following description before the conjoint
+experiment starts, in Spanish and Portuguese:
+
+\vspace{.5cm}
+
+\begin{verbatim}
+For the following questions, read carefully the instructions below.
+ 
+Imagine that your country would sign an international treaty to mitigate climate change. 
+A climate mitigation treaty has, in general, the following attributes:
+ 
+1. Who defines the rules? Which group will define the parameters for the treaty?
+2. How are the conflicts that might happen when the treaty begin be resolved?
+3. What punishments should be applied to ensure compliance?
+4. How will repeated violations be punished?
+5. How are costs for implementing the treaty be distributed?
+6. How often the treaty has to be renegotiated?
+
+In the following questions, you will see variations in treaties on these six attributes.
+Please select the treaty that has the characteristics that you believe are best for your country.
+\end{verbatim}
+
+\vspace{.5cm}
+
+The conjoint experiment consisted in comparing two treaties that vary in
+these six attributes, repeating the application for seven times for each
+respondent.
+
+\noindent \textbf{Software:} To program the PHP randomization device we
+used the Python application provided by \citet{strezhnev2013conjoint}.
+We used Qualtrics to administer the survey.
+
+\noindent \textbf{Delivery:} We repeated the conjoint experiment seven
+times, to improve test power.
+
+\noindent \textbf{Dataset description:} Each line in the dataset
+represents a given treaty, varying for the selection status (selected
+versus non-selected) for a given respondent. When a respondent finished
+an entire response set, this adds 14 rows to the dataset. Seven rows
+with the selected treaties and other seven rows with the non-selected
+treaties.
+
+\noindent \textbf{Deception:} We used no deception in this survey
+experiment.
+
+\hypertarget{results}{%
+\subsection{Results}\label{results}}
+
+\noindent \textbf{Outcome measures and covariates:} The main outcome is
+a binary indicator for the selection of a given conjoined package. We
+added two covariates to measure heterogeneous effects: \emph{Country}
+and \emph{Elite type}.
+
+\noindent \textbf{Questionnaire:} For the English translation of the
+entire survey instrument, with both the telephone and the online
+components, see the attachment below.
+
+\noindent \textbf{Statistical analysis:} We fit a marginal means
+estimator and an AMCE estimator. The estimation conditions the results
+within subjects and the presented conjoined packages. The results are
+available in sections \ref{sec:features} and \ref{sec:amce}.
+
+\noindent \textbf{Missing data and attrition:} Conditional on having
+started the conjoint experiment, for each task we had the following
+completion rates:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{barplot}\NormalTok{(}\DecValTok{100}\OperatorTok{*}\KeywordTok{table}\NormalTok{(cj}\OperatorTok{$}\NormalTok{task)}\OperatorTok{/}\KeywordTok{max}\NormalTok{(}\KeywordTok{table}\NormalTok{(cj}\OperatorTok{$}\NormalTok{task)), }\DataTypeTok{xlab =} \StringTok{'Conjoint task'}\NormalTok{, }\DataTypeTok{ylab =} \StringTok{'Percentage completed'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{appendix-institutional-design-climate-policy_files/figure-latex/unnamed-chunk-46-1.pdf}
+
+\hypertarget{other-information}{%
+\subsection{Other information}\label{other-information}}
+
+\noindent \textbf{IRB:} This research received IRB approval from Brown
+University (Protocol 2195/2018) and Fundação Getulio Vargas (Protocol
+83/2018).
+
+\noindent \textbf{Pre-registration:} The result was not pre-registered.
+
+\noindent \textbf{Funding:} The research was funded by Konrad Adenauer
+Stiftung (KAS). KAS provided EUR\$ 55,000.00 for this research. They
+have not interfered in the research design and in the question choices.
+
+\noindent \textbf{Replication materials:} Available at
+\url{http://github.com/danilofreire/climate-governance}.
+
+% More bibliography
+\renewcommand\refname{Bibliography}
+\bibliography{references.bib}
+
+\end{document}

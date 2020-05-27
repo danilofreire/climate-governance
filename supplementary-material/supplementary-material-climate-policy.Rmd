@@ -5,7 +5,7 @@ author:
 - "Danilo Freire[^freire]"
 - "Umberto Mignozzetti[^mignozzetti]"
 - "David Skarbek[^skarbek]"
-date: November 20, 2019
+date: \today
 fontfamily: libertine
 fontawesome: yes
 fontsize: 12pt
@@ -20,7 +20,7 @@ output:
     fig_caption: yes
     number_sections: yes
     toc: true
-    keep_tex: no
+    keep_tex: yes
     template: template.latex
 ---
 
@@ -552,11 +552,8 @@ plotAMCE <-
             cat(resp.message, "\n")
         }
     }
-
-
 ```
 
-\newpage
 
 # Latin American Elite Survey \label{sec:latam}
 
@@ -565,93 +562,44 @@ plotAMCE <-
 
 From October 1 to December 5, 2018, we ran an elite survey with respondents from ten Latin American countries: Argentina, Bolivia, Brazil, Chile, Colombia, Costa Rica, Ecuador, Mexico, Panama, and Peru. The survey proceeded in two steps.
 
-First, we collected information on Latin American elites. Our sample included:
+We collected information on Latin American elites. The target was:
 
-1. Executive members
-2. Legislative members
+1. Members of the Executive branch
+2. Members of the Legislative branch
 3. Civil society
 4. Academics
 
 For each profile, in each country, we aimed at surveying:
 
-1. 10 Executive members
-2. 10 Legislative members
+1. 10 members of the Executive branch
+2. 10 members of the Legislative branch
 3. 15 Civil society
 4. 15 Academics
 
-To do so, we built a dataset of prospective respondents that was ten times larger than our sample goal of 500 elite members. We constructed the dataset by gathering information from government websites, local NGOs, newspapers, and university departments.
+To do so, we built a prospective respondents dataset with ten times these members for each country. Then, we ran an online and telephone survey where we collected information regarding the climate change agreements and other climate
+change-related problems.
 
-After finishing this dataset, we started the surveying stage. From November 12 to December 5, we ran the survey by contacting the elite members by phone or by email. We had two teams of enumerators, one based in São Paulo and another based in Rio de Janeiro, Brazil. The teams were comprised of Portuguese and Spanish native speakers. Although our initial expectation was to collect 500 survey responses, we completed 654 interviews.
+After finishing this dataset, we started the surveying stage. From November 12 to December 5, we ran the survey by contacting elite members by phone or by email. We had two teams of enumerators, one based in São Paulo and another based in Rio de Janeiro, Brazil, comprised of Portuguese and Spanish native speakers. Although the overall aim of the survey was 500 responses, the teams managed to collect 654 interviews.
 
 # Conjoint Experiment Analysis: Identification and Estimation \label{sec:conjoint}
 
 A conjoint experiment is a statistical technique that allows individuals to express their preferences on multiple attributes of a single topic [@hainmueller2014causal; @bansak2016economic]. Individuals are presented with two hypothetical scenarios, A and B, each containing a series of characteristics a researcher wants to evaluate. The individual chooses one of them. As the attributes are randomized and individuals choose between different pairs of hypothetical scenarios, we can estimate how individuals value each of the conjoined elements.  
 
-In our research, we ask what features elite members would like to see implemented in a climate change agreement. We ask their opinion on 6 questions: 1) who makes the rules; 2) who enforces the laws; 3) what punishment should be used against lawbreakers; 4) how are repeated violations punished; 5) how are costs distributed, and 6) how often the agreement will be renegotiated. Each of the questions has four to five different attributes. For the first two questions, we ask individuals if they would rather have the community, local governments, federal governments, or international organizations to create or enforce rules. As for punishments, we have options ranging from do nothing to fines and incarceration. We ask whether the costs of climate change agreements should be paid mostly or exclusively by developed countries, by polluting countries regardless of their wealth, or if costs should be allocated according to the history of emissions of a given nation. Individuals also state their preferences for short-term agreements, a proxy we use for flexibility, or for long-term ones, our proxy for the stability of rules. 
+In our research, we ask what features elite members would like to see implemented in a climate change agreement. We ask their opinion on 6 questions: 1) who makes the rules; 2) who enforces the laws; 3) what punishment should be used against lawbreakers; 4) how are repeated violations punished; 5) how are costs distributed, and 6) how often the agreement will be renegotiated. Each of the questions has four to five different attributes. For the first two questions, we ask individuals if they would rather have the community, local governments, federal governments, or international organizations to create or enforce rules. As for punishments, we have options ranging from do nothing to fines and incarceration. We ask whether the costs of climate change agreements should be paid mostly or exclusively by developed countries, by polluter countries regardless of their wealth, or if costs should be allocated according to the history of emissions of a given nation. Individuals also state their preferences for short-term agreements, a proxy we use for flexibility, or for long-term ones, what we see as a proxy for the stability of rules. Lastly, we ask which of the two conjoined choices individuals perceive as more legitimate and more efficient. 
 
-Conjoint experiments have many advantages. First, as each individual chooses between many pairs of possible climate agreements---seven in our case---we can drastically increase our statistical power without incurring in further financial costs. Thus, the design maximizes our research budget. Second, individuals rarely decide considering one attribute at a time, as presented in other types of survey experiments. In that regard, our conjoint analysis mirrors how people naturally make their choices, that is, by simultaneously taking several characteristics into consideration. Finally, as the experiments consist of a simple choice between two bundles, conjoint analyses are easy to understand and to implement. This research design reduces the cognitive load of interviewees, so we can expect more accurate responses from our sample.  
-
-# Conjoint Experiment Dimensions \label{sec:conjdim}
-
-In Table 1 of the main paper, we present the attributes and values for climate mitigation in our conjoint experiment. Here, we discuss the theoretical underpinnings of each of the dimensions and attributes evoked.
-
-## Attribute One: *Who Makes the Rules*
-
-Climate change governance faces numerous implementation challenges. For example, the voluntary character of the Nationally Determined Contributions (NDCs), which are the core mechanism of the Paris Agreement, illustrates how climate coordination might be difficult to achieve. Climate governance can be observed at a number of different scales, such as the international, national, subnational, regional, and local levels [@bruhl2001international]. Microlevel implementation requires regulations and attribution of responsibilities for each level, and it is unclear how competences will be distributed. This question motivates the first dimension of our conjoint experiment, *Who makes the rules?* Since rules might be provided by different institutions, we added the following attributes to this first category: international organizations; federal governments; local governments; local community members; and non-governmental organizations. These levels represent possible top-down versus bottom-up regulation schemes and reflect the choices available to treaty signatory countries.
-
-Regarding the *International organizations* dimension, currently there is no international institution that centralizes agenda-setting, rule making, conflict resolution, and law enforcement for climate-related issues. On the other hand, the Conference of Parties is the highest decision-making body of the UNFCCC (United Nations Framework Convention on Climate Change), and the UN Climate Convention could possibly evolve into a more institutionalized model of international governance. The very signing of the many agreements that comprise the climate mitigation international framework---the Rio Convention, the Kyoto Protocol, and the Paris Agreement---constitutes a step in this direction of further institutionalization. 
-
-We can take the WTO (World Trade Organization) as an example. After the establishment of the GATT (General Agreement on Tariffs and Trade), trade organizations progressively increased their role as gatekeepers, issue entrepreneurs, and proponents of international norms. In turn, this movement solidified the international trade regime and established dedicated international organizations. The process of continuous, and eventually formal, institutionalization of trade regimes has been discussed by the rational functionalist school of international relations [e.g., @simons2002handbook]. This mechanism could plausibly be valued by specific country elites as a reliable and legitimate potential source of climate mitigation rules.    
-
-We also include the *Federal government* as an alternative rule provider. Once a treaty is signed and ratified, it must be internalized by a minimum number of signatories in order to entry into force. In other words, federal governments have to comply with the engagement, which highlights the essential role states play in the implementation of international treaties. Despite the growing importance of transnational networks and non-state actors in global regimes, states remain the fundamental actors in the international realm. 
-
-Concerning climate-related agreements, the bare existence of international institutions is not sufficient for global climate governance. In fact, scholars have posited that these engagements can be understood as a discursive strategy, one which allows states to please the domestic public without having to take costly global warming mitigation initiatives [e.g., @dimitrov2005hostage]. In that sense, elites may see the federal government as a more credible source of environmental legislation. Latin American countries provide many examples of national-level climate legislation, such as Mexico's General Law for Climate Change (2012), Bolivia's Mother Earth Legal Framework (Law 300/2012), and Costa Rica's Biodiversity Law (1998). 
-
-Local actors, such as municipal governments, have also participated in the creation of climate mitigation norms [@barber2013if; @fraundorfer2017role]. Significantly, cities have built a number of networks to tackle climate issues, such as the ICLEI (Local Governments for Sustainability) and the C40. Together, these networks include 94 cities and promote coordinated actions to fight climate change. While some countries opt to implement climate rules at the national level, others prefer to withdraw from the climate treaties while allowing local governments to voluntarily comply with international conventions. The state of California offers a recent example. Although the United States had chosen to withdraw from the Paris Agreement, the Californian government offered a plan to follow the mitigation schemes proposed by the treaty. 
-
-Likewise, climate mitigation practices are strongly influenced by local community members and non-governmental organizations. The civil society has long played a substantive role in setting the agenda and monitoring compliance of climate legislation [@bruhl2001international]. This is also true for Latin America. Indigenous groups have been particularly active in the local sphere, as climate change directly endangers traditional communities [@bellier2012peuples]. Latin American communities have founded many non-governmental organizations to fight climate change, such as the _Asamblea Nacional de Afectados Ambientales_ (ANAA) in Mexico, the _Red de los Pueblos Fumigados_ in Argentina and the _Rede Brasileira de Justiça Ambiental_ (RBJA) in Brazil. At the international level, we highlight the support Latin American groups have provided to the creation of the United Nations Permanent Forum on Indigenous Issues.
-
-## Attribute Two: *Conflict Resolution Mechanism*
-
-International regimes require efficient institutions to deal with non-compliance and provide cost reparations to aggrieved parties. We consider five institutions that can plausibly serve as instances for conflict mediation in climate issues: the United Nations; government bureaucracies; local courts; private arbitration; and informal norms. 
-
-International trade disputes, such as those concerning unfair business practices, are already solved by international courts. The WTO Dispute Settlement Body is the best-known example. Criminal offenses are also judged by the International Criminal Court. In this sense, it is reasonable to assume that the United Nations may also provide a similar resolution mechanism to solve climate disputes.
-
-In other situations, government bureaucracies have the discretion to settle conflicts and enforce punishment to violators [@biesbroek2018public]. In Latin America, one example is the Brazilian Environmental Protection Agency (IBAMA), which is run by the federal government. The IBAMA is free to set rules nationally and punish any violation of environmental laws in Brazil. Another example is provided by the Costa Rican National Environmental Office (SETENA), which is responsible for receiving denunciations and conducting investigations on environmental crimes.
-
-Local courts can also function as conflict resolution mechanisms. A widely-publicized case in Latin America involves the lawsuit filed by almost 30 thousand Ecuadorian citizens against oil companies Texaco/Chevron. The case was brought to a provincial court in Ecuador [@pigrau2014texaco]. Alternatively, private arbitration offers a low-cost approach to deal with international violations. Chile and Argentina resorted to private arbitration in 1972 to address a border dispute, and the Permanent Court of Arbitration frequently addresses environmental issues.
-
-Informal norms may also be a plausible and low-cost form of solving conflicts. Non-institutionalized forms of reputational sanctions within the climate international regime, such as *naming and shaming*, can act as a peer-pressure compliance mechanisms. There is comparative evidence that informal norms within communities boost local compliance and allow for flexible and context-adapted climate mitigation solutions [@ostrom1990governing]. 
-
-## Attributes Three and Four: *Punishment* and *Punishment for Repeated Violations*
-
-The third and fourth attributes relate to punishments against non-compliance. We design the first feature, *Punishment*, to capture what types of punishment elites would like to apply to climate agreement violators. The options we present closely match existing Latin American regulations on the subject. As such, they constitute plausible answers for the interviewees. In Brazil, violations are punishable with a range of options, from community services and fines to imprisonment (Law 9605/98, available at <http://www.planalto.gov.br/ccivil_03/leis/l9605.htm>. That is also the case for Peru (Law 29263, available at <http://www.minam.gob.pe/delitosambientales>). Similarly, Ecuador has recently approved legislation that adds severe penalties on perpetrators of climate violations. Incarceration is one of the possible punishments (Article 245, Código Orgánico Integral Penal, available at <http://www.oas.org/juridico/PDFs/mesicic5_ecu_ane_con_judi_c%C3%B3d_org_int_pen.pdf>). In this respect, our selected treaty characteristics are plausible to Latin American elites.
-
-Following the same logic, the fourth experimental feature, *Punishment for repeated violations*, captures the actions that should be taken upon subsequent violations of climate change agreements. 
-
-## Attribute Five: *Agreement Costs*
-
-The fifth design principle refers to the distribution of climate agreement costs. Here we consider the normative debates on burden-sharing and climate distributive justice. Developing nations have stressed how wealthier countries have historically contributed more to global warming [@santos2017global]. More specifically, under the Copenhagen Accord and the Kyoto Protocol, developed countries were deemed as the sole responsible for CO2 emissions [@kartha2011comparison]. Over time, the wealthier nations successfully contested this position, arguing that emerging economies such as China and India account for a large share of recent greenhouse gas emissions. Hence, a new compensation principle emerged, that of *common but differentiated responsibilities and respective capabilities*. While accounting for past environmental pollution, the model also requires the contribution of developing countries to reduce global warming.
-
-Our design feature allows us to capture the position of Latin American elites in this debate. We add four attributes derived from the discussion presented above. The first attribute posits that only rich countries should pay the costs of climate agreements, reflecting the original stance of developing nations. The second attribute states that rich countries should pay more than poor countries, which also tests the elites' willing to contribute to global public goods. The third alternative states that countries should pay costs according to the history of emissions, while the last one affirms that only current emissions should be taken into account. Understanding how Latin American elites stand on this normative issue is essential for assuring local-level compliance and crafting effective climate governance schemes.
-
-## Attribute Six: *Renegotiation*
-
-Finally, our last conjoint experiment dimension investigates the rigidity of climate change agreements. From a theoretical standpoint, the contract theory literature argues that more rigid agreements may fall short when their underlying conditions change. However, agreements that change constantly might be too unstable to form a path dependency and provide focal points for long-run coordination. Thus, parties have to strike a balance between legal stability and the need for adaptation. If a climate agreement has deleterious effects in the economy while only marginally improving the country's environmental output, decision-makers will push for treaty renegotiations. Conversely, longer agreements reduce coordination costs and give predictability to the system. We analyse temporal preferences of Latin American elites by including five different climate agreement renegotiation schedules: one year, five years, twenty years, fifty years, or never. 
-
-Latin America has a history of political and economic volatility, so it is unclear whether elites will prefer long-term or short-term climate change initiatives. On the one hand, elites may perceive longer contracts as a means to force collective commitment to fight global warming. On the other hand, elites can also anticipate future volatility and discount the future more heavily in favor of immediate circumstances. 
+Conjoint experiments have many advantages [@hainmueller2014causal]. First, as each individual chooses between many pairs of possible climate agreements -- seven in our case -- we can drastically increase our sample size without incurring in further financial costs. The design thus maximizes our research budget. Second, individuals rarely decide considering one attribute at a time, as presented in other types of survey experiments. In that regard, the conjoint analysis mirrors how people naturally make their choices, that is, by simultaneously taking several characteristics into consideration. Finally, as the experiments consist of a simple choice between A and B, conjoint analyses are easy to understand and to implement. This research design reduces the cognitive load interviewees have while answering surveys and as a result, we can expect more accurate responses from our sample.  
 
 # Descriptive Statistics \label{sec:descstats}
 
-The main demographic statistics we collected are: country indicators, elite types, and the geolocation of the respondents. We show their distributions in the graphs below.
+The main demographic statistics collected were the country and elite types, and the geolocation of the respondents. They follow in the graphs below.
 
-```{r demogGraph, fig.align='center', fig.height=3.5, message=FALSE,warning=F}
+```{r demogGraph, echo=FALSE, fig.align='center', fig.height=3.5, message=FALSE,warning=F}
 library(plm); library(tidyverse)
 library(haven); library(clusterSEs)
 library(stargazer); library(cjoint)
 library(sp); library(cregg)
 library(kableExtra)
-load('data.RData')
+load('freire-mignozzetti-skarbek.RData')
 
 aux <- cj %>%
   select(Response.ID, countryOrigin, groupOrigin, LocationLongitude, LocationLatitude) %>%
@@ -675,29 +623,19 @@ p<- ggplot(data = tab, aes(x = `Group Origin`, y = Frequency)) +
   theme_bw() + annotate(geom = "text", label = tab$Frequency,
                         x = tab$`Group Origin`, y = tab$Frequency + 5)
 p
-
-# Elite type and group type
-tab <- data.frame(table(aux$groupOrigin, aux$countryOrigin))
-names(tab) <- c('Group Origin','Country', 'Frequency')
-p<- ggplot(data = tab, aes(x = `Group Origin`, y = Frequency)) +
-  geom_bar(stat = "identity") +
-  facet_wrap(~Country) +
-  theme_bw() + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-p
 ```
 
-As we can see, we contacted more than fifty elite members for all countries but Bolivia and Peru. To compensate for the low response rates in these two countries, we exceeded the sample size in all the remaining states.
+As we can see, we managed to contact more than fifty elite members for all countries but Bolivia and Peru. To compensate for the low collection rates in these two countries, note that we exceeded the sample size in all the remaining states.
 
-Regarding elite type, we interviewed a high number of academics and members of civil society. They were followed by members the Executive and of the Legislative, respectively. This result is in line with our expectations given the difficulty of reaching high profile government members. 
+Considering the elite type, note that we have, as expected, more people from academia and the civil society, followed by those from the Executive and Legislative branches. The data collection for members of the Legislative branch was below the original target, but above the minimum mark of 5 for each country. This is expected, given the difficulty of accessing these elite members. 
 
-We see that respondents are concentrated in the largest municipalities of their respective countries. As elites tend to be more urban and well-educated than average, we indeed expected that most of our sample would be clustered in big cities.
+In the map, we can see that the answers concentrate on the country's capitals, with some variation within the state, but with sample concentrated in the largest municipalities. This is also in line with our expectations, as elite members are assumed to gravitate around capital cities and large urban centers.
 
 # Frequency of Features Selected by Each Attribute \label{sec:features}
 
-The figures below display the freature frequency for each attribute, by each task.
+The figures below display the feature frequency for each attribute, by each task.
 
-```{r attributes, fig.align='center', fig.height=4}
+```{r attributes, echo=FALSE, fig.align='center', fig.height=4}
 aux <- cj %>%
   select(Response.ID, `Who makes the rules?`, `How are conflicts resolved?`, `What punishments do they use?`,`How are repeated violations punished?`, `How are costs distributed?`,`How often will the agreement be renegotiated?`) %>%
   unique()
@@ -769,7 +707,7 @@ p <- ggplot(data=tab, aes(x = Levels, y = Frequency)) +
 p
 ```
 
-Two remarkable issues in our data are the low frequency of *Less penalty* in the attribute *How are repeated violations punished?* and the low frequency of *None* for the attribute *What punishments do they use?*. This because when we draw the level none for the attribute *What punishments do they use?* or the level less penalty for *How are repeated violations punished?*, then it makes no sense to have less penalty than the minimum possible.
+The two remarkable issues are the low frequency of *Less penalty* in the attribute *How are repeated violations punished?* and the low frequency of *None* for the attribute *What punishments do they use?*. This because when we draw the level none for the attribute *What punishments do they use?* or the level less penalty for *How are repeated violations punished?*, then it makes no sense to have less penalty than the minimum possible.
 
 # Code for the Main Paper
 
@@ -795,18 +733,18 @@ myFaces <- c(rep('plain', 5), "bold",
              rep('plain', 5), "bold",
              rep('plain', 5), "bold")
 
-p <- plot(mms, vline = 0.5, header_fmt = "%s", size = 2) +
-  ggplot2::theme(
+p <- plot(mms, vline = 0.5, header_fmt = "%s", size = 2) + ggplot2::theme(
     legend.position = "none",
     panel.grid.major = ggplot2::element_blank(),
     panel.grid.minor = ggplot2::element_blank(),
     axis.text.y = element_text(face=myFaces, size = 11)) + 
     ggplot2::geom_errorbarh(ggplot2::aes_string(xmin = "lower",
                                                 xmax = "upper"),
-                            size = 0.5, height = 0, na.rm = TRUE)
+                            size = 1, height = 0, na.rm = TRUE,
+                            position = ggstance::position_dodgev(height = 1))
 p
 
-ggsave(filename = 'MM_all.pdf', plot = p, width = 6, height = 5)
+ggsave(filename = 'MM_all.pdf', plot = p, width = 8, height = 6)
 
 # Table
 table_mm <- function(mms, capt) {
@@ -942,15 +880,16 @@ p <- plot(rbind(arg, bol, bra, chi, col,
         header_fmt = "%s", size = 2) +
   facet_wrap( ~ country, ncol = 5) +
   ggplot2::theme(
-    axis.text.y = element_text(face=myFaces, size = 13)) + 
+    axis.text.y = element_text(face=myFaces, size = 11)) + 
     ggplot2::geom_errorbarh(ggplot2::aes_string(xmin = "lower",
                                                 xmax = "upper"),
-                            size = 0.75, height = 0, na.rm = TRUE)
+                            size = 1, height = 0, na.rm = TRUE,
+                            position = ggstance::position_dodgev(height = 1))
 
 p
 
 ggsave(filename = 'MM_country.pdf', 
-       plot = p, width = 10, height = 12)
+       plot = p, width = 12, height = 12)
 ```
 
 The code for Figure 4 of the paper is available below. Tables displaying the point estimates are also included.
@@ -958,7 +897,7 @@ The code for Figure 4 of the paper is available below. Tables displaying the poi
 ```{r}
 ## Elite type graphs and estimates
 
-# Table for the Executive
+# Table for the Executive branch
 res1 <- mm(subset(cj, groupOrigin=='Executive'), 
            fm, id = ~Response.ID, alpha = 0.1, h0 = 0.5)
 table_mm(res1, capt = 'Marginal Means -- Executive Only')
@@ -967,7 +906,7 @@ table_mm(res1, capt = 'Marginal Means -- Executive Only')
 \newpage
 
 ```{r}
-# Legislative
+# Legislative branch
 res2 <- mm(subset(cj, groupOrigin=='Legislative'), 
            fm, id = ~Response.ID, alpha = 0.1, h0 = 0.5)
 table_mm(res2, capt = 'Marginal Means -- Legislative Only')
@@ -976,7 +915,7 @@ table_mm(res2, capt = 'Marginal Means -- Legislative Only')
 \newpage
 
 ```{r}
-# Civil Society
+# Civil society
 res3 <- mm(subset(cj, groupOrigin=='Civil Society'), 
            fm, id = ~Response.ID, alpha = 0.1, h0 = 0.5)
 table_mm(res3, capt = 'Marginal Means -- Civil Society Only')
@@ -1010,11 +949,11 @@ p <- plot(rbind(res1, res2, res3, res4),
     axis.text.y = element_text(face=myFaces, size = 11)) + 
     ggplot2::geom_errorbarh(ggplot2::aes_string(xmin = "lower",
                                                 xmax = "upper"),
-                            size = 0.5, height = 0, na.rm = TRUE,
+                            size = 1, height = 0, na.rm = TRUE,
                             position = ggstance::position_dodgev(height = 1))
 p
 
-ggsave(filename = 'MM_membertype.pdf', plot = p,
+ggsave(filename = 'MM_membertype.pdf', plot = p, 
        width = 8, height = 6)
 ```
 
@@ -1025,7 +964,7 @@ This estimator fixes one category and look at changes from this baseline categor
 ```{r, fig.width = 7, fig.height = 8}
 ## Main model
 rm(cj)
-load('data.RData')
+load('freire-mignozzetti-skarbek.RData')
 
 # Set conjoint baselines
 baselines <- list()
@@ -1295,40 +1234,40 @@ plot(results, ci=0.9, point.size = .8, dodge.size = 1,
 ```{r}
 ## Elite Subsample
 
-# Executive
+# Executive branch
 results <- cjoint::amce(fm, data = cj, cluster = TRUE,
                         respondent.id = "Response.ID", 
                         design = conjDesign, baselines = baselines,
                         subset = cj$groupOrigin == 'Executive')
-# Table AMCE -- Executive Only
-tableAMCE(results, capt = 'AMCE -- Executive Only')
+# Table AMCE -- Executive branch only
+tableAMCE(results, capt = 'AMCE -- Executive Branch Only')
 ```
 
 \newpage
 
 ```{r, fig.width = 7, fig.height = 8}
 plot(results, ci=0.9, point.size = .8, dodge.size = 1,
-     text.size = 10, main = 'AMCE -- Executive Only',
+     text.size = 10, main = 'AMCE -- Executive Branch Only',
      attribute.names = attrs)
 ```
 
 \newpage
 
 ```{r}
-## Legislative
+## Legislative branch
 results <- cjoint::amce(fm, data = cj, cluster = TRUE,
                         respondent.id = "Response.ID", 
                         design = conjDesign, baselines = baselines,
                         subset = cj$groupOrigin == 'Legislative')
-# Table AMCE -- Legislative Only
-tableAMCE(results, capt = 'AMCE -- Legislative Only')
+# Table AMCE -- Legislative branch only
+tableAMCE(results, capt = 'AMCE -- Legislative Branch Only')
 ```
 
 \newpage
 
 ```{r, fig.width = 7, fig.height = 8}
 plot(results, ci=0.9, point.size = .8, dodge.size = 1,
-     text.size = 10, main = 'AMCE -- Legislative Only',
+     text.size = 10, main = 'AMCE -- Legislative Branch Only',
      attribute.names = attrs)
 ```
 
@@ -1374,7 +1313,7 @@ plot(results, ci=0.9, point.size = .8, dodge.size = 1,
 
 \newpage
 
-# APSA Experimental Section Standard Report for Experiments
+# APSA Experimental Section Standard Report for Experiments \label{sec:apsa}
 
 ## Hypothesis
 
@@ -1384,14 +1323,14 @@ The experiment was designed to study the characteristics of the climate change m
 
 The eligibility criteria for the research was to belong to one of the four elite profiles listed below.
 
-1. **Executive members**: members of regulatory agencies, politicians (mayors, governors, presidents), members of ministries and secretaries at the federal and state levels.
-2. **Legislative members**: legislators and staff officers from the federal and state level in the researched countries.
+1. **Members of the Executive branch**: members of regulatory agencies, politicians (mayors, governors, presidents), members of ministries and secretaries at the federal and state levels.
+2. **Members of the Legislative branch**: legislators and staff officers from the federal and state level in the researched countries.
 3. **Civil society**: environmental and energy-related NGO members; oil, renewables, and environmental solutions firm owners in the researched countries.
 4. **Academics**: professors from energy and engineering departments of the most prestigious universities in the countries researched.
 
-We decided to include these profiles based on the stakes and influence that such elites have on climate change policies. According to constructivist international relations theories, academics have notable influence on our topic of interest as they form an epistemic community around climate change policies. Civil society members that have stakes on climate policies are also influential, such as oil-extracting companies, lobby groups, and environmental NGOs. Executive and Legislative elites handle the decisions themselves, what justifies their inclusion in our sample.
+We decided to include these profiles based on the stakes and influence that such elites have on climate change policies. According to the IR constructivist theories, academics have notable influence on our topic of interest as they form the epistemic community around climate change policies. Civil society members that have stakes on climate policies are also influential, such as oil-extracting companies, lobby groups, and environmental NGOs. Members of the Executive and Legislative branches handle the decisions themselves, so their importance.
 
-We selected ten countries to our sample: Argentina, Bolivia, Brazil, Chile, Colombia, Costa Rica, Ecuador, Mexico, Panama, and Peru. Our selection criteria were: 1) the impact of climate change on each nation, 2) their size and regional importance, and 3) natural resources availability. For each country, we built a dataset of potential respondents with at least:
+We selected ten countries to our sample: Argentina, Bolivia, Brazil, Chile, Colombia, Costa Rica, Ecuador, Mexico, Panama, and Peru. Our selection criteria were the impact of climate change on each nation, their size and regional importance, and natural resources availability. For each country, we built a dataset of potential respondents with at least:
 
 * 150 potential legislative respondents
 * 150 potential executive respondents
@@ -1400,7 +1339,7 @@ We selected ten countries to our sample: Argentina, Bolivia, Brazil, Chile, Colo
 
 These numbers represent ten times the number of respondents we were aiming to interview by the end of the survey. The dataset was build from October 5th to November 12th, 2018. We hired a team of enumerators that searched the internet for people in the countries that fulfilled our pre-determined elite profiles.
 
-We ranked the possible respondents in two tiers. In the first tier we placed people that we had complete information about their profiles: office telephone numbers, emails, social media contacts, and so on. In the second tier we included participants that had incomplete profiles, such as those with only online information available. The dataset including the first-tier respondents was randomly divided between enumerators in Rio de Janeiro and São Paulo to avoid any eventual biases at the collecting stage. Both groups conducted the interviews by phone from November 12th to December 5th, 2018. The second tier dataset was used for the online only version of the survey.
+We ranked the possible respondents in two tiers. In the first tier we placed people that we had complete information about their profiles: office telephone numbers, emails, social media contacts, and so on. In the second tier we included participants that had incomplete profiles, such as those with only online information available. The dataset including the first-tier respondents was randomly divided between enumerators in Rio de Janeiro and São Paulo to avoid any eventual biases from the collecting stage. Both groups conducted the interviews by phone from November 12th to December 5th, 2018. The second tier dataset was used for an online only version of the survey.
 
 The response rate in each of the enumeration sites and in the online only survey follows in the table below.
 
@@ -1445,13 +1384,13 @@ The response rate in each of the enumeration sites and in the online only survey
 | *TOTAL*    |                   | Online Only      | 5569  |        | 293    |
 Table: Survey response rates.
 
-The response rate was 10.24 percent of the original population in the telephone survey (779 of 7606 possible respondents). We had an attrition rate of 61.62 percent from the telephone (779) to the online survey (299). The response rate for the online only survey was 5.26 percent (293 of 5569 invited by email).
+The response rate was 10.24 percent of the original population in the telephone survey (779 of 7606 possible respondents). We had an attrition of 61.62 percent from the telephone (779) to the online survey (299). The response rate for the online only survey was 5.26 percent (293 of 5569 invited by email).
 
-The conjoint experiment analyzed in this paper was in the online and online only dataset. Therefore, the relevant column for our data is the last one.
+The conjoint experiment analyzed in this paper was in the online and online-only dataset. Therefore, the relevant column for our data is the last one.
 
 ## Allocation Methods
 
-**Random Assignment:** We wrote the computer code for our experiment using a Python application provided by @strezhnev2013conjoint. We translated the original survey questions (as shown in the text) into Portuguese and Spanish, and then embedded the PHP file with the randomization parameters in a Qualtrics survey. The PHP code we used to randomize the values of the attributes is available at the project's GitHub repository: <https://github.com/danilofreire/climate-governance>.
+**Random Assignment:** We programmed the experiment using a Python application provided by @strezhnev2013conjoint. We translated the original survey questions (as shown in the text) into Portuguese and Spanish, and then embedded the PHP file with the randomization parameters in a Qualtrics survey. The PHP code we used to randomize the values of the attributes is available at the project's GitHub repository: <http://github.com/danilofreire/climate-governance>.
 
 For each attribute, the probability of selecting a given component follows a uniform distribution function. The table below describes the results.
 
@@ -1519,13 +1458,13 @@ Please select the treaty that has the characteristics that you believe are best 
 
 \vspace{.5cm}
 
-The conjoint experiment consisted in comparing two hypothetical climate change treaties that vary across six attributes. We presented each respondent with seven pairs of possible climate agreements.
+The conjoint experiment consisted in comparing two treaties that vary in these six attributes, repeating the application for seven times for each respondent.
 
-\noindent \textbf{Software:} We used the Python application provided by @strezhnev2013conjoint to program the PHP randomization device. We hosted the survey questionnaire on Qualtrics.
+\noindent \textbf{Software:} To program the PHP randomization device we used the Python application provided by @strezhnev2013conjoint. We used Qualtrics to administer the survey.
 
 \noindent \textbf{Delivery:} We repeated the conjoint experiment seven times, to improve test power.
 
-\noindent \textbf{Dataset description:} Each line in the dataset corresponds to a given treaty, which indicates the selection status of a given treaty (selected versus non-selected) for a specific respondent. When a respondent finished an entire response set, this added 14 rows to the dataset. Seven rows with the selected treaties and other seven rows with the non-selected treaties.
+\noindent \textbf{Dataset description:} Each line in the dataset represents a given treaty, varying for the selection status (selected versus non-selected) for a given respondent. When a respondent finished an entire response set, this adds 14 rows to the dataset. Seven rows with the selected treaties and other seven rows with the non-selected treaties.
 
 \noindent \textbf{Deception:} We used no deception in this survey experiment.
 
@@ -1533,14 +1472,14 @@ The conjoint experiment consisted in comparing two hypothetical climate change t
 
 \noindent \textbf{Outcome measures and covariates:} The main outcome is a binary indicator for the selection of a given conjoined package. We added two covariates to measure heterogeneous effects: *Country* and *Elite type*.
 
+\noindent \textbf{Questionnaire:} For the English translation of the entire survey instrument, with both the telephone and the online components, see the attachment below.
+
 \noindent \textbf{Statistical analysis:} We fit a marginal means estimator and an AMCE estimator. The estimation conditions the results within subjects and the presented conjoined packages. The results are available in sections \ref{sec:features} and \ref{sec:amce}.
 
 \noindent \textbf{Missing data and attrition:} Conditional on having started the conjoint experiment, for each task we had the following completion rates:
 
-```{r, fig.width = 7, fig.height = 5, tidy=FALSE}
-barplot(100*table(cj$task)/max(table(cj$task)),
-        xlab = 'Conjoint task',
-        ylab = 'Percentage completed')
+```{r, fig.width = 7, fig.height = 8}
+barplot(100*table(cj$task)/max(table(cj$task)), xlab = 'Conjoint task', ylab = 'Percentage completed')
 ```
 
 ## Other information
