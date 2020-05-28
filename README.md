@@ -18,6 +18,6 @@ BibTeX entry:
   author={Freire, Danilo and Mignozzetti, Umberto and Skarbek, David},
   pages={1--17},
   year={2020},
-  howpublished = {\href{https://osf.io/9a6ch}{\texttt{https://doi.org/10.31235/osf.io/9a6ch}}}
+  howpublished = {\url{https://doi.org/10.31235/osf.io/9a6ch}}
 }
 ```
